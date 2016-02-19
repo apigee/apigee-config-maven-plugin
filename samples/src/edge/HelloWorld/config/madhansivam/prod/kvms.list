@@ -1,0 +1,4 @@
+# List of JSON Files of the kvmaps to be created
+# Full path of the files can be specified.
+# If not files will be considered relative to the location of this file.
+logconfigurations.json

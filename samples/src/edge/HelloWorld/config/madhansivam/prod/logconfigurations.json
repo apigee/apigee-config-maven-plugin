@@ -1,0 +1,13 @@
+{
+    "entry": [
+        {
+            "name": "splunk_server",
+            "value": "localhost3"
+        },
+        {
+            "name": "splunk_port",
+            "value": "8082"
+        }
+    ],
+    "name": "splunk_configurations"
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage name="WelcomeMessage">
+    <AssignTo type="response" createNew="false"/>
+    <Set>
+        <Headers>
+            <Header name="system.timestamp">{system.timestamp}</Header>
+            <Header name="system.time">{system.time}</Header>
+            <Header name="organization.name">{organization.name}</Header>
+            <Header name="apiproxy.name">{apiproxy.name}</Header>
+            <Header name="apiproxy.revision">{apiproxy.revision}</Header>
+            <Header name="proxy.basepath">{proxy.basepath}</Header>
+            <Header name="proxy.name">{apiproxy.name}</Header>
+            <Header name="proxy.pathsuffix">{proxy.pathsuffix}</Header>
+        </Headers>
+        <Payload contentType="application/json" variableSuffix="#" variablePrefix="@">
+            {"status":"success", "message":"Hello World"}
+        </Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</AssignMessage>

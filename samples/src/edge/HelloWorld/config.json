@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "name": "sit",
+            "policies": [],
+            "proxies": [],
+            "targets": []
+        },
+        {
+            "name": "uat",
+            "policies": [],
+            "proxies": [],
+            "targets": []
+        },
+        {
+            "name": "dev",
+            "policies": [],
+            "proxies": [],
+            "targets": []
+        },
+        {
+            "name": "test",
+            "policies": [],
+            "proxies": [],
+            "targets": []
+        }
+    ]
+}

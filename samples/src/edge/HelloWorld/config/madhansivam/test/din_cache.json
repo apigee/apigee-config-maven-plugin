@@ -1,0 +1,17 @@
+{
+  "description" : "Caches Din - access token map details",
+  "diskSizeInMB" : 0,
+  "expirySettings" : {
+    "timeoutInSec" : {
+      "value" : "10800"
+    },
+    "valuesNull" : false
+  },
+  "inMemorySizeInKB" : 0,
+  "maxElementsInMemory" : 100,
+  "maxElementsOnDisk" : 1000,
+  "name" : "din_cache",
+  "overflowToDisk" : true,
+  "persistent" : false,
+  "skipCacheIfElementSizeInKBExceeds" : 1024
+}

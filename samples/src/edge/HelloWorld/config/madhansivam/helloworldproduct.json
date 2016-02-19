@@ -1,0 +1,43 @@
+{
+    "apiResources": [
+        "/**",
+        "/"
+    ],
+    "approvalType": "auto",
+    "attributes": [
+        {
+            "name": "description",
+            "value": "json Product"
+        },
+        {
+            "name": "developer.quota.limit",
+            "value": "10000"
+        },
+        {
+            "name": "developer.quota.interval",
+            "value": "1"
+        },
+        {
+            "name": "developer.quota.timeunit",
+            "value": "month"
+        },
+        {
+            "name": "access",
+            "value": "public"
+        }
+    ],
+    "description": "free Product",
+    "displayName": "free Product",
+    "environments": [
+        "test",
+        "prod"
+    ],
+    "name": "helloworldproduct",
+    "proxies": [
+        "HelloWorld"
+    ],
+    "quota": "10000",
+    "quotaInterval": "1",
+    "quotaTimeUnit": "month",
+    "scopes": []
+}
