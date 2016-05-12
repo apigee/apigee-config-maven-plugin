@@ -29,6 +29,18 @@
       <organization>Apigee Corporation</organization>
       <organizationUrl>http://www.apigee.com</organizationUrl>
     </developer>
+    <developer>
+      <name>Prashanth K S</name>
+      <email>psubrahmanyam@apigee.com</email>
+      <organization>Apigee Corporation</organization>
+      <organizationUrl>http://www.apigee.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Meghdeep Basu</name>
+      <email>mbasu@apigee.com</email>
+      <organization>Apigee Corporation</organization>
+      <organizationUrl>http://www.apigee.com</organizationUrl>
+    </developer>
   </developers>
 
   <scm>
