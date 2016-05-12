@@ -32,8 +32,7 @@ cd /samples/src/edge/HelloWorld
 
 This project demonstrates use of apigee-config-maven-plugin and 
 apigee-deploy-maven-plugin to create API and config. The example project 
-performs the following steps in sequence. This sequence is inherent to the 
-platform and is managed using the sequencing of goals in pom.xml
+performs the following steps in sequence. This sequence is inherent to the platform and is managed using the sequencing of goals in pom.xml
   - Creates Caches
   - Creates Target servers
   - Deploy API
@@ -41,15 +40,15 @@ platform and is managed using the sequencing of goals in pom.xml
   - Creates Developers
   - Creates Developer Apps
 
-To use
-  - edit samples/src/edge/shared-pom.xml, and update org and env elements in 
-  all profiles to point to your Apigee org, env. You can add more profiles 
-  corresponding to each env in your org.
+To use, edit samples/src/edge/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
+
     ```
       <apigee.org>myorg</apigee.org>
       <apigee.env>test</apigee.env>
     ```
-  - run mvn
+
+Run mvn
+
     ```
     cd /samples/src/edge/HelloWorld
     export APIGEE_USER <your-apigee-username>
