@@ -35,6 +35,7 @@
       <url>git@github.com:apigee/apigee-config-maven-plugin.git</url>
       <connection>scm:git:https://github.com/apigee/apigee-config-maven-plugin.git</connection>
       <developerConnection>scm:git:ssh://git@github.com/apigee/apigee-config-maven-plugin.git</developerConnection>
+      <tag>apigee-config-maven-plugin-1.0</tag>
   </scm>
 
   <properties>
