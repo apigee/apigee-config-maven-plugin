@@ -6,6 +6,8 @@ A new config file edge.json is used to hold all the config data to create the co
 
 The org and env information comes from the maven profile and helps deploy an API and the associated config to any environment just by using the right profile name in the command line.
 
+This is the plugin source code project. Refer to samples folder for plugin usage samples.
+
 ## Plugin Usage
 ```
 mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.config.options=create
@@ -25,36 +27,25 @@ mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.
 The default action is no-action and it helps deploy APIs without affecting config.
 
 ## Sample project
-Refer to an example API project here. 
-```
-cd /samples/src/edge/HelloWorld
-```
+Refer to an example API project at [/samples/EdgeConfig](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/EdgeConfig)
 
-This project demonstrates use of apigee-config-maven-plugin and 
-apigee-deploy-maven-plugin to create API and config. The example project 
-performs the following steps in sequence. This sequence is inherent to the platform and is managed using the sequencing of goals in pom.xml
+This project demonstrates the creation and management of Apigee Edge Config and performs the following steps in sequence.
   - Creates Caches
   - Creates Target servers
-  - Deploy API
   - Creates API products
   - Creates Developers
   - Creates Developer Apps
 
-To use, edit samples/src/edge/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
+To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
-    ```
       <apigee.org>myorg</apigee.org>
       <apigee.env>test</apigee.env>
-    ```
 
-Run mvn
+To run jump to samples project `cd /samples/EdgeConfig` and run 
 
-    ```
-    cd /samples/src/edge/HelloWorld
-    export APIGEE_USER <your-apigee-username>
-    export APIGEE_PASS <your-apigee-password>
-    mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.config.options=create
-    ```
+`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
+
+Refer to [samples/APIandConfig/HelloWorld](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/APIandConfig/HelloWorld) for config management alongwith API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](https://github.com/apigee/apigee-config-maven-plugin/blob/master/samples/README.md)
 
 ## edge.json - v1.0
 edge.json contains all config entities to be created in Apigee Edge. It is organized into 3 scopes corresponding to the scopes of config entities that can be created in Edge.
@@ -85,11 +76,35 @@ Each config entity is the payload of the corresponding management API. The examp
 Config entities like "developerApps" are grouped under the developerId (email) they belong to.
 
 ## TODO
-  - Sample project that really uses config
-  - Sample project just for apigee-config-maven-plugin
   - KVM (encrypted data support)
   - Vault (encrypted data support)
   - Keystore, Truststore support
   - Virtual host (on-prem)
   - Custom roles
   - User role association
+
+More TODOs captured as [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
+
+## Contributing
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
+
+## History
+| Date | Version | Notes |
+| ----- | ------ | ----- |
+| 12 May 2016 | [Version 1.0](https://github.com/apigee/apigee-config-maven-plugin/releases/tag/apigee-config-maven-plugin-1.0) | First release. Supports Cache, Target Servers, API products, Developers, Developer Apps |
+
+## Authors
+  * Madhan Sadasivam
+  * Prashanth K S
+  * Meghdeep Basu
+
+## License
+* see [LICENSE](https://github.com/apigee/apigee-config-maven-plugin/blob/master/LICENSE) file
+
+## Support
+* Post a question in [Apigee community](https://community.apigee.com/index.html)
+* Create an issue
