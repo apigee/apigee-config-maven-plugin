@@ -1,10 +1,14 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create Apigee config like Cache, Target Server, Developers, Developer Apps that can be used alongwith the apigee-deploy-maven-plugin to deploy a working API in one go.
+Maven plugin to create/update Apigee config like Cache, Target Server, Developers and Developer Apps.
+
+Help teams follow API development best practices with Apigee.
+  * Prefer config like Cache resources, Target Servers over hard-coding them in the API
+  * Scope config to the lowest and least visibility level applicable (API, env, org)
+  * Track Config in source control
+  * Deploy changes to config alongwith API deployment
 
 A new config file edge.json is used to hold all the config data to create the corresponding entities in Apigee Edge.
-
-The org and env information comes from the maven profile and helps deploy an API and the associated config to any environment just by using the right profile name in the command line.
 
 This is the plugin source code project. Refer to samples folder for plugin usage samples.
 
@@ -15,12 +19,12 @@ mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.
   # Options
 
   -P<profile>
-    used to pick a profile in the parent pom.xml (shared-pom.xml in the example)
-  
+    used to pick a profile in the parent pom.xml (shared-pom.xml in the example). Apigee org and env
+    information comes from the profile.
 
   -Dapigee.config.options
     none   - No action (default)
-    create - Create when not found. Existing config is not refreshed even if it is different.
+    create - Create when not found. Pre-existing config is not refreshed even if it is different.
     update - Update when found; create when not found. Refreshes all config to reflect edge.json.
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
