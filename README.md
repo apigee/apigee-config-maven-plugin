@@ -19,12 +19,11 @@ mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.
   
 
   -Dapigee.config.options
-    overwrite settings
-    none   - default. No action
-    create - create when not found
-    update - update when found; create when not found
+    none   - No action (default)
+    create - Create when not found. Existing config is not refreshed even if it is different.
+    update - Update when found; create when not found. Refreshes all config to reflect edge.json.
 ```
-The default action is no-action and it helps deploy APIs without affecting config.
+The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
 ## Sample project
 Refer to an example API project at [/samples/EdgeConfig](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/EdgeConfig)
@@ -107,4 +106,4 @@ More TODOs captured as [issues](https://github.com/apigee/apigee-config-maven-pl
 
 ## Support
 * Post a question in [Apigee community](https://community.apigee.com/index.html)
-* Create an issue
+* Create an [issue](https://github.com/apigee/apigee-config-maven-plugin/issues/new)
