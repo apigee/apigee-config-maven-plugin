@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -190,6 +191,90 @@ public class ConfigReader {
                 out.put((String)pair.getKey(), outStrs);
             }
 
+        }
+        catch(IOException ie) {
+            logger.info(ie.getMessage());
+            throw ie;
+        }
+        catch(ParseException pe) {
+            logger.info(pe.getMessage());
+            throw pe;
+        }
+
+        return out;
+    }
+
+    /**
+     * List of APIs under apiConfig
+     */
+    public static Set<String> getAPIList(File configFile)
+            throws ParseException, IOException {
+
+        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+
+        JSONParser parser = new JSONParser();
+        ArrayList<String> out = null;    
+        try {
+            BufferedReader bufferedReader = new BufferedReader(
+                new java.io.FileReader(configFile));
+
+            JSONObject edgeConf     = (JSONObject)parser.parse(bufferedReader);
+            if (edgeConf == null) return null;
+
+            JSONObject scopeConf  = (JSONObject)edgeConf.get("apiConfig");
+            if (scopeConf == null) return null;
+
+            return scopeConf.keySet();
+
+            // while( keys.hasNext() ) {
+            //     out.add((String)keys.next());
+            // }
+        }
+        catch(IOException ie) {
+            logger.info(ie.getMessage());
+            throw ie;
+        }
+        catch(ParseException pe) {
+            logger.info(pe.getMessage());
+            throw pe;
+        }
+    }
+
+
+    /**
+     * API Config
+     * [ {apiProduct1}, {apiProduct2}, {apiProduct3} ]
+     */
+    public static List getAPIConfig(String env, 
+                                     File configFile, 
+                                     String api,
+                                     String resource)
+            throws ParseException, IOException {
+
+        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+
+        JSONParser parser = new JSONParser();
+        ArrayList out = null;    
+        try {
+            BufferedReader bufferedReader = new BufferedReader(
+                new java.io.FileReader(configFile));
+
+            JSONObject edgeConf     = (JSONObject)parser.parse(bufferedReader);
+            if (edgeConf == null) return null;
+
+            JSONObject scopeConf  = (JSONObject)edgeConf.get("apiConfig");
+            if (scopeConf == null) return null;
+
+            JSONObject  scopedConfigs      = (JSONObject)scopeConf.get(api);
+            if (scopedConfigs == null) return null;
+
+            JSONArray  resourceConfigs = (JSONArray)scopedConfigs.get(resource);
+            if (resourceConfigs == null) return null;
+
+            out = new ArrayList();
+            for (Object config: resourceConfigs) {              
+                out.add(((JSONObject)config).toJSONString());
+            }
         }
         catch(IOException ie) {
             logger.info(ie.getMessage());

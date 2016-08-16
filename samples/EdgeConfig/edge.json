@@ -2,57 +2,72 @@
     "version": "1.0",
     "envConfig": {
         "test": {
-          "targetServers": [
-              {
-                "name" : "SAPtarget",
-                "host" : "example.com",
-                "isEnabled" : true,
-                "port" : 8080,
-                "sSLInfo": {
-                    "enabled": "true",
-                    "clientAuthEnabled": "false",
-                    "keyStore": "keystore_name",
-                    "trustStore": "truststore_name",
-                    "keyAlias": "key_alias",
-                    "ignoreValidationErrors": "false"
+            "targetServers": [
+                {
+                    "name": "SAPtarget",
+                    "host": "example.com",
+                    "isEnabled": true,
+                    "port": 8080,
+                    "sSLInfo": {
+                        "enabled": "true",
+                        "clientAuthEnabled": "false",
+                        "keyStore": "keystore_name",
+                        "trustStore": "truststore_name",
+                        "keyAlias": "key_alias",
+                        "ignoreValidationErrors": "false"
+                    }
+                },
+                {
+                    "name": "ESBTarget",
+                    "host": "enterprise.com",
+                    "isEnabled": true,
+                    "port": 8080,
+                    "sSLInfo": {
+                        "enabled": "true",
+                        "clientAuthEnabled": "false",
+                        "keyStore": "keystore_name",
+                        "trustStore": "truststore_name",
+                        "keyAlias": "key_alias",
+                        "ignoreValidationErrors": "false"
+                    }
                 }
-              },
-              {
-                "name" : "ESBTarget",
-                "host" : "enterprise.com",
-                "isEnabled" : true,
-                "port" : 8080,
-                "sSLInfo": {
-                    "enabled": "true",
-                    "clientAuthEnabled": "false",
-                    "keyStore": "keystore_name",
-                    "trustStore": "truststore_name",
-                    "keyAlias": "key_alias",
-                    "ignoreValidationErrors": "false"
+            ],
+            "caches": [
+                {
+                    "name": "quote",
+                    "description": "products quote"
+                },
+                {
+                    "name": "userMetadata",
+                    "description": "user metadata cache",
+                    "diskSizeInMB": 0,
+                    "distributed": true,
+                    "inMemorySizeInKB": 0,
+                    "maxElementsInMemory": 0,
+                    "maxElementsOnDisk": 0,
+                    "overflowToDisk": false,
+                    "persistent": false
                 }
-              }
-          ],
-          "caches": [
-              {
-                "name": "quote",
-                "description": "products quote"
-              },
-              {
-                "name": "userMetadata",
-                "description": "user metadata cache",
-                "diskSizeInMB" : 0,
-                "distributed" : true,
-                "inMemorySizeInKB" : 0,
-                "maxElementsInMemory" : 0,
-                "maxElementsOnDisk" : 0,
-                "overflowToDisk" : false,
-                "persistent" : false
-              }            
-          ]
+            ],
+            "kvms": [
+                {
+                    "name": "backend_account_config",
+                    "entry": [
+                        {
+                            "name": "COMPANY",
+                            "value": "example.com"
+                        },
+                        {
+                            "name": "PREFIX",
+                            "value": "EXMPL"
+                        }
+                    ]
+                }
+            ]
         },
         "dev": {
-          "caches": [],
-          "targetServers": []
+            "caches": [],
+            "targetServers": []
         }
     },
     "orgConfig": {
@@ -96,13 +111,13 @@
                 "lastModifiedAt": 1394953446189,
                 "lastModifiedBy": "madhansivam@gmail.com",
                 "proxies": [
-                    "HelloWorld"
+                    "No-Target"
                 ],
                 "quota": "10000",
                 "quotaInterval": "1",
                 "quotaTimeUnit": "month",
                 "scopes": []
-            }        
+            }
         ],
         "developers": [
             {
@@ -124,7 +139,9 @@
             "john@example.com": [
                 {
                     "name": "coolapp",
-                    "apiProducts": [ "DecTraining" ],
+                    "apiProducts": [
+                        "weatherProduct"
+                    ],
                     "callbackUrl": "http://weatherapp.com",
                     "scopes": []
                 }
@@ -132,9 +149,58 @@
             "bill@unesco.com": [
                 {
                     "name": "oneapp",
-                    "apiProducts": [ "DecTraining" ],
+                    "apiProducts": [
+                        "weatherProduct"
+                    ],
                     "callbackUrl": "http://weatherapp.com",
                     "scopes": []
+                }
+            ]
+        },
+        "kvms": [
+            {
+                "name": "user_account_status",
+                "entry": [
+                    {
+                        "name": "ACTIVE",
+                        "value": "001"
+                    },
+                    {
+                        "name": "DISABLED",
+                        "value": "002"
+                    }
+                ]
+            },
+            {
+                "name": "validation_rules",
+                "entry": [
+                    {
+                        "name": "name_max_length",
+                        "value": "15"
+                    },
+                    {
+                        "name": "max_start_date",
+                        "value": "1460896299"
+                    }
+                ]
+            }
+        ]
+    },
+    "apiConfig": {
+        "No-Target": {
+            "kvms": [
+                {
+                    "name": "AUTH_ERROR_CODES",
+                    "entry": [
+                        {
+                            "name": "COMPANY",
+                            "value": "example.com"
+                        },
+                        {
+                            "name": "PREFIX",
+                            "value": "EXMPL"
+                        }
+                    ]
                 }
             ]
         }
