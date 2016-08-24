@@ -282,6 +282,11 @@ public class KVMMojo extends GatewayAbstractMojo
 
             // /* API scoped KVMs */
             Set<String> apis = getAPIList(logger, configFile);
+            if (apis == null || apis.size() == 0) {
+                logger.info("No API scoped KVM config found in edge.json.");
+                return;
+            }
+
             for (String api : apis) {
                 logger.info(api);
                 kvms = getAPIConfig(logger, configFile, api);
