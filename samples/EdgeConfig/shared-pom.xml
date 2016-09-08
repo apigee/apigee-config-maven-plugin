@@ -26,7 +26,7 @@
             <plugin>
                 <groupId>com.apigee.edge.config</groupId>
                 <artifactId>apigee-config-maven-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.1</version>
                 <executions>
                     <execution>
                         <id>create-config-cache</id>
@@ -81,8 +81,8 @@
                 <apigee.profile>test</apigee.profile>
                 <apigee.hosturl>https://api.enterprise.apigee.com</apigee.hosturl>
                 <apigee.apiversion>v1</apigee.apiversion>
-                <apigee.org>myorg</apigee.org>
-                <apigee.env>test</apigee.env>
+                <apigee.org>${org}</apigee.org>
+                <apigee.env>${env}</apigee.env>
                 <apigee.username>${username}</apigee.username>
                 <apigee.password>${password}</apigee.password>
             </properties>
@@ -93,8 +93,8 @@
                 <apigee.profile>dev</apigee.profile>
                 <apigee.hosturl>https://api.enterprise.apigee.com</apigee.hosturl>
                 <apigee.apiversion>v1</apigee.apiversion>
-                <apigee.org>myorg</apigee.org>
-                <apigee.env>dev</apigee.env>
+                <apigee.org>${org}</apigee.org>
+                <apigee.env>${env}</apigee.env>
                 <apigee.username>${username}</apigee.username>
                 <apigee.password>${password}</apigee.password>
             </properties>

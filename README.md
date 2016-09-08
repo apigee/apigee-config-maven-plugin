@@ -79,8 +79,8 @@ Each config entity is the payload of the corresponding management API. The examp
 Config entities like "developerApps" are grouped under the developerId (email) they belong to.
 
 ## TODO
-  - KVM (encrypted data support)
-  - Vault (encrypted data support)
+  - KVM (CPS)
+  - Vault
   - Keystore, Truststore support
   - Virtual host (on-prem)
   - Custom roles
