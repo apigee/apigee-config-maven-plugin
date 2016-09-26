@@ -62,7 +62,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update
+		none, create, update, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -118,11 +118,12 @@ public class APIProductMojo extends GatewayAbstractMojo
 		try {
 			List existingAPIProducts = null;
 			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create) {
+				buildOption != OPTIONS.create &&
+                buildOption != OPTIONS.sync) {
 				return;
 			}
 
-			logger.info("Retrieving existing environment API Products");
+			logger.info("Retrieving existing API Products");
 			existingAPIProducts = getAPIProduct(serverProfile);
 
 	        for (String product : products) {
@@ -133,14 +134,23 @@ public class APIProductMojo extends GatewayAbstractMojo
 	        	}
 
         		if (existingAPIProducts.contains(productName)) {
-		        	if (buildOption == OPTIONS.update) {
-						logger.info("API Product \"" + productName + 
-												"\" exists. Updating.");
-						updateAPIProduct(serverProfile,
-												productName, product);
-	        		} else {
-	        			logger.info("API Product \"" + productName + 
-	        									"\" already exists. Skipping.");
+                    switch (buildOption) {
+                        case update:
+        						logger.info("API Product \"" + productName + 
+				           					"\" exists. Updating.");
+		          				updateAPIProduct(serverProfile, productName, product);
+                                break;
+                        case create:
+	        			        logger.info("API Product \"" + productName + 
+        									"\" already exists. Skipping.");
+                                break;
+                        case sync:
+                                logger.info("API Product \"" + productName + 
+                                            "\" already exists. Deleting and recreating.");
+                                deleteAPIProduct(serverProfile, productName);
+                                logger.info("Creating API Product - " + productName);
+                                createAPIProduct(serverProfile, product);
+                                break;
 	        		}
 	        	} else {
 					logger.info("Creating API Product - " + productName);
@@ -269,6 +279,28 @@ public class APIProductMojo extends GatewayAbstractMojo
 
         } catch (HttpResponseException e) {
             logger.error("API Product update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteAPIProduct(ServerProfile profile,
+                                            String productName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+                                                        "apiproducts", 
+                                                        productName);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("API Product delete error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 

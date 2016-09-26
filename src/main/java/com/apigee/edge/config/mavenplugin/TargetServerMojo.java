@@ -62,7 +62,7 @@ public class TargetServerMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update
+		none, create, update, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -116,7 +116,8 @@ public class TargetServerMojo extends GatewayAbstractMojo
 		try {
 			List existingTargets = null;
 			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create) {
+				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.sync) {
 				return;
 			}
 
@@ -132,14 +133,24 @@ public class TargetServerMojo extends GatewayAbstractMojo
 	        	}
 
         		if (existingTargets.contains(targetName)) {
-		        	if (buildOption == OPTIONS.update) {
-						logger.info("Target Server \"" + targetName + 
-												"\" exists. Updating.");
-						updateTarget(serverProfile, targetName, target);
-	        		} else {
-	        			logger.info("Target Server \"" + targetName + 
-	        									"\" already exists. Skipping.");
-	        		}
+                    switch (buildOption) {
+                        case update:
+                            logger.info("Target Server \"" + targetName + 
+                                                    "\" exists. Updating.");
+                            updateTarget(serverProfile, targetName, target);
+                            break;
+                        case create:
+                            logger.info("Target Server \"" + targetName + 
+                                                "\" already exists. Skipping.");
+                            break;
+                        case sync:
+                            logger.info("Target Server \"" + targetName + 
+                                            "\" already exists. Deleting and recreating.");
+                            deleteTarget(serverProfile, targetName);
+                            logger.info("Creating Target Server - " + targetName);
+                            createTarget(serverProfile, target);
+                            break;
+                    }
 	        	} else {
 					logger.info("Creating Target Server - " + targetName);
 					createTarget(serverProfile, target);
@@ -268,6 +279,28 @@ public class TargetServerMojo extends GatewayAbstractMojo
 
         } catch (HttpResponseException e) {
             logger.error("Target Server update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteTarget(ServerProfile profile, 
+                                        String targetName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteEnvConfig(profile, 
+                                                        "targetservers", 
+                                                        targetName);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Target Server delete error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 

@@ -63,7 +63,7 @@ public class KVMMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update
+		none, create, update, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -119,7 +119,8 @@ public class KVMMojo extends GatewayAbstractMojo
         try {
             List existingKVM = getOrgKVM(serverProfile);
             if (buildOption != OPTIONS.update && 
-                buildOption != OPTIONS.create) {
+                buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.sync) {
                 return;
             }
 
@@ -131,13 +132,23 @@ public class KVMMojo extends GatewayAbstractMojo
                 }
 
                 if (existingKVM.contains(kvmName)) {
-                    if (buildOption == OPTIONS.update) {
-                        logger.info("Org KVM \"" + kvmName + 
-                                                "\" exists. Updating.");
-                        updateOrgKVM(serverProfile, kvmName, kvm);
-                    } else {
-                        logger.info("Org KVM \"" + kvmName + 
+                    switch (buildOption) {
+                        case update:
+                            logger.info("Org KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            updateOrgKVM(serverProfile, kvmName, kvm);
+                            break;
+                        case create:
+                            logger.info("Org KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
+                            break;
+                        case sync:
+                            logger.info("Org KVM \"" + kvmName + 
+                                "\" already exists. Deleting and recreating.");
+                            deleteOrgKVM(serverProfile, kvmName);
+                            logger.info("Creating Org KVM - " + kvmName);
+                            createOrgKVM(serverProfile, kvm);
+                            break;
                     }
                 } else {
                     logger.info("Creating Org KVM - " + kvmName);
@@ -158,7 +169,8 @@ public class KVMMojo extends GatewayAbstractMojo
         try {
             List existingKVM = getEnvKVM(serverProfile);
             if (buildOption != OPTIONS.update && 
-                buildOption != OPTIONS.create) {
+                buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.sync) {
                 return;
             }
 
@@ -170,13 +182,23 @@ public class KVMMojo extends GatewayAbstractMojo
                 }
 
                 if (existingKVM.contains(kvmName)) {
-                    if (buildOption == OPTIONS.update) {
-                        logger.info("Env KVM \"" + kvmName + 
-                                                "\" exists. Updating.");
-                        updateEnvKVM(serverProfile, kvmName, kvm);
-                    } else {
-                        logger.info("Env KVM \"" + kvmName + 
+                    switch (buildOption) {
+                        case update:
+                            logger.info("Env KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            updateEnvKVM(serverProfile, kvmName, kvm);
+                            break;
+                        case create:
+                            logger.info("Env KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
+                            break;
+                        case sync:
+                            logger.info("Env KVM \"" + kvmName + 
+                                "\" already exists. Deleting and recreating.");
+                            deleteEnvKVM(serverProfile, kvmName);
+                            logger.info("Creating Env KVM - " + kvmName);
+                            createEnvKVM(serverProfile, kvm);
+                            break;
                     }
                 } else {
                     logger.info("Creating Env KVM - " + kvmName);
@@ -197,7 +219,8 @@ public class KVMMojo extends GatewayAbstractMojo
 		try {
 			List existingKVM = getAPIKVM(serverProfile, api);
 			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create) {
+				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.sync) {
 				return;
 			}
 
@@ -209,14 +232,24 @@ public class KVMMojo extends GatewayAbstractMojo
 	        	}
 
         		if (existingKVM.contains(kvmName)) {
-		        	if (buildOption == OPTIONS.update) {
-						logger.info("API KVM \"" + kvmName + 
-												"\" exists. Updating.");
-						updateAPIKVM(serverProfile, api, kvmName, kvm);
-	        		} else {
-	        			logger.info("API KVM \"" + kvmName + 
-	        									"\" already exists. Skipping.");
-	        		}
+                    switch (buildOption) {
+                        case update:
+                            logger.info("API KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            updateAPIKVM(serverProfile, api, kvmName, kvm);
+                            break;
+                        case create:
+                            logger.info("API KVM \"" + kvmName + 
+                                                "\" already exists. Skipping.");
+                            break;
+                        case sync:
+                            logger.info("API KVM \"" + kvmName + 
+                                            "\" already exists. Deleting and recreating.");
+                            deleteAPIKVM(serverProfile, api, kvmName);
+                            logger.info("Creating API KVM - " + kvmName);
+                            createAPIKVM(serverProfile, api, kvm);
+                            break;
+                    }
 	        	} else {
 					logger.info("Creating API KVM - " + kvmName);
 					createAPIKVM(serverProfile, api, kvm);
@@ -288,7 +321,6 @@ public class KVMMojo extends GatewayAbstractMojo
             }
 
             for (String api : apis) {
-                logger.info(api);
                 kvms = getAPIConfig(logger, configFile, api);
                 if (kvms == null || kvms.size() == 0) {
                     logger.info(
@@ -414,6 +446,27 @@ public class KVMMojo extends GatewayAbstractMojo
         return "";
     }
 
+    public static String deleteOrgKVM(ServerProfile profile, String kvmEntry)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+                                                            "keyvaluemaps", 
+                                                            kvmEntry);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("KVM delete error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
     public static List getOrgKVM(ServerProfile profile)
             throws IOException {
 
@@ -489,6 +542,27 @@ public class KVMMojo extends GatewayAbstractMojo
         return "";
     }
 
+    public static String deleteEnvKVM(ServerProfile profile, 
+                                        String kvmEntry)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteEnvConfig(profile, 
+                                                    "keyvaluemaps", 
+                                                    kvmEntry);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("KVM delete error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
 
     public static List getEnvKVM(ServerProfile profile)
             throws IOException {
@@ -564,6 +638,30 @@ public class KVMMojo extends GatewayAbstractMojo
 
         } catch (HttpResponseException e) {
             logger.error("KVM update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteAPIKVM(ServerProfile profile, 
+                                        String api,
+                                        String kvmEntry)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteAPIConfig(profile, 
+                                                            api,
+                                                            "keyvaluemaps", 
+                                                            kvmEntry);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("KVM delete error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 

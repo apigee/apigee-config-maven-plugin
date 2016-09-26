@@ -62,7 +62,7 @@ public class CacheMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update
+		none, create, update, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -119,7 +119,8 @@ public class CacheMojo extends GatewayAbstractMojo
 		try {
 			List existingCaches = null;
 			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create) {
+				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.sync) {
 				return;
 			}
 
@@ -135,15 +136,24 @@ public class CacheMojo extends GatewayAbstractMojo
 	        	}
 
         		if (existingCaches.contains(cacheName)) {
-		        	if (buildOption == OPTIONS.update) {
-						logger.info("Cache \"" + cacheName + 
-												"\" exists. Updating.");
-						updateCache(serverProfile,
-												cacheName, cache);
-	        		} else {
-	        			logger.info("Cache \"" + cacheName + 
-	        									"\" already exists. Skipping.");
-	        		}
+                    switch (buildOption) {
+                        case update:
+                            logger.info("Cache \"" + cacheName + 
+                                                    "\" exists. Updating.");
+                            updateCache(serverProfile, cacheName, cache);
+                            break;
+                        case create:
+                            logger.info("Cache \"" + cacheName + 
+                                                "\" already exists. Skipping.");
+                            break;
+                        case sync:
+                            logger.info("Cache \"" + cacheName + 
+                                                "\" already exists. Deleting and recreating.");
+                            deleteCache(serverProfile, cacheName);
+                            logger.info("Creating Cache - " + cacheName);
+                            createCache(serverProfile, cache);
+                            break;
+                    }
 	        	} else {
 					logger.info("Creating Cache - " + cacheName);
 					createCache(serverProfile, cache);
@@ -267,6 +277,27 @@ public class CacheMojo extends GatewayAbstractMojo
 
         } catch (HttpResponseException e) {
             logger.error("Cache update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteCache(ServerProfile profile, 
+                                        String cacheName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteEnvConfig(profile, "caches", 
+                                                    cacheName);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Cache delete error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 

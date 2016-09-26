@@ -62,7 +62,7 @@ public class DeveloperMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update
+		none, create, update, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -118,7 +118,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
 		try {
 			List existingDevelopers = null;
 			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create) {
+				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.sync) {
 				return;
 			}
 
@@ -133,15 +134,25 @@ public class DeveloperMojo extends GatewayAbstractMojo
 	        	}
 
         		if (existingDevelopers.contains(developerId)) {
-		        	if (buildOption == OPTIONS.update) {
-						logger.info("Developer \"" + developerId + 
-												"\" exists. Updating.");
-						updateDeveloper(serverProfile,
-												developerId, developer);
-	        		} else {
-	        			logger.info("Developer \"" + developerId + 
-	        									"\" already exists. Skipping.");
-	        		}
+                    switch (buildOption) {
+                        case update:
+                            logger.info("Developer \"" + developerId + 
+                                                    "\" exists. Updating.");
+                            updateDeveloper(serverProfile,
+                                                    developerId, developer);
+                            break;
+                        case create:
+                            logger.info("Developer \"" + developerId + 
+                                                "\" already exists. Skipping.");
+                            break;
+                        case sync:
+                            logger.info("Developer \"" + developerId + 
+                                    "\" already exists. Deleting and recreating.");
+                            deleteDeveloper(serverProfile, developerId);
+                            logger.info("Creating Developer - " + developerId);
+                            createDeveloper(serverProfile, developer);
+                                break;
+                    }
 	        	} else {
 					logger.info("Creating Developer - " + developerId);
 					createDeveloper(serverProfile, developer);
@@ -269,6 +280,28 @@ public class DeveloperMojo extends GatewayAbstractMojo
 
         } catch (HttpResponseException e) {
             logger.error("Developer update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteDeveloper(ServerProfile profile, 
+                                        String developerId)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+                                                        "developers", 
+                                                        developerId);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Developer delete error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 

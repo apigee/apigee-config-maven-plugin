@@ -1,10 +1,10 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create/update Apigee config like Cache, Target Server, Developers and Developer Apps.
+Maven plugin to create/update Apigee config like Cache, KVM, Target Server, API Products, Developers and Developer Apps.
 
 Help teams follow API development best practices with Apigee.
-  * Prefer config like Cache resources, Target Servers over hard-coding them in the API
-  * Scope config to the lowest and least visibility level applicable (API, env, org)
+  * Prefer config like Cache, Target Servers over hard-coded alternatives in the API
+  * Scope config to the least visibility level required (API, env, org)
   * Track Config in source control
   * Deploy changes to config alongwith API deployment
 
@@ -24,8 +24,9 @@ mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.
 
   -Dapigee.config.options
     none   - No action (default)
-    create - Create when not found. Pre-existing config is not refreshed even if it is different.
+    create - Create when not found. Pre-existing config is NOT updated even if it is different.
     update - Update when found; create when not found. Refreshes all config to reflect edge.json.
+    sync   - Delete and recreate.
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
@@ -35,6 +36,7 @@ Refer to an example API project at [/samples/EdgeConfig](https://github.com/apig
 This project demonstrates the creation and management of Apigee Edge Config and performs the following steps in sequence.
   - Creates Caches
   - Creates Target servers
+  - Creates KVM
   - Creates API products
   - Creates Developers
   - Creates Developer Apps

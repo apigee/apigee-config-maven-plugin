@@ -63,7 +63,7 @@ public class AppMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update
+		none, create, update, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -119,7 +119,8 @@ public class AppMojo extends GatewayAbstractMojo
 		try {
 			List existingApps = null;
 			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create) {
+                buildOption != OPTIONS.create &&
+				buildOption != OPTIONS.sync) {
 				return;
 			}
 
@@ -137,15 +138,25 @@ public class AppMojo extends GatewayAbstractMojo
     	        	}
 
             		if (existingApps.contains(appName)) {
-    		        	if (buildOption == OPTIONS.update) {
-    						logger.info("App \"" + appName + 
-    												"\" exists. Updating.");
-    						updateApp(serverProfile, developerId,
-    												appName, app);
-    	        		} else {
-    	        			logger.info("App \"" + appName + 
-    	        								"\" already exists. Skipping.");
-    	        		}
+                        switch (buildOption) {
+                            case update:
+                                logger.info("App \"" + appName + 
+                                                        "\" exists. Updating.");
+                                updateApp(serverProfile, developerId,
+                                                        appName, app);
+                                break;
+                            case create:
+                                logger.info("App \"" + appName + 
+                                                "\" already exists. Skipping.");
+                                break;
+                            case sync:
+                                logger.info("App \"" + appName + 
+                                                "\" already exists. Deleting and recreating.");
+                                deleteApp(serverProfile, developerId, appName);
+                                logger.info("Creating App - " + appName);
+                                createApp(serverProfile, developerId, app);
+                                break;
+                        }
     	        	} else {
     					logger.info("Creating App - " + appName);
     					createApp(serverProfile, developerId, app);
@@ -278,6 +289,29 @@ public class AppMojo extends GatewayAbstractMojo
 
         } catch (HttpResponseException e) {
             logger.error("App update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteApp(ServerProfile profile,
+                                    String developerId, 
+                                    String appName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+                                        "developers/" + developerId + "/apps", 
+                                        appName);
+        try {
+            
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("App delete error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 
