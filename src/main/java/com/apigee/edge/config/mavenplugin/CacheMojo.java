@@ -36,6 +36,7 @@ import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
@@ -62,7 +63,7 @@ public class CacheMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update, sync
+		none, create, update, delete, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -120,6 +121,7 @@ public class CacheMojo extends GatewayAbstractMojo
 			List existingCaches = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.delete && 
                 buildOption != OPTIONS.sync) {
 				return;
 			}
@@ -146,6 +148,11 @@ public class CacheMojo extends GatewayAbstractMojo
                             logger.info("Cache \"" + cacheName + 
                                                 "\" already exists. Skipping.");
                             break;
+                        case delete:
+                            logger.info("Cache \"" + cacheName + 
+                                                "\" already exists. Deleting.");
+                            deleteCache(serverProfile, cacheName);
+                            break;
                         case sync:
                             logger.info("Cache \"" + cacheName + 
                                                 "\" already exists. Deleting and recreating.");
@@ -155,8 +162,18 @@ public class CacheMojo extends GatewayAbstractMojo
                             break;
                     }
 	        	} else {
-					logger.info("Creating Cache - " + cacheName);
-					createCache(serverProfile, cache);
+                    switch (buildOption) {
+                        case create:
+                        case sync:
+                        case update:
+                            logger.info("Creating Cache - " + cacheName);
+                            createCache(serverProfile, cache);
+                            break;
+                        case delete:
+                            logger.info("Cache \"" + cacheName + 
+                                            "\" does not exist. Skipping.");
+                            break;
+                    }
 	        	}
 			}
 		
@@ -308,6 +325,7 @@ public class CacheMojo extends GatewayAbstractMojo
             throws IOException {
 
         HttpResponse response = RestUtil.getEnvConfig(profile, "caches");
+        if(response == null) return new ArrayList();
         JSONArray caches = null;
         try {
             logger.debug("output " + response.getContentType());

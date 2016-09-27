@@ -192,6 +192,7 @@ public class RestUtil {
         try {
             response = restRequest.execute();
         } catch (HttpResponseException e) {
+            if (e.getStatusCode() == 404) return null;
             logger.error(e.getMessage());
             throw new IOException(e.getMessage());
         }
@@ -325,6 +326,7 @@ public class RestUtil {
         try {
             response = restRequest.execute();
         } catch (HttpResponseException e) {
+            if (e.getStatusCode() == 404) return null;
             logger.error(e.getMessage());
             throw new IOException(e.getMessage());
         }
@@ -467,6 +469,7 @@ public class RestUtil {
         try {
             response = restRequest.execute();
         } catch (HttpResponseException e) {
+            if (e.getStatusCode() == 404) return null;
             logger.error(e.getMessage());
             throw new IOException(e.getMessage());
         }

@@ -36,6 +36,7 @@ import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
@@ -62,7 +63,7 @@ public class TargetServerMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update, sync
+		none, create, update, delete, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -117,6 +118,7 @@ public class TargetServerMojo extends GatewayAbstractMojo
 			List existingTargets = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.delete && 
                 buildOption != OPTIONS.sync) {
 				return;
 			}
@@ -143,6 +145,11 @@ public class TargetServerMojo extends GatewayAbstractMojo
                             logger.info("Target Server \"" + targetName + 
                                                 "\" already exists. Skipping.");
                             break;
+                        case delete:
+                            logger.info("Target Server \"" + targetName + 
+                                            "\" already exists. Deleting.");
+                            deleteTarget(serverProfile, targetName);
+                            break;
                         case sync:
                             logger.info("Target Server \"" + targetName + 
                                             "\" already exists. Deleting and recreating.");
@@ -152,8 +159,18 @@ public class TargetServerMojo extends GatewayAbstractMojo
                             break;
                     }
 	        	} else {
-					logger.info("Creating Target Server - " + targetName);
-					createTarget(serverProfile, target);
+                    switch (buildOption) {
+                        case create:
+                        case sync:
+                        case update:
+                            logger.info("Creating Target Server - " + targetName);
+                            createTarget(serverProfile, target);
+                            break;
+                        case delete:
+                            logger.info("Target Server \"" + targetName + 
+                                        "\" does not exist. Skipping.");
+                            break;
+                    }
 	        	}
 			}
 		
@@ -311,6 +328,7 @@ public class TargetServerMojo extends GatewayAbstractMojo
             throws IOException {
 
         HttpResponse response = RestUtil.getEnvConfig(profile, "targetservers");
+        if(response == null) return new ArrayList();
         JSONArray targets = null;
         try {
             logger.debug("output " + response.getContentType());

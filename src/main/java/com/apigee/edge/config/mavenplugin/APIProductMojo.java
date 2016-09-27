@@ -35,6 +35,7 @@ import com.google.gson.JsonParseException;
 
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -62,7 +63,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update, sync
+		none, create, update, delete, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -119,6 +120,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 			List existingAPIProducts = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create &&
+                buildOption != OPTIONS.delete &&
                 buildOption != OPTIONS.sync) {
 				return;
 			}
@@ -136,25 +138,40 @@ public class APIProductMojo extends GatewayAbstractMojo
         		if (existingAPIProducts.contains(productName)) {
                     switch (buildOption) {
                         case update:
-        						logger.info("API Product \"" + productName + 
-				           					"\" exists. Updating.");
-		          				updateAPIProduct(serverProfile, productName, product);
-                                break;
+    						logger.info("API Product \"" + productName + 
+			           					"\" exists. Updating.");
+	          				updateAPIProduct(serverProfile, productName, product);
+                            break;
                         case create:
-	        			        logger.info("API Product \"" + productName + 
-        									"\" already exists. Skipping.");
-                                break;
+        			        logger.info("API Product \"" + productName + 
+    									"\" already exists. Skipping.");
+                            break;
+                        case delete:
+                            logger.info("API Product \"" + productName + 
+                                        "\" already exists. Deleting.");
+                            deleteAPIProduct(serverProfile, productName);
+                            break;
                         case sync:
-                                logger.info("API Product \"" + productName + 
-                                            "\" already exists. Deleting and recreating.");
-                                deleteAPIProduct(serverProfile, productName);
-                                logger.info("Creating API Product - " + productName);
-                                createAPIProduct(serverProfile, product);
-                                break;
+                            logger.info("API Product \"" + productName + 
+                                        "\" already exists. Deleting and recreating.");
+                            deleteAPIProduct(serverProfile, productName);
+                            logger.info("Creating API Product - " + productName);
+                            createAPIProduct(serverProfile, product);
+                            break;
 	        		}
 	        	} else {
-					logger.info("Creating API Product - " + productName);
-					createAPIProduct(serverProfile, product);
+                    switch (buildOption) {
+                        case create:
+                        case sync:
+                        case update:
+                            logger.info("Creating API Product - " + productName);
+                            createAPIProduct(serverProfile, product);
+                            break;
+                        case delete:
+                            logger.info("API Product \"" + productName + 
+                                        "\" does not exist. Skipping.");
+                            break;
+                    }
 	        	}
 			}
 		
@@ -312,6 +329,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 
         HttpResponse response = RestUtil.getOrgConfig(profile, 
                                                     "apiproducts");
+        if(response == null) return new ArrayList();
         JSONArray products = null;
         try {
             logger.debug("output " + response.getContentType());

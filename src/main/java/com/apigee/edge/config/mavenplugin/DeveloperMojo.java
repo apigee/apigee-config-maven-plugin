@@ -36,6 +36,7 @@ import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
@@ -62,7 +63,7 @@ public class DeveloperMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update, sync
+		none, create, update, delete, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -119,6 +120,7 @@ public class DeveloperMojo extends GatewayAbstractMojo
 			List existingDevelopers = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create && 
+                buildOption != OPTIONS.delete && 
                 buildOption != OPTIONS.sync) {
 				return;
 			}
@@ -145,6 +147,11 @@ public class DeveloperMojo extends GatewayAbstractMojo
                             logger.info("Developer \"" + developerId + 
                                                 "\" already exists. Skipping.");
                             break;
+                        case delete:
+                            logger.info("Developer \"" + developerId + 
+                                    "\" already exists. Deleting.");
+                            deleteDeveloper(serverProfile, developerId);
+                            break;
                         case sync:
                             logger.info("Developer \"" + developerId + 
                                     "\" already exists. Deleting and recreating.");
@@ -154,8 +161,18 @@ public class DeveloperMojo extends GatewayAbstractMojo
                                 break;
                     }
 	        	} else {
-					logger.info("Creating Developer - " + developerId);
-					createDeveloper(serverProfile, developer);
+                    switch (buildOption) {
+                        case create:
+                        case sync:
+                        case update:
+                            logger.info("Creating Developer - " + developerId);
+                            createDeveloper(serverProfile, developer);
+                            break;
+                        case delete:
+                            logger.info("Developer \"" + developerId + 
+                                        "\" does not exist. Skipping.");
+                            break;
+                    }
 	        	}
 			}
 		
@@ -311,8 +328,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
     public static List getDeveloper(ServerProfile profile)
             throws IOException {
 
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
-                                                    "developers");
+        HttpResponse response = RestUtil.getOrgConfig(profile, "developers");
+        if(response == null) return new ArrayList();
         JSONArray developers = null;
         try {
             logger.debug("output " + response.getContentType());

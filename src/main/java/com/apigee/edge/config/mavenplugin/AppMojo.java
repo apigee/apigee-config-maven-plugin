@@ -36,6 +36,7 @@ import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -63,7 +64,7 @@ public class AppMojo extends GatewayAbstractMojo
 	"************************************************************************";
 
 	enum OPTIONS {
-		none, create, update, sync
+		none, create, update, delete, sync
 	}
 
 	OPTIONS buildOption = OPTIONS.none;
@@ -120,7 +121,8 @@ public class AppMojo extends GatewayAbstractMojo
 			List existingApps = null;
 			if (buildOption != OPTIONS.update && 
                 buildOption != OPTIONS.create &&
-				buildOption != OPTIONS.sync) {
+				buildOption != OPTIONS.delete &&
+                buildOption != OPTIONS.sync) {
 				return;
 			}
 
@@ -149,6 +151,11 @@ public class AppMojo extends GatewayAbstractMojo
                                 logger.info("App \"" + appName + 
                                                 "\" already exists. Skipping.");
                                 break;
+                            case delete:
+                                logger.info("App \"" + appName + 
+                                                "\" already exists. Deleting.");
+                                deleteApp(serverProfile, developerId, appName);
+                                break;
                             case sync:
                                 logger.info("App \"" + appName + 
                                                 "\" already exists. Deleting and recreating.");
@@ -158,8 +165,18 @@ public class AppMojo extends GatewayAbstractMojo
                                 break;
                         }
     	        	} else {
-    					logger.info("Creating App - " + appName);
-    					createApp(serverProfile, developerId, app);
+                        switch (buildOption) {
+                            case create:
+                            case sync:
+                            case update:
+                                logger.info("Creating App - " + appName);
+                                createApp(serverProfile, developerId, app);
+                                break;
+                            case delete:
+                                logger.info("App \"" + appName + 
+                                                "\" does not exist. Skipping.");
+                                break;
+                        }
     	        	}
     			}
             }
@@ -323,6 +340,8 @@ public class AppMojo extends GatewayAbstractMojo
 
         HttpResponse response = RestUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
+        if(response == null) return new ArrayList();
+
         JSONArray apps = null;
         try {
             logger.debug("output " + response.getContentType());
