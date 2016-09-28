@@ -14,7 +14,7 @@ This is the plugin source code project. Refer to samples folder for plugin usage
 
 ## Plugin Usage
 ```
-mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.config.options=create
+mvn install -Ptest -Dapigee.config.options=create
 
   # Options
 
@@ -26,8 +26,20 @@ mvn install -Ptest -Dusername=${APIGEE_USER} -Dpassword=${APIGEE_PASS} -Dapigee.
     none   - No action (default)
     create - Create when not found. Pre-existing config is NOT updated even if it is different.
     update - Update when found; create when not found. Refreshes all config to reflect edge.json.
-    sync   - Delete all config listed in edge.json.
+    delete - Delete all config listed in edge.json.
     sync   - Delete and recreate.
+
+  # Individual goals
+  You can also work with individual config class using goals directly. The available goals are,
+  apiproducts 
+  apps
+  caches
+  developers
+  keyvaluemaps
+  targetservers
+
+  To delete all apps mentioned in edge.json use the following.
+  mvn apigee-config:apps -Ptest -Dapigee.config.options=delete
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
