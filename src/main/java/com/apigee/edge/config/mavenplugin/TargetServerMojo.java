@@ -199,7 +199,6 @@ public class TargetServerMojo extends GatewayAbstractMojo
 		}
 
 		try {
-			fixOSXNonProxyHosts();
 			
 			init();
 

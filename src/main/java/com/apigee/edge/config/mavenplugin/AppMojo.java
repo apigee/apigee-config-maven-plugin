@@ -206,7 +206,6 @@ public class AppMojo extends GatewayAbstractMojo
 		}
 
 		try {
-			fixOSXNonProxyHosts();
 			
 			init();
 

@@ -330,7 +330,6 @@ public class KVMMojo extends GatewayAbstractMojo
 		}
 
 		try {
-			fixOSXNonProxyHosts();
 			
 			init();
 

@@ -202,7 +202,6 @@ public class CacheMojo extends GatewayAbstractMojo
 		}
 
 		try {
-			fixOSXNonProxyHosts();
 			
 			init();
 

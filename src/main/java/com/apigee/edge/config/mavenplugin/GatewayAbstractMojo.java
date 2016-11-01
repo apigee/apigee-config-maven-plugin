@@ -214,18 +214,4 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.skip = skip;
 	}
 	
-
-	protected void fixOSXNonProxyHosts() {
-		
-		// This is required to work around a Mac OS X bug.  Probably would be better to be more selective about this.  Only override if we're
-		// actually on OS X.  Or look at the value and only unset if it contains the problematic wildcard value.
-		try {
-			System.setProperty("http.nonProxyHosts", "");
-		}
-		catch (RuntimeException e) {
-			// just try to continue
-			getLog().error(e);
-		}
-	}
-	
 }

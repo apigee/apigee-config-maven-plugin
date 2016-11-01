@@ -200,7 +200,6 @@ public class APIProductMojo extends GatewayAbstractMojo
 		}
 
 		try {
-			fixOSXNonProxyHosts();
 			
 			init();
 
