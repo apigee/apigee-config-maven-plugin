@@ -93,15 +93,15 @@ Each config entity is the payload of the corresponding management API. The examp
 
 Config entities like "developerApps" are grouped under the developerId (email) they belong to.
 
-## TODO
+## ROADMAP
+  - Support management API OAuth and MFA
   - KVM (CPS)
-  - Vault
   - Keystore, Truststore support
   - Virtual host (on-prem)
   - Custom roles
   - User role association
 
-More TODOs captured as [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
+Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
 ## Contributing
 1. Fork it!
