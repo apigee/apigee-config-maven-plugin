@@ -105,8 +105,7 @@ public class ConfigReader {
      * Returns List of
      * [ {apiProduct1}, {apiProduct2}, {apiProduct3} ]
      */
-    public static List getConfig(String env, 
-                                 File configFile, 
+    public static List getConfig(File configFile, 
                                  String scope,
                                  String resource)
             throws ParseException, IOException {
@@ -152,8 +151,7 @@ public class ConfigReader {
      * Returns Map of
      * <developerId> => [ {app1}, {app2}, {app3} ]
      */
-    public static Map<String, List<String>> getConfigWithId(String env, 
-                                                             File configFile, 
+    public static Map<String, List<String>> getConfigWithId(File configFile, 
                                                              String scope,
                                                              String resource)
             throws ParseException, IOException {

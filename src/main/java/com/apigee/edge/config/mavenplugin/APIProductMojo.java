@@ -232,8 +232,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 			throws MojoExecutionException {
 		logger.debug("Retrieving config from edge.json");
 		try {
-			return ConfigReader.getConfig(serverProfile.getEnvironment(), 
-    										configFile,
+			return ConfigReader.getConfig(configFile,
                                             "orgConfig",
                                             "apiProducts");
 		} catch (Exception e) {

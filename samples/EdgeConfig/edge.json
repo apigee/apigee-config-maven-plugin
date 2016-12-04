@@ -71,6 +71,18 @@
         }
     },
     "orgConfig": {
+        "maskconfigs": [
+            {
+                "name": "default",
+                "jSONPathsFault": [
+                    "$.store.book[*].author"
+                ],
+                "variables": [
+                    "request.header.user-agent",
+                    "request.formparam.password"
+                ]
+            }
+        ],
         "apiProducts": [
             {
                 "name": "weatherProduct",
@@ -200,6 +212,17 @@
                             "name": "PREFIX",
                             "value": "EXMPL"
                         }
+                    ]
+                }
+            ],
+            "maskconfigs": [
+                {
+                    "name": "default",
+                    "xPathsRequest": [
+                        "/apigee:Greeting/apigee:User"
+                    ],
+                    "xPathsResponse": [
+                        "/apigee:Greeting/apigee:User"
                     ]
                 }
             ]

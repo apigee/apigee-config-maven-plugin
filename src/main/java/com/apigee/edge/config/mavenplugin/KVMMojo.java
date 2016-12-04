@@ -50,7 +50,7 @@ import org.json.simple.parser.ParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create KVM in Apigee EDGE.
- * scope: env
+ * scope: org, env, api
  *
  * @author madhan.sadasivam
  * @goal keyvaluemaps
@@ -353,8 +353,7 @@ public class KVMMojo extends GatewayAbstractMojo
             }
 
             /* env scoped KVMs */
-            scope = "envConfig";
-            kvms = getEnvConfig(logger, configFile, scope);
+            kvms = getEnvConfig(logger, configFile);
             if (kvms == null || kvms.size() == 0) {
                 logger.info("No env scoped KVM config found in edge.json.");
             } else {
@@ -408,14 +407,26 @@ public class KVMMojo extends GatewayAbstractMojo
         }
     }
 
-	private List getEnvConfig(Logger logger, File configFile, String scope) 
+	private List getEnvConfig(Logger logger, File configFile) 
 			throws MojoExecutionException {
-		logger.debug("Retrieving config from edge.json");
 		try {
-            return ConfigReader.getEnvConfig(serverProfile.getEnvironment(), 
+            /* envProfileConfig takes priority over envConfig */
+            logger.info("Retrieving env profile config " + serverProfile.getProfileId());
+            List envConfigs = ConfigReader.getEnvConfig(
+                                                serverProfile.getProfileId(), 
                                                 configFile,
-                                                scope,
+                                                "envProfileConfig",
                                                 "kvms");
+            if (envConfigs == null || envConfigs.size() == 0) {
+                logger.info("Env profile config not found. Retrieving env config " + 
+                                                serverProfile.getEnvironment());
+                envConfigs = ConfigReader.getEnvConfig(
+                                    serverProfile.getEnvironment(), 
+                                    configFile,
+                                    "envConfig",
+                                    "kvms");
+            }
+            return envConfigs;
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage());
 		}
@@ -425,10 +436,9 @@ public class KVMMojo extends GatewayAbstractMojo
             throws MojoExecutionException {
         logger.debug("Retrieving config from edge.json");
         try {
-            return ConfigReader.getConfig(serverProfile.getEnvironment(), 
-                                                configFile,
-                                                scope,
-                                                "kvms");
+            return ConfigReader.getConfig(configFile,
+                                            scope,
+                                            "kvms");
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage());
         }

@@ -215,7 +215,7 @@ public class CacheMojo extends GatewayAbstractMojo
                             "Apigee environment not found in profile");
             }
 
-			List caches = getConfig(logger, configFile);			
+			List caches = getEnvConfig(logger, configFile);			
 			if (caches == null || caches.size() == 0) {
 				logger.info("No Cache config found in edge.json.");
                 return;
@@ -230,14 +230,26 @@ public class CacheMojo extends GatewayAbstractMojo
 		}
 	}
 
-	private List getConfig(Logger logger, File configFile) 
+	private List getEnvConfig(Logger logger, File configFile) 
 			throws MojoExecutionException {
-		logger.debug("Retrieving config from edge.json");
 		try {
-			return ConfigReader.getEnvConfig(serverProfile.getEnvironment(), 
+            /* envProfileConfig takes priority over envConfig */
+            logger.info("Retrieving env profile config " + serverProfile.getProfileId());
+            List envConfigs = ConfigReader.getEnvConfig(
+                                                serverProfile.getProfileId(), 
         										configFile,
-                                                "envConfig",
+                                                "envProfileConfig",
                                                 "caches");
+            if (envConfigs == null || envConfigs.size() == 0) {
+                logger.info("Env profile config not found. Retrieving env config " + 
+                                                serverProfile.getEnvironment());
+                envConfigs = ConfigReader.getEnvConfig(
+                                    serverProfile.getEnvironment(), 
+                                    configFile,
+                                    "envConfig",
+                                    "caches");
+            }
+            return envConfigs;
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage());
 		}

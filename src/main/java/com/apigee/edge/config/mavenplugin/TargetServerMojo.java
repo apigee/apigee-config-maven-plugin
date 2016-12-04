@@ -212,7 +212,7 @@ public class TargetServerMojo extends GatewayAbstractMojo
                             "Apigee environment not found in profile");
             }
 
-			List targets = getConfig(logger, configFile);			
+			List targets = getEnvConfig(logger, configFile);			
 			if (targets == null || targets.size() == 0) {
 				logger.info(
                     "No Target server config found in edge.json.");
@@ -228,14 +228,26 @@ public class TargetServerMojo extends GatewayAbstractMojo
 		}
 	}
 
-	private List getConfig(Logger logger, File configFile) 
+	private List getEnvConfig(Logger logger, File configFile) 
 			throws MojoExecutionException {
-		logger.debug("Retrieving config from edge.json");
 		try {
-            return ConfigReader.getEnvConfig(serverProfile.getEnvironment(), 
+            /* envProfileConfig takes priority over envConfig */
+            logger.info("Retrieving env profile config " + serverProfile.getProfileId());
+            List envConfigs = ConfigReader.getEnvConfig(
+                                                serverProfile.getProfileId(), 
                                                 configFile,
-                                                "envConfig",
+                                                "envProfileConfig",
                                                 "targetServers");
+            if (envConfigs == null || envConfigs.size() == 0) {
+                logger.info("Env profile config not found. Retrieving env config " + 
+                                                serverProfile.getEnvironment());
+                envConfigs = ConfigReader.getEnvConfig(
+                                    serverProfile.getEnvironment(), 
+                                    configFile,
+                                    "envConfig",
+                                    "targetServers");
+            }
+            return envConfigs;
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage());
 		}

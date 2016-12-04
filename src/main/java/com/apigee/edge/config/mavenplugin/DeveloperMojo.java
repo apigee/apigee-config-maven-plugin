@@ -233,8 +233,7 @@ public class DeveloperMojo extends GatewayAbstractMojo
 			throws MojoExecutionException {
 		logger.debug("Retrieving config from edge.json");
 		try {
-			return ConfigReader.getConfig(serverProfile.getEnvironment(), 
-    										configFile,
+			return ConfigReader.getConfig(configFile,
                                             "orgConfig",
                                             "developers");
 		} catch (Exception e) {
