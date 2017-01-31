@@ -13,7 +13,7 @@
   <packaging>maven-plugin</packaging>
   <name>apigee-config-maven-plugin</name>
   <description>Plugin to manage configuration in Apigee</description>
-  <url>https://github.com/apigee/apigee-config-maven-plugin</url>
+  <url>https://github.com/IanWillard/apigee-config-maven-plugin</url>
 
   <licenses>
     <license>
