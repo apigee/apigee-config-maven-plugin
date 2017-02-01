@@ -29,6 +29,9 @@ mvn install -Ptest -Dapigee.config.options=create
     delete - Delete all config listed in edge.json.
     sync   - Delete and recreate.
 
+  -Dapigee.config.dir=<dir>
+     dir containing individual json files.
+
   # Individual goals
   You can also work with individual config class using goals directly. The available goals are,
   apiproducts 
@@ -37,6 +40,7 @@ mvn install -Ptest -Dapigee.config.options=create
   developers
   kvms
   targetservers
+  maskconfigs
 
   To delete all apps mentioned in edge.json use the following.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=delete
@@ -110,15 +114,9 @@ Please send feature requests using [issues](https://github.com/apigee/apigee-con
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## History
-| Date | Version | Notes |
-| ----- | ------ | ----- |
-| 12 May 2016 | [Version 1.0](https://github.com/apigee/apigee-config-maven-plugin/releases/tag/apigee-config-maven-plugin-1.0) | First release. Supports Cache, Target Servers, API products, Developers, Developer Apps |
-
-## Authors
-  * Madhan Sadasivam
-  * Prashanth K S
-  * Meghdeep Basu
+## Latest Release
+[Version 1.1.3](https://github.com/apigee/apigee-config-maven-plugin/releases/tag/apigee-config-maven-plugin-1.1.3) - Adds support for individual config files and maskconfig.
+[Older Releases](https://github.com/apigee/apigee-config-maven-plugin/releases)
 
 ## License
 * see [LICENSE](https://github.com/apigee/apigee-config-maven-plugin/blob/master/LICENSE) file
@@ -126,3 +124,7 @@ Please send feature requests using [issues](https://github.com/apigee/apigee-con
 ## Support
 * Post a question in [Apigee community](https://community.apigee.com/index.html)
 * Create an [issue](https://github.com/apigee/apigee-config-maven-plugin/issues/new)
+
+## Credits
+Madhan Sadasivam, Prashanth K S, Meghdeep Basu
+
