@@ -1,22 +1,22 @@
 {
- "john@example.com": [
-  {
-   "name": "coolapp",
-   "apiProducts": [
-    "weatherProduct"
-   ],
-   "callbackUrl": "http://weatherapp.com",
-   "scopes": []
-  }
- ],
- "bill@unesco.com": [
-  {
-   "name": "oneapp",
-   "apiProducts": [
-    "weatherProduct"
-   ],
-   "callbackUrl": "http://weatherapp.com",
-   "scopes": []
-  }
- ]
+    "bill@unesco.com": [
+        {
+            "apiProducts": [
+                "weatherProduct"
+            ],
+            "callbackUrl": "http://weatherapp.com",
+            "name": "oneapp",
+            "scopes": []
+        }
+    ],
+    "john@example.com": [
+        {
+            "apiProducts": [
+                "weatherProduct"
+            ],
+            "callbackUrl": "http://weatherapp.com",
+            "name": "coolapp",
+            "scopes": []
+        }
+    ]
 }

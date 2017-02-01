@@ -86,6 +86,8 @@
         "apiProducts": [
             {
                 "name": "weatherProduct",
+                "displayName": "weather Product",
+                "description": "weather Product",
                 "apiResources": [
                     "/**"
                 ],
@@ -104,16 +106,9 @@
                         "value": "month"
                     }
                 ],
-                "createdAt": 1394953446189,
-                "createdBy": "madhansivam@gmail.com",
-                "description": "weather Product",
-                "displayName": "weather Product",
                 "environments": [
-                    "test",
-                    "prod"
+                    "test"
                 ],
-                "lastModifiedAt": 1394953446189,
-                "lastModifiedBy": "madhansivam@gmail.com",
                 "proxies": [
                     "forecastweatherapi"
                 ],
