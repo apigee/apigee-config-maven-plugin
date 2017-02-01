@@ -1,6 +1,0 @@
-{
-  "name" : "sapbackend",
-  "host" : "sapbackend",
-  "isEnabled" : true,
-  "port" : 8080
- }

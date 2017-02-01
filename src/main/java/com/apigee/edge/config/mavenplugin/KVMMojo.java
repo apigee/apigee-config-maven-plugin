@@ -15,7 +15,6 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 
@@ -53,7 +52,7 @@ import org.json.simple.parser.ParseException;
  * scope: org, env, api
  *
  * @author madhan.sadasivam
- * @goal keyvaluemaps
+ * @goal kvms
  * @phase install
  */
 
@@ -324,10 +323,6 @@ public class KVMMojo extends GatewayAbstractMojo
 		}
 
 		Logger logger = LoggerFactory.getLogger(KVMMojo.class);
-		File configFile = findConfigFile(logger);
-		if (configFile == null) {
-			return;
-		}
 
 		try {
 			
@@ -345,33 +340,33 @@ public class KVMMojo extends GatewayAbstractMojo
 
             /* org scoped KVMs */
             String scope = "orgConfig";
-			List kvms = getOrgConfig(logger, configFile, scope);
+			List kvms = getOrgConfig(logger, "kvms");
 			if (kvms == null || kvms.size() == 0) {
-				logger.info("No org scoped KVM config found in edge.json.");
+				logger.info("No org scoped KVM config found.");
 			} else {
                 doOrgUpdate(kvms, scope);
             }
 
             /* env scoped KVMs */
-            kvms = getEnvConfig(logger, configFile);
+            kvms = getEnvConfig(logger, "kvms");
             if (kvms == null || kvms.size() == 0) {
-                logger.info("No env scoped KVM config found in edge.json.");
+                logger.info("No env scoped KVM config found.");
             } else {
                 doEnvUpdate(kvms, scope);
             }
 
             // /* API scoped KVMs */
-            Set<String> apis = getAPIList(logger, configFile);
+            Set<String> apis = getAPIList(logger);
             if (apis == null || apis.size() == 0) {
-                logger.info("No API scoped KVM config found in edge.json.");
+                logger.info("No API scoped KVM config found.");
                 return;
             }
 
             for (String api : apis) {
-                kvms = getAPIConfig(logger, configFile, api);
+                kvms = getAPIConfig(logger, "kvms", api);
                 if (kvms == null || kvms.size() == 0) {
                     logger.info(
-                        "No API scoped KVM config found in edge.json.");
+                        "No API scoped KVM config found for " + api);
                 } else {
                     doAPIUpdate(api, kvms);
                 }
@@ -382,78 +377,6 @@ public class KVMMojo extends GatewayAbstractMojo
 		} catch (RuntimeException e) {
 			throw e;
 		}
-	}
-
-    private Set<String> getAPIList(Logger logger, File configFile) 
-            throws MojoExecutionException {
-        logger.debug("Retrieving list of APIs from edge.json");
-        try {
-            return ConfigReader.getAPIList(configFile);
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-    private List getAPIConfig(Logger logger, File configFile, String api) 
-            throws MojoExecutionException {
-        logger.debug("Retrieving config from edge.json for API " + api);
-        try {
-            return ConfigReader.getAPIConfig(serverProfile.getEnvironment(), 
-                                                configFile,
-                                                api,
-                                                "kvms");
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-	private List getEnvConfig(Logger logger, File configFile) 
-			throws MojoExecutionException {
-		try {
-            /* envProfileConfig takes priority over envConfig */
-            logger.info("Retrieving env profile config " + serverProfile.getProfileId());
-            List envConfigs = ConfigReader.getEnvConfig(
-                                                serverProfile.getProfileId(), 
-                                                configFile,
-                                                "envProfileConfig",
-                                                "kvms");
-            if (envConfigs == null || envConfigs.size() == 0) {
-                logger.info("Env profile config not found. Retrieving env config " + 
-                                                serverProfile.getEnvironment());
-                envConfigs = ConfigReader.getEnvConfig(
-                                    serverProfile.getEnvironment(), 
-                                    configFile,
-                                    "envConfig",
-                                    "kvms");
-            }
-            return envConfigs;
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getMessage());
-		}
-	}
-
-    private List getOrgConfig(Logger logger, File configFile, String scope) 
-            throws MojoExecutionException {
-        logger.debug("Retrieving config from edge.json");
-        try {
-            return ConfigReader.getConfig(configFile,
-                                            scope,
-                                            "kvms");
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-	private File findConfigFile(Logger logger) throws MojoExecutionException {
-		File configFile = new File(super.getBaseDirectoryPath() + 
-									File.separator + "edge.json");
-
-		if (configFile.exists()) {
-			return configFile;
-		}
-
-		logger.info("No edge.json found.");
-		return null;
 	}
 
     /***************************************************************************

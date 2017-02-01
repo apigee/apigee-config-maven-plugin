@@ -1,0 +1,45 @@
+[
+    {
+        "apiResources": [
+            "/**",
+            "/"
+        ],
+        "approvalType": "auto",
+        "attributes": [
+            {
+                "name": "description",
+                "value": "json Product"
+            },
+            {
+                "name": "developer.quota.limit",
+                "value": "10000"
+            },
+            {
+                "name": "developer.quota.interval",
+                "value": "1"
+            },
+            {
+                "name": "developer.quota.timeunit",
+                "value": "month"
+            },
+            {
+                "name": "access",
+                "value": "public"
+            }
+        ],
+        "description": "Weather Product",
+        "displayName": "Weather Product",
+        "environments": [
+            "test",
+            "prod"
+        ],
+        "name": "Weather Product",
+        "proxies": [
+            "forecastweatherapi"
+        ],
+        "quota": "10000",
+        "quotaInterval": "1",
+        "quotaTimeUnit": "month",
+        "scopes": []
+    }
+]

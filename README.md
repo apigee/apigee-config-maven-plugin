@@ -32,10 +32,10 @@ mvn install -Ptest -Dapigee.config.options=create
   # Individual goals
   You can also work with individual config class using goals directly. The available goals are,
   apiproducts 
-  apps
+  developerapps
   caches
   developers
-  keyvaluemaps
+  kvms
   targetservers
 
   To delete all apps mentioned in edge.json use the following.

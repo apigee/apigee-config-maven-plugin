@@ -15,10 +15,20 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
+import org.slf4j.Logger;
+
 import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.apigee.edge.config.utils.ServerProfile;
+import com.apigee.edge.config.utils.ConfigReader;
+import com.apigee.edge.config.utils.ConsolidatedConfigReader;
 import org.apache.maven.plugin.AbstractMojo;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 public abstract class GatewayAbstractMojo extends AbstractMojo {
 
@@ -123,8 +133,14 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 * @parameter property="apigee.config.options"
 	 */
 	private String options;
-	
-	
+
+	/**
+	 * Config dir
+	 * @parameter property="apigee.config.dir"
+ 	 */
+	private String configDir;
+	// TODO set resources/edge as default value
+
 	/**
 	* Skip running this plugin.
 	* Default is false.
@@ -139,8 +155,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		super();
 		
 	}
-	
-	
+
 	public ServerProfile getProfile() {
 		this.buildProfile = new ServerProfile();
 		this.buildProfile.setOrg(this.orgName);
@@ -152,7 +167,6 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile.setCredential_pwd(this.password);
 		this.buildProfile.setProfileId(this.id);
 		this.buildProfile.setOptions(this.options);
-		
 		return buildProfile;
 	}
 
@@ -187,7 +201,6 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	public void setOptions(String options) {
 		this.options = options;
 	}
-	
 
 	/**
 	 * @return the id
@@ -213,5 +226,221 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	public void setSkip(boolean skip) {
 		this.skip = skip;
 	}
-	
+
+	private File findConsolidatedConfigFile()
+			throws MojoExecutionException {
+		File configFile = new File(getBaseDirectoryPath() + File.separator +
+									"edge.json");
+		if (configFile.exists()) {
+			return configFile;
+		}
+		return null;
+	}
+
+	private File findConfigFile(String scope, String config)
+			throws MojoExecutionException {
+		File configFile = new File(configDir + File.separator +
+									scope + File.separator +
+									config + ".json");
+		if (configFile.exists()) {
+			return configFile;
+		}
+		return null;
+	}
+
+	protected List getAPIConfig(Logger logger, String config, String api)
+			throws MojoExecutionException {
+		File configFile;
+		String scope = "api" + File.separator + api;
+
+		/* configDir takes precedence over edge.json */
+		if (configDir != null && configDir.length() > 0) {
+			configFile = findConfigFile(scope, config);
+			if (configFile == null) {
+				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				return null;
+			}
+
+			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			try {
+				return ConfigReader.getAPIConfig(configFile);
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getMessage());
+			}
+		}
+
+		/* consolidated edge.json in CWD as fallback */
+		configFile = findConsolidatedConfigFile();
+
+		if (configFile == null) {
+			logger.info("No edge.json found.");
+			throw new MojoExecutionException("config file edge.json not found");
+		}
+
+		logger.debug("Retrieving config from edge.json");
+		try {
+
+			return ConsolidatedConfigReader.getAPIConfig(configFile,
+					api,
+					config);
+		} catch (Exception e) {
+			throw new MojoExecutionException(e.getMessage());
+		}
+	}
+
+	protected Set<String> getAPIList(Logger logger)
+			throws MojoExecutionException {
+		File configFile;
+		String scope = configDir + File.separator + "api";
+
+		/* configDir takes precedence over edge.json */
+		if (configDir != null && configDir.length() > 0) {
+			logger.info("Retrieving API list from " + scope);
+			try {
+				return ConfigReader.getAPIList(scope);
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getMessage());
+			}
+		}
+
+		/* consolidated edge.json in CWD as fallback */
+		configFile = findConsolidatedConfigFile();
+
+		if (configFile == null) {
+			logger.info("No edge.json found.");
+			throw new MojoExecutionException("config file edge.json not found");
+		}
+
+		logger.debug("Retrieving config from edge.json");
+		try {
+			return ConsolidatedConfigReader.getAPIList(configFile);
+		} catch (Exception e) {
+			throw new MojoExecutionException(e.getMessage());
+		}
+	}
+
+	/*
+	*  env picked from maven profile
+	*  No support for maven profile names itself */
+	protected List getEnvConfig(Logger logger, String config)
+			throws MojoExecutionException {
+		File configFile;
+		String scope = "env" + File.separator + this.buildProfile.getEnvironment();
+
+		/* configDir takes precedence over edge.json */
+		if (configDir != null && configDir.length() > 0) {
+			configFile = findConfigFile(scope, config);
+			if (configFile == null) {
+				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				return null;
+			}
+
+			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			try {
+				return ConfigReader.getEnvConfig(this.buildProfile.getEnvironment(),
+													configFile);
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getMessage());
+			}
+		}
+
+		/* consolidated edge.json in CWD as fallback */
+		configFile = findConsolidatedConfigFile();
+
+		if (configFile == null) {
+			logger.info("No edge.json found.");
+			throw new MojoExecutionException("config file edge.json not found");
+		}
+
+		logger.debug("Retrieving config from edge.json");
+		try {
+			List envConfigs = ConsolidatedConfigReader.getEnvConfig(
+					this.buildProfile.getEnvironment(),
+							configFile,
+							"envConfig",
+							config);
+			return envConfigs;
+		} catch (Exception e) {
+			throw new MojoExecutionException(e.getMessage());
+		}
+	}
+
+	protected List getOrgConfig(Logger logger, String config)
+			throws MojoExecutionException {
+		File configFile;
+		String scope = "org";
+
+		/* configDir takes precedence over edge.json */
+		if (configDir != null && configDir.length() > 0) {
+			configFile = findConfigFile(scope, config);
+			if (configFile == null) {
+				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				return null;
+			}
+
+			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			try {
+				return ConfigReader.getOrgConfig(configFile);
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getMessage());
+			}
+		}
+
+		/* consolidated edge.json in CWD as fallback */
+		configFile = findConsolidatedConfigFile();
+
+		if (configFile == null) {
+			logger.info("No edge.json found.");
+			throw new MojoExecutionException("config file edge.json not found");
+		}
+
+		logger.debug("Retrieving config from edge.json");
+		try {
+			return ConsolidatedConfigReader.getOrgConfig(configFile,
+															"orgConfig",
+															config);
+		} catch (Exception e) {
+			throw new MojoExecutionException(e.getMessage());
+		}
+	}
+
+	protected Map getOrgConfigWithId(Logger logger, String config)
+			throws MojoExecutionException {
+		File configFile;
+		String scope = "org";
+
+		/* configDir takes precedence over edge.json */
+		if (configDir != null && configDir.length() > 0) {
+			configFile = findConfigFile(scope, config);
+			if (configFile == null) {
+				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				return null;
+			}
+
+			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			try {
+				return ConfigReader.getOrgConfigWithId(configFile);
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getMessage());
+			}
+		}
+
+		/* consolidated edge.json in CWD as fallback */
+		configFile = findConsolidatedConfigFile();
+
+		if (configFile == null) {
+			logger.info("No edge.json found.");
+			throw new MojoExecutionException("config file edge.json not found");
+		}
+
+		logger.debug("Retrieving config from edge.json");
+		try {
+			return ConsolidatedConfigReader.getOrgConfigWithId(configFile,
+					"orgConfig",
+					config);
+		} catch (Exception e) {
+			throw new MojoExecutionException(e.getMessage());
+		}
+	}
+
 }

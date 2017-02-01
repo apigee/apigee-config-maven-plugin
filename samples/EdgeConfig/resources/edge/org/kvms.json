@@ -1,0 +1,28 @@
+[
+    {
+        "entry": [
+            {
+                "name": "ACTIVE",
+                "value": "001"
+            },
+            {
+                "name": "DISABLED",
+                "value": "002"
+            }
+        ],
+        "name": "user_account_status"
+    },
+    {
+        "entry": [
+            {
+                "name": "name_max_length",
+                "value": "15"
+            },
+            {
+                "name": "max_start_date",
+                "value": "1460896299"
+            }
+        ],
+        "name": "validation_rules"
+    }
+]

@@ -1,0 +1,30 @@
+[
+    {
+        "host": "example.com",
+        "isEnabled": true,
+        "name": "Enterprisetarget",
+        "port": 8080,
+        "sSLInfo": {
+            "clientAuthEnabled": "false",
+            "enabled": "true",
+            "ignoreValidationErrors": "false",
+            "keyAlias": "key_alias",
+            "keyStore": "keystore_name",
+            "trustStore": "truststore_name"
+        }
+    },
+    {
+        "host": "enterprise.com",
+        "isEnabled": true,
+        "name": "ESBTarget",
+        "port": 8080,
+        "sSLInfo": {
+            "clientAuthEnabled": "false",
+            "enabled": "true",
+            "ignoreValidationErrors": "false",
+            "keyAlias": "key_alias",
+            "keyStore": "keystore_name",
+            "trustStore": "truststore_name"
+        }
+    }
+]

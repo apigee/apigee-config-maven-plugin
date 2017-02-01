@@ -1,0 +1,11 @@
+[
+    {
+        "name": "default",
+        "xPathsRequest": [
+            "/apigee:Greeting/apigee:User"
+        ],
+        "xPathsResponse": [
+            "/apigee:Greeting/apigee:User"
+        ]
+    }
+]

@@ -15,7 +15,6 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 
@@ -195,10 +194,6 @@ public class DeveloperMojo extends GatewayAbstractMojo
 		}
 
 		Logger logger = LoggerFactory.getLogger(DeveloperMojo.class);
-		File configFile = findConfigFile(logger);
-		if (configFile == null) {
-			return;
-		}
 
 		try {
 			
@@ -214,9 +209,9 @@ public class DeveloperMojo extends GatewayAbstractMojo
                             "Apigee environment not found in profile");
             }
 
-			List developers = getConfig(logger, configFile);			
+			List developers = getOrgConfig(logger, "developers");
 			if (developers == null || developers.size() == 0) {
-				logger.info("No Developer found in edge.json.");
+				logger.info("No Developers found.");
                 return;
 			}
 
@@ -227,30 +222,6 @@ public class DeveloperMojo extends GatewayAbstractMojo
 		} catch (RuntimeException e) {
 			throw e;
 		}
-	}
-
-	private List getConfig(Logger logger, File configFile) 
-			throws MojoExecutionException {
-		logger.debug("Retrieving config from edge.json");
-		try {
-			return ConfigReader.getConfig(configFile,
-                                            "orgConfig",
-                                            "developers");
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getMessage());
-		}
-	}
-
-	private File findConfigFile(Logger logger) throws MojoExecutionException {
-		File configFile = new File(super.getBaseDirectoryPath() + 
-									File.separator + "edge.json");
-
-		if (configFile.exists()) {
-			return configFile;
-		}
-
-		logger.info("No edge.json found.");
-		return null;
 	}
 
     /***************************************************************************

@@ -15,7 +15,6 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 
@@ -256,10 +255,6 @@ public class MaskConfigMojo extends GatewayAbstractMojo
 		}
 
 		Logger logger = LoggerFactory.getLogger(MaskConfigMojo.class);
-		File configFile = findConfigFile(logger);
-		if (configFile == null) {
-			return;
-		}
 
 		try {
 			
@@ -276,23 +271,22 @@ public class MaskConfigMojo extends GatewayAbstractMojo
             }
 
             /* Org scoped Masks */
-            String scope = "orgConfig";
-			List maskConfigs = getOrgConfig(logger, configFile, scope);
+			List maskConfigs = getOrgConfig(logger, "maskconfigs");
 			if (maskConfigs == null || maskConfigs.size() == 0) {
-				logger.info("No org scoped Mask config found in edge.json.");
+				logger.info("No org scoped Mask config found.");
 			} else {
                 doOrgUpdate(maskConfigs);
             }
 
             /* API scoped Masks */
-            Set<String> apis = getAPIList(logger, configFile);
+            Set<String> apis = getAPIList(logger);
             if (apis == null || apis.size() == 0) {
                 logger.info("No API scoped Mask config found in edge.json.");
                 return;
             }
 
             for (String api : apis) {
-                maskConfigs = getAPIConfig(logger, configFile, api);
+                maskConfigs = getAPIConfig(logger, "maskconfigs", api);
                 if (maskConfigs == null || maskConfigs.size() == 0) {
                     logger.info(
                         "No API scoped Mask config found in edge.json.");
@@ -306,53 +300,6 @@ public class MaskConfigMojo extends GatewayAbstractMojo
 		} catch (RuntimeException e) {
 			throw e;
 		}
-	}
-
-    private Set<String> getAPIList(Logger logger, File configFile) 
-            throws MojoExecutionException {
-        logger.debug("Retrieving list of APIs from edge.json");
-        try {
-            return ConfigReader.getAPIList(configFile);
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-    private List getAPIConfig(Logger logger, File configFile, String api) 
-            throws MojoExecutionException {
-        logger.debug("Retrieving config from edge.json for API " + api);
-        try {
-            return ConfigReader.getAPIConfig(serverProfile.getEnvironment(), 
-                                                configFile,
-                                                api,
-                                                "maskconfigs");
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-    private List getOrgConfig(Logger logger, File configFile, String scope) 
-            throws MojoExecutionException {
-        logger.debug("Retrieving config from edge.json");
-        try {
-            return ConfigReader.getConfig(configFile,
-                                            scope,
-                                            "maskconfigs");
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-	private File findConfigFile(Logger logger) throws MojoExecutionException {
-		File configFile = new File(super.getBaseDirectoryPath() + 
-									File.separator + "edge.json");
-
-		if (configFile.exists()) {
-			return configFile;
-		}
-
-		logger.info("No edge.json found.");
-		return null;
 	}
 
     /***************************************************************************

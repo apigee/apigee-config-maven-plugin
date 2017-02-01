@@ -15,7 +15,6 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 
@@ -193,10 +192,6 @@ public class TargetServerMojo extends GatewayAbstractMojo
 		}
 
 		Logger logger = LoggerFactory.getLogger(TargetServerMojo.class);
-		File configFile = findConfigFile(logger);
-		if (configFile == null) {
-			return;
-		}
 
 		try {
 			
@@ -212,10 +207,10 @@ public class TargetServerMojo extends GatewayAbstractMojo
                             "Apigee environment not found in profile");
             }
 
-			List targets = getEnvConfig(logger, configFile);			
+			List targets = getEnvConfig(logger, "targetServers");
 			if (targets == null || targets.size() == 0) {
 				logger.info(
-                    "No Target server config found in edge.json.");
+                    "No target server config found.");
 				return;
 			}
 
@@ -226,43 +221,6 @@ public class TargetServerMojo extends GatewayAbstractMojo
 		} catch (RuntimeException e) {
 			throw e;
 		}
-	}
-
-	private List getEnvConfig(Logger logger, File configFile) 
-			throws MojoExecutionException {
-		try {
-            /* envProfileConfig takes priority over envConfig */
-            logger.info("Retrieving env profile config " + serverProfile.getProfileId());
-            List envConfigs = ConfigReader.getEnvConfig(
-                                                serverProfile.getProfileId(), 
-                                                configFile,
-                                                "envProfileConfig",
-                                                "targetServers");
-            if (envConfigs == null || envConfigs.size() == 0) {
-                logger.info("Env profile config not found. Retrieving env config " + 
-                                                serverProfile.getEnvironment());
-                envConfigs = ConfigReader.getEnvConfig(
-                                    serverProfile.getEnvironment(), 
-                                    configFile,
-                                    "envConfig",
-                                    "targetServers");
-            }
-            return envConfigs;
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getMessage());
-		}
-	}
-
-	private File findConfigFile(Logger logger) throws MojoExecutionException {
-		File configFile = new File(super.getBaseDirectoryPath() + 
-									File.separator + "edge.json");
-
-		if (configFile.exists()) {
-			return configFile;
-		}
-
-		logger.info("No edge.json found.");
-		return null;
 	}
 
     /***************************************************************************

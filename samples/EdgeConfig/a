@@ -1,0 +1,387 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building ConfigOnly 1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ ConfigOnly ---
+[INFO] Installing /Users/Madhan1/Madhan/github/apigee-config-maven-plugin/samples/EdgeConfig/pom.xml to /Users/Madhan1/.m2/repository/Apigee/ConfigOnly/1.0/ConfigOnly-1.0.pom
+[INFO] 
+[INFO] --- apigee-config-maven-plugin:1.1.3-SNAPSHOT:caches (create-config-cache) @ ConfigOnly ---
+[INFO] ************************************************************************
+[INFO] Apigee Cache
+[INFO] ************************************************************************
+[INFO] Retrieving existing environment caches - test
+[INFO] Cache "quote" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/caches/quote
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "description" : "products quote",
+  "diskSizeInMB" : 0,
+  "distributed" : true,
+  "inMemorySizeInKB" : 0,
+  "maxElementsInMemory" : 0,
+  "maxElementsOnDisk" : 0,
+  "name" : "quote",
+  "overflowToDisk" : false,
+  "persistent" : false
+}
+[INFO] Delete Success.
+[INFO] Creating Cache - quote
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/caches
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"description":"products quote","name":"quote"}
+[INFO] Response application/json
+{
+  "description" : "products quote",
+  "diskSizeInMB" : 0,
+  "distributed" : true,
+  "inMemorySizeInKB" : 0,
+  "maxElementsInMemory" : 0,
+  "maxElementsOnDisk" : 0,
+  "name" : "quote",
+  "overflowToDisk" : false,
+  "persistent" : false
+}
+[INFO] Create Success.
+[INFO] Cache "userMetadata" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/caches/userMetadata
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "description" : "user metadata cache",
+  "diskSizeInMB" : 0,
+  "distributed" : true,
+  "inMemorySizeInKB" : 0,
+  "maxElementsInMemory" : 0,
+  "maxElementsOnDisk" : 0,
+  "name" : "userMetadata",
+  "overflowToDisk" : false,
+  "persistent" : false
+}
+[INFO] Delete Success.
+[INFO] Creating Cache - userMetadata
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/caches
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"persistent":false,"inMemorySizeInKB":0,"description":"user metadata cache","name":"userMetadata","overflowToDisk":false,"distributed":true,"diskSizeInMB":0,"maxElementsOnDisk":0,"maxElementsInMemory":0}
+[INFO] Response application/json
+{
+  "description" : "user metadata cache",
+  "diskSizeInMB" : 0,
+  "distributed" : true,
+  "inMemorySizeInKB" : 0,
+  "maxElementsInMemory" : 0,
+  "maxElementsOnDisk" : 0,
+  "name" : "userMetadata",
+  "overflowToDisk" : false,
+  "persistent" : false
+}
+[INFO] Create Success.
+[INFO] 
+[INFO] --- apigee-config-maven-plugin:1.1.3-SNAPSHOT:targetservers (create-config-targetserver) @ ConfigOnly ---
+[INFO] ************************************************************************
+[INFO] Apigee Target Servers
+[INFO] ************************************************************************
+[INFO] Retrieving existing environment Target Servers - test
+[INFO] Target Server "Enterprisetarget" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/targetservers/Enterprisetarget
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "host" : "example.com",
+  "isEnabled" : true,
+  "name" : "Enterprisetarget",
+  "port" : 8080,
+  "sSLInfo" : {
+    "ciphers" : [ ],
+    "clientAuthEnabled" : "false",
+    "enabled" : "true",
+    "ignoreValidationErrors" : false,
+    "keyAlias" : "key_alias",
+    "keyStore" : "keystore_name",
+    "protocols" : [ ],
+    "trustStore" : "truststore_name"
+  }
+}
+[INFO] Delete Success.
+[INFO] Creating Target Server - Enterprisetarget
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/targetservers
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"port":8080,"sSLInfo":{"enabled":"true","trustStore":"truststore_name","keyStore":"keystore_name","clientAuthEnabled":"false","ignoreValidationErrors":"false","keyAlias":"key_alias"},"host":"example.com","name":"Enterprisetarget","isEnabled":true}
+[INFO] Response application/json
+{
+  "host" : "example.com",
+  "isEnabled" : true,
+  "name" : "Enterprisetarget",
+  "port" : 8080,
+  "sSLInfo" : {
+    "ciphers" : [ ],
+    "clientAuthEnabled" : "false",
+    "enabled" : "true",
+    "ignoreValidationErrors" : false,
+    "keyAlias" : "key_alias",
+    "keyStore" : "keystore_name",
+    "protocols" : [ ],
+    "trustStore" : "truststore_name"
+  }
+}
+[INFO] Create Success.
+[INFO] Target Server "ESBTarget" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/targetservers/ESBTarget
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "host" : "enterprise.com",
+  "isEnabled" : true,
+  "name" : "ESBTarget",
+  "port" : 8080,
+  "sSLInfo" : {
+    "ciphers" : [ ],
+    "clientAuthEnabled" : "false",
+    "enabled" : "true",
+    "ignoreValidationErrors" : false,
+    "keyAlias" : "key_alias",
+    "keyStore" : "keystore_name",
+    "protocols" : [ ],
+    "trustStore" : "truststore_name"
+  }
+}
+[INFO] Delete Success.
+[INFO] Creating Target Server - ESBTarget
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/targetservers
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"port":8080,"sSLInfo":{"enabled":"true","trustStore":"truststore_name","keyStore":"keystore_name","clientAuthEnabled":"false","ignoreValidationErrors":"false","keyAlias":"key_alias"},"host":"enterprise.com","name":"ESBTarget","isEnabled":true}
+[INFO] Response application/json
+{
+  "host" : "enterprise.com",
+  "isEnabled" : true,
+  "name" : "ESBTarget",
+  "port" : 8080,
+  "sSLInfo" : {
+    "ciphers" : [ ],
+    "clientAuthEnabled" : "false",
+    "enabled" : "true",
+    "ignoreValidationErrors" : false,
+    "keyAlias" : "key_alias",
+    "keyStore" : "keystore_name",
+    "protocols" : [ ],
+    "trustStore" : "truststore_name"
+  }
+}
+[INFO] Create Success.
+[INFO] 
+[INFO] --- apigee-config-maven-plugin:1.1.3-SNAPSHOT:keyvaluemaps (create-config-kvm) @ ConfigOnly ---
+[INFO] ************************************************************************
+[INFO] Apigee KVM
+[INFO] ************************************************************************
+[INFO] Org KVM "user_account_status" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/keyvaluemaps/user_account_status
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ ],
+  "name" : "user_account_status"
+}
+[INFO] Delete Success.
+[INFO] Creating Org KVM - user_account_status
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/keyvaluemaps
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"entry":[{"name":"ACTIVE","value":"001"},{"name":"DISABLED","value":"002"}],"name":"user_account_status"}
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ {
+    "name" : "ACTIVE",
+    "value" : "001"
+  }, {
+    "name" : "DISABLED",
+    "value" : "002"
+  } ],
+  "name" : "user_account_status"
+}
+[INFO] Create Success.
+[INFO] Org KVM "validation_rules" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/keyvaluemaps/validation_rules
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ ],
+  "name" : "validation_rules"
+}
+[INFO] Delete Success.
+[INFO] Creating Org KVM - validation_rules
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/keyvaluemaps
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"entry":[{"name":"name_max_length","value":"15"},{"name":"max_start_date","value":"1460896299"}],"name":"validation_rules"}
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ {
+    "name" : "name_max_length",
+    "value" : "15"
+  }, {
+    "name" : "max_start_date",
+    "value" : "1460896299"
+  } ],
+  "name" : "validation_rules"
+}
+[INFO] Create Success.
+[INFO] Env KVM "backend_account_config" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/keyvaluemaps/backend_account_config
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ ],
+  "name" : "backend_account_config"
+}
+[INFO] Delete Success.
+[INFO] Creating Env KVM - backend_account_config
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/environments/test/keyvaluemaps
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"entry":[{"name":"COMPANY","value":"example.com"},{"name":"PREFIX","value":"EXMPL"}],"name":"backend_account_config"}
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ {
+    "name" : "COMPANY",
+    "value" : "example.com"
+  }, {
+    "name" : "PREFIX",
+    "value" : "EXMPL"
+  } ],
+  "name" : "backend_account_config"
+}
+[INFO] Create Success.
+[INFO] API KVM "AUTH_ERROR_CODES" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/apis/forecastweatherapi/keyvaluemaps/AUTH_ERROR_CODES
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ ],
+  "name" : "AUTH_ERROR_CODES"
+}
+[INFO] Delete Success.
+[INFO] Creating API KVM - AUTH_ERROR_CODES
+[INFO] Request 
+POST  https://api.enterprise.apigee.com/v1/organizations/madhansivam/apis/forecastweatherapi/keyvaluemaps
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+content-type: application/json
+ [Request body]
+{"entry":[{"name":"COMPANY","value":"example.com"},{"name":"PREFIX","value":"EXMPL"}],"name":"AUTH_ERROR_CODES"}
+[INFO] Response application/json
+{
+  "encrypted" : false,
+  "entry" : [ {
+    "name" : "COMPANY",
+    "value" : "example.com"
+  }, {
+    "name" : "PREFIX",
+    "value" : "EXMPL"
+  } ],
+  "name" : "AUTH_ERROR_CODES"
+}
+[INFO] Create Success.
+[INFO] 
+[INFO] --- apigee-config-maven-plugin:1.1.3-SNAPSHOT:apiproducts (create-config-apiproduct) @ ConfigOnly ---
+[INFO] ************************************************************************
+[INFO] Apigee API Product
+[INFO] ************************************************************************
+[INFO] Retrieving existing API Products
+[INFO] API Product "weatherProduct" already exists. Deleting and recreating.
+[INFO] Request 
+DELETE  https://api.enterprise.apigee.com/v1/organizations/madhansivam/apiproducts/weatherProduct
+accept: application/json
+accept-encoding: gzip
+authorization: Basic [Not shown in log]
+[ERROR] Apigee call failed 500 Server Error
+{
+  "code" : "keymanagement.service.apiproduct_deletion_failed_apps_associated",
+  "message" : "Unable to delete ApiProduct as there are one or more apps associated with it.",
+  "contexts" : [ ]
+}
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 25.952 s
+[INFO] Finished at: 2017-02-01T12:55:03+11:00
+[INFO] Final Memory: 12M/106M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal com.apigee.edge.config:apigee-config-maven-plugin:1.1.3-SNAPSHOT:apiproducts (create-config-apiproduct) on project ConfigOnly: Apigee network call error 500 Server Error
+[ERROR] {
+[ERROR] "code" : "keymanagement.service.apiproduct_deletion_failed_apps_associated",
+[ERROR] "message" : "Unable to delete ApiProduct as there are one or more apps associated with it.",
+[ERROR] "contexts" : [ ]
+[ERROR] }
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -4,7 +4,7 @@
         "test": {
             "targetServers": [
                 {
-                    "name": "SAPtarget",
+                    "name": "Enterprisetarget",
                     "host": "example.com",
                     "isEnabled": true,
                     "port": 8080,
@@ -92,10 +92,6 @@
                 "approvalType": "auto",
                 "attributes": [
                     {
-                        "name": "description",
-                        "value": "weatherapikey Product"
-                    },
-                    {
                         "name": "developer.quota.limit",
                         "value": "10000"
                     },
@@ -106,10 +102,6 @@
                     {
                         "name": "developer.quota.timeunit",
                         "value": "month"
-                    },
-                    {
-                        "name": "access",
-                        "value": "public"
                     }
                 ],
                 "createdAt": 1394953446189,
@@ -123,7 +115,7 @@
                 "lastModifiedAt": 1394953446189,
                 "lastModifiedBy": "madhansivam@gmail.com",
                 "proxies": [
-                    "No-Target"
+                    "forecastweatherapi"
                 ],
                 "quota": "10000",
                 "quotaInterval": "1",
@@ -199,7 +191,7 @@
         ]
     },
     "apiConfig": {
-        "No-Target": {
+        "forecastweatherapi": {
             "kvms": [
                 {
                     "name": "AUTH_ERROR_CODES",
