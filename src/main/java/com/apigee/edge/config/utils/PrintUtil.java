@@ -56,23 +56,24 @@ public class PrintUtil {
         }
 
         try {
-        if (request.getMethod().compareTo(HttpMethod.POST) == 0  ){
-
-            if (request.getContent()!=null && request.getContent().getType() !=null)
-            {
-                prettyRequest = prettyRequest + "\n" + "content-type" + ": " + request.getContent().getType();
-
-                if (!request.getContent().getType().contains("octet"))
+            if (request.getMethod().compareTo(HttpMethod.POST) == 0 ||
+                    request.getMethod().compareTo(HttpMethod.PUT) == 0) {
+    
+                if (request.getContent()!=null && request.getContent().getType() !=null)
                 {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                request.getContent().writeTo(out);
-                prettyRequest = prettyRequest + "\n [Request body]\n" + out.toString();
-                } else {
-                    prettyRequest = prettyRequest + "\n [Request body contains data, not shown] \n";
+                    prettyRequest = prettyRequest + "\n" + "content-type" + ": " + request.getContent().getType();
+    
+                    if (!request.getContent().getType().contains("octet"))
+                    {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    request.getContent().writeTo(out);
+                    prettyRequest = prettyRequest + "\n [Request body]\n" + out.toString();
+                    } else {
+                        prettyRequest = prettyRequest + "\n [Request body contains data, not shown] \n";
+                    }
                 }
+    
             }
-
-        }
         }catch (Exception e){
             e.printStackTrace();
         }

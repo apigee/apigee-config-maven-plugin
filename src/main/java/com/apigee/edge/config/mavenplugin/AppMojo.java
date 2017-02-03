@@ -32,6 +32,7 @@ import com.google.api.client.util.Key;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
+import java.net.URLEncoder;
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
@@ -75,6 +76,11 @@ public class AppMojo extends GatewayAbstractMojo
         public String name;
     }
 	
+    public static class KeyData {
+        @Key
+        public String consumerKey;
+    }
+
 	public AppMojo() {
 		super();
 
@@ -114,6 +120,17 @@ public class AppMojo extends GatewayAbstractMojo
 		}
 	}
 
+    protected String getKeyName(String payload)
+            throws MojoFailureException {
+        Gson gson = new Gson();
+        try {
+            KeyData key = gson.fromJson(payload, KeyData.class);
+            return key.consumerKey;
+        } catch (JsonParseException e) {
+            throw new MojoFailureException(e.getMessage());
+        }
+    }
+
 	protected void doUpdate(Map<String, List<String>> devApps) 
             throws MojoFailureException {
 		try {
@@ -145,10 +162,14 @@ public class AppMojo extends GatewayAbstractMojo
                                                         "\" exists. Updating.");
                                 updateApp(serverProfile, developerId,
                                                         appName, app);
+                                doUpdateKeys(serverProfile, developerId,
+                                                        appName, app);
                                 break;
                             case create:
                                 logger.info("App \"" + appName + 
                                                 "\" already exists. Skipping.");
+                                doUpdateKeys(serverProfile, developerId,
+                                                        appName, app);
                                 break;
                             case delete:
                                 logger.info("App \"" + appName + 
@@ -161,6 +182,8 @@ public class AppMojo extends GatewayAbstractMojo
                                 deleteApp(serverProfile, developerId, appName);
                                 logger.info("Creating App - " + appName);
                                 createApp(serverProfile, developerId, app);
+                                doUpdateKeys(serverProfile, developerId,
+                                                        appName, app);
                                 break;
                         }
     	        	} else {
@@ -187,6 +210,161 @@ public class AppMojo extends GatewayAbstractMojo
 			throw e;
 		}
 	}
+
+    private void doUpdateKeys(ServerProfile profile,
+                              String developerId,
+                              String appName,
+                              String app)
+            throws MojoFailureException {
+
+        try {
+            List existingKeys = null;
+            logger.info("Retrieving Keys of " + appName);
+            existingKeys = getKey(serverProfile, developerId, appName);
+
+            List keys = getConfigSubArray(logger, app, "keys");
+
+            if (keys == null || keys.size() == 0) {
+                logger.info("No keys for App \"" + appName +
+                        "\" found in edge.json.");
+                return;
+            }
+
+            for (Object keyData : keys) {
+                String key = ((JSONObject) keyData).toJSONString();
+                String keyName = getKeyName(key);
+                if (keyName == null) {
+                    throw new IllegalArgumentException("Key for App \"" +
+                            appName + "\" does not have a name.\n" + key + "\n");
+                }
+
+                if (existingKeys.contains(keyName)) {
+                    switch (buildOption) {
+                    case update:
+                    case create:
+                        logger.info("Key \"" + keyName + "\" for App \"" +
+                                appName + "\" already exists. Skipping.");
+                        doUpdateKeyProducts(serverProfile, developerId,
+                                appName, keyName, key);
+                        break;
+                    case delete:
+                        logger.info("Key \"" + keyName + "\" for App \"" +
+                                appName + "\" already exists. Deleting.");
+                        deleteKey(serverProfile, developerId, appName, key);
+                        break;
+                    case sync:
+                        logger.info("Key \"" + keyName + "\" for App \"" + appName +
+                                "\" already exists. Deleting and recreating.");
+                        deleteKey(serverProfile, developerId, appName, key);
+                        logger.info("Creating Key - " + keyName + " for App " +
+                                appName);
+                        createKey(serverProfile, developerId, appName, key);
+                        doUpdateKeyProducts(serverProfile, developerId,
+                                appName, keyName, key);
+                        break;
+                    }
+                } else {
+                    switch (buildOption) {
+                    case create:
+                    case sync:
+                    case update:
+                        logger.info("Creating Key - " + keyName + " for App " +
+                                appName);
+                        createKey(serverProfile, developerId, appName, key);
+                        doUpdateKeyProducts(serverProfile, developerId,
+                                appName, keyName, key);
+                        break;
+                    case delete:
+                        logger.info("Key \"" + keyName + "\" for App \"" +
+                                appName + "\" does not exist. Skipping.");
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            throw new MojoFailureException("Apigee network call error " + e.getMessage());
+        } catch (RuntimeException e) {
+            throw e;
+        }
+    }
+
+    private void doUpdateKeyProducts(ServerProfile profile,
+                                     String developerId,
+                                     String appName,
+                                     String keyName,
+                                     String key)
+            throws MojoFailureException {
+
+        try {
+            List existingProducts = null;
+            logger.info("Retrieving apiproducts of " + keyName + " of " + appName);
+            existingProducts = getKeyProducts(serverProfile, developerId,
+                    appName, keyName);
+
+            List products = getConfigSubArray(logger, key, "apiProducts");
+
+            if (products == null || products.size() == 0) {
+                logger.info("No products for Key \"" + keyName +
+                        "\" for App \"" + appName + "\" found in edge.json.");
+                return;
+            }
+
+            switch (buildOption) {
+            case update:
+            case create:
+                logger.info("Updating API Products for Key \"" + keyName +
+                        "\" for App \"" + appName + ".\"");
+                updateKeyProducts(serverProfile, developerId, appName, keyName,
+                        key);
+                break;
+            case delete:
+                logger.info("Key \"" + keyName + "\" for App \"" + appName +
+                        "\" already exists. Deleting products.");
+                deleteAllKeyProducts(serverProfile, developerId, appName,
+                        keyName, existingProducts, products);
+                break;
+            case sync:
+                logger.info("Key \"" + keyName + "\" for App \"" + appName +
+                        "\" already exists. Deleting and Recreating products.");
+                deleteAllKeyProducts(serverProfile, developerId, appName,
+                        keyName, existingProducts, products);
+                logger.info("Updating API Products for Key \"" + keyName +
+                        "\" for App \"" + appName + ".\"");
+                updateKeyProducts(serverProfile, developerId, appName, keyName,
+                        key);
+                break;
+            }
+
+        } catch (IOException e) {
+            throw new MojoFailureException("Apigee network call error " +
+                e.getMessage());
+        } catch (RuntimeException e) {
+            throw e;
+        }
+    }
+
+    private void deleteAllKeyProducts(ServerProfile serverProfile,
+                                      String developerId,
+                                      String appName,
+                                      String keyName,
+                                      List existingProducts,
+                                      List products)
+            throws IOException {
+
+        for (Object product : products) {
+            String apiProduct = (String) product;
+            if (existingProducts.contains(product)) {
+                logger.info("Product \" + product + \" for Key \"" + keyName +
+                        "\" for App \"" + appName + "\" already exists. Deleting.");
+                deleteKeyProducts(serverProfile, developerId, appName, keyName,
+                        apiProduct);
+            } else {
+                logger.info("Product \" + product + \" for Key \"" + keyName +
+                        "\" for App \"" + appName + "\" does not exist. Skipping.");
+            }
+        }
+    }
 
 	/** 
 	 * Entry point for the mojo.
@@ -228,6 +406,25 @@ public class AppMojo extends GatewayAbstractMojo
 		} catch (RuntimeException e) {
 			throw e;
 		}
+	}
+
+	public static List getConfigSubArray(Logger logger,
+                                         String payload,
+			                             String token)
+               throws IOException {
+
+		JSONArray arr1 = null;
+		try {
+			JSONParser parser = new JSONParser();
+			JSONObject obj1 = (JSONObject) parser.parse(payload);
+			arr1 = (JSONArray) obj1.get(token);
+
+		} catch (ParseException pe) {
+			logger.error("Get App parse error " + pe.getMessage());
+			throw new IOException(pe.getMessage());
+		}
+
+		return arr1;
 	}
 
     /***************************************************************************
@@ -309,6 +506,7 @@ public class AppMojo extends GatewayAbstractMojo
 
         HttpResponse response = RestUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
+
         if(response == null) return new ArrayList();
 
         JSONArray apps = null;
@@ -335,9 +533,186 @@ public class AppMojo extends GatewayAbstractMojo
         }
 
         return apps;
-    }	
+    }
+
+    public static String createKey(ServerProfile profile,
+                                   String developerId,
+                                   String appName,
+                                   String key)
+            throws IOException {
+
+        HttpResponse response = RestUtil.createOrgConfig(profile,
+                "developers/" + developerId + "/apps/" + URLEncoder.encode(appName, "UTF-8") + "/keys/create",
+                key);
+
+        try {
+
+            logger.info("Response " + response.getContentType() + "\n" +
+                             response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Create Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Key create error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteKey(ServerProfile profile,
+                                   String developerId,
+                                   String appName,
+                                   String key)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteOrgConfig(profile,
+                "developers/" + developerId + "/apps/" + URLEncoder.encode(appName, "UTF-8") + "/keys",
+                key);
+
+        try {
+
+            logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Key delete error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static List getKey(ServerProfile profile,
+                              String developerId,
+                              String appName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.getOrgConfig(profile,
+                "developers/" + developerId + "/apps/" + URLEncoder.encode(appName, "UTF-8"));
+
+        if(response == null) return new ArrayList();
+
+        List keys = new ArrayList();
+        try {
+            logger.debug("output " + response.getContentType());
+            // response can be read only once
+            String payload = response.parseAsString();
+            logger.debug(payload);
+
+            JSONParser parser = new JSONParser();
+            JSONObject obj1 = (JSONObject) parser.parse(payload);
+            JSONArray arr1 = (JSONArray) obj1.get("credentials");
+
+            if(arr1 == null) return new ArrayList();
+
+            // flatten array
+            for (Object obj2 : arr1) {
+                JSONObject obj3 = (JSONObject) obj2;
+                keys.add(obj3.get("consumerKey"));
+            }
+
+        } catch (ParseException pe) {
+            logger.error("Get App parse error " + pe.getMessage());
+            throw new IOException(pe.getMessage());
+        } catch (HttpResponseException e) {
+            logger.error("Get Apps error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return keys;
+    }
+
+    public static String updateKeyProducts(ServerProfile profile,
+                                           String developerId,
+                                           String appName,
+                                           String keyName,
+                                           String products)
+            throws IOException {
+
+        HttpResponse response = RestUtil.updateOrgConfig(profile,
+                "developers/" + developerId + "/apps/" + URLEncoder.encode(appName, "UTF-8") +
+                "/keys", keyName, products);
+
+        try {
+
+            logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Update Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("ApiProduct update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static String deleteKeyProducts(ServerProfile profile,
+                                           String developerId,
+                                           String appName,
+                                           String keyName,
+                                           String productName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.deleteOrgConfig(profile,
+                "developers/" + developerId + "/apps/" + URLEncoder.encode(appName, "UTF-8") +
+                "/keys/" + keyName + "/apiproducts", productName);
+
+        try {
+
+            logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Delete Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("App delete error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+
+    public static List getKeyProducts(ServerProfile profile,
+                                      String developerId,
+                                      String appName,
+                                      String keyName)
+            throws IOException {
+
+        HttpResponse response = RestUtil.getOrgConfig(profile,
+                "developers/" + developerId + "/apps/" + URLEncoder.encode(appName, "UTF-8") +
+                "/keys/" + keyName);
+
+        if(response == null) return new ArrayList();
+
+        List products = new ArrayList();
+        try {
+            logger.debug("output " + response.getContentType());
+            // response can be read only once
+            String payload = response.parseAsString();
+            logger.debug(payload);
+
+            JSONParser parser = new JSONParser();
+            JSONObject obj1 = (JSONObject) parser.parse(payload);
+            JSONArray arr1 = (JSONArray) obj1.get("apiproducts");
+
+            if(arr1 == null) return new ArrayList();
+
+            // flatten array
+            for (Object obj2 : arr1) {
+                JSONObject obj3 = (JSONObject) obj2;
+                products.add(obj3.get("apiproduct"));
+            }
+
+        } catch (ParseException pe) {
+            logger.error("Get App parse error " + pe.getMessage());
+            throw new IOException(pe.getMessage());
+        } catch (HttpResponseException e) {
+            logger.error("Get Apps error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return products;
+    }
 }
-
-
-
-

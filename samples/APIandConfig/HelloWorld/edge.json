@@ -124,7 +124,13 @@
             "john@example.com": [
                 {
                     "name": "coolapp",
-                    "apiProducts": [ "DecTraining" ],
+                    "keys": [
+                        "consumerKey": "i8wVEIbuLtedoy4gJE3IukSq2Gww0trT",
+                        "consumerSecret": "x8tFPqcmEAXm8ewG",
+                        "apiProducts": [
+                            "DecTraining"
+                        ],
+                    ],
                     "callbackUrl": "http://weatherapp.com",
                     "scopes": []
                 }

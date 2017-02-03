@@ -148,8 +148,12 @@
             "bill@unesco.com": [
                 {
                     "name": "oneapp",
-                    "apiProducts": [
-                        "weatherProduct"
+                    "keys": [
+                        "consumerKey": "i8wVEIbuLtedoy4gJE3IukSq2Gww0trT",
+                        "consumerSecret": "x8tFPqcmEAXm8ewG",
+                        "apiProducts": [
+                            "weatherProduct"
+                        ],
                     ],
                     "callbackUrl": "http://weatherapp.com",
                     "scopes": []
