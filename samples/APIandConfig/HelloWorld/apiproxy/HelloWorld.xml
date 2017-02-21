@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<APIProxy revision="1" name="HelloWorld">
+<APIProxy revision="4" name="HelloWorld">
+    <Basepaths>/helloworld</Basepaths>
     <ConfigurationVersion majorVersion="4" minorVersion="0"/>
-    <CreatedAt>1437021096873</CreatedAt>
-    <CreatedBy>msadasivam@apigee.com</CreatedBy>
+    <CreatedAt>1487673552316</CreatedAt>
+    <CreatedBy>madhansivam@gmail.com</CreatedBy>
     <Description>Hello world application</Description>
     <DisplayName>HelloWorld</DisplayName>
-    <LastModifiedAt>1437021638560</LastModifiedAt>
-    <LastModifiedBy>msadasivam@apigee.com</LastModifiedBy>
+    <LastModifiedAt>1487673829026</LastModifiedAt>
+    <LastModifiedBy>madhansivam@gmail.com</LastModifiedBy>
     <Policies>
-        <Policy>WelcomeMessage</Policy>
+        <Policy>ResponseCache</Policy>
+        <Policy>VerifyAPIKey</Policy>
     </Policies>
     <ProxyEndpoints>
         <ProxyEndpoint>default</ProxyEndpoint>
     </ProxyEndpoints>
     <Resources/>
+    <Spec></Spec>
     <TargetServers/>
-    <TargetEndpoints/>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
     <validate>false</validate>
 </APIProxy>

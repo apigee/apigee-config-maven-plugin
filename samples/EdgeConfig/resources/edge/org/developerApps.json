@@ -1,21 +1,29 @@
 {
-    "bill@unesco.com": [
+    "grant@enterprise.com": [
         {
             "apiProducts": [
                 "weatherProduct"
             ],
             "callbackUrl": "http://weatherapp.com",
-            "name": "oneapp",
+            "name": "grantoneapp",
+            "scopes": []
+        },
+        {
+            "apiProducts": [
+                "weatherProduct"
+            ],
+            "callbackUrl": "http://weatherapp.com",
+            "name": "granttwoapp",
             "scopes": []
         }
     ],
-    "john@example.com": [
+    "hugh@example.com": [
         {
             "apiProducts": [
                 "weatherProduct"
             ],
             "callbackUrl": "http://weatherapp.com",
-            "name": "coolapp",
+            "name": "hughapp",
             "scopes": []
         }
     ]

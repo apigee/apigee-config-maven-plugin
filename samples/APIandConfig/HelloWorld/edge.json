@@ -4,97 +4,47 @@
         "test": {
           "targetServers": [
               {
-                "name" : "SAPtarget",
-                "host" : "example.com",
+                "name" : "HTTPBin",
+                "host" : "httpbin.org",
                 "isEnabled" : true,
-                "port" : 8080,
-                "sSLInfo": {
-                    "enabled": "true",
-                    "clientAuthEnabled": "false",
-                    "keyStore": "keystore_name",
-                    "trustStore": "truststore_name",
-                    "keyAlias": "key_alias",
-                    "ignoreValidationErrors": "false"
-                }
-              },
-              {
-                "name" : "ESBTarget",
-                "host" : "enterprise.com",
-                "isEnabled" : true,
-                "port" : 8080,
-                "sSLInfo": {
-                    "enabled": "true",
-                    "clientAuthEnabled": "false",
-                    "keyStore": "keystore_name",
-                    "trustStore": "truststore_name",
-                    "keyAlias": "key_alias",
-                    "ignoreValidationErrors": "false"
-                }
+                "port" : 80
               }
           ],
           "caches": [
               {
-                "name": "quote",
-                "description": "products quote"
-              },
-              {
-                "name": "userMetadata",
-                "description": "user metadata cache",
-                "diskSizeInMB" : 0,
-                "distributed" : true,
-                "inMemorySizeInKB" : 0,
-                "maxElementsInMemory" : 0,
-                "maxElementsOnDisk" : 0,
-                "overflowToDisk" : false,
-                "persistent" : false
+                "name": "echocache",
+                "description": "echo cache",
+                "expirySettings": {
+                    "timeoutInSec": {
+                        "value": "300"
+                    },
+                    "valuesNull": false
+                }
               }            
           ]
-        },
-        "dev": {
-          "caches": [],
-          "targetServers": []
         }
     },
     "orgConfig": {
         "apiProducts": [
             {
-                "name": "weatherProduct",
+                "name": "EchoProduct",
                 "apiResources": [
+                    "/",
                     "/**"
                 ],
                 "approvalType": "auto",
                 "attributes": [
                     {
                         "name": "description",
-                        "value": "weatherapikey Product"
-                    },
-                    {
-                        "name": "developer.quota.limit",
-                        "value": "10000"
-                    },
-                    {
-                        "name": "developer.quota.interval",
-                        "value": "1"
-                    },
-                    {
-                        "name": "developer.quota.timeunit",
-                        "value": "month"
-                    },
-                    {
-                        "name": "access",
-                        "value": "public"
+                        "value": "Echo Product"
                     }
                 ],
-                "createdAt": 1394953446189,
-                "createdBy": "madhansivam@gmail.com",
-                "description": "weather Product",
-                "displayName": "weather Product",
+                "description": "Echo Product",
+                "displayName": "Echo Product",
                 "environments": [
                     "test",
                     "prod"
                 ],
-                "lastModifiedAt": 1394953446189,
-                "lastModifiedBy": "madhansivam@gmail.com",
                 "proxies": [
                     "HelloWorld"
                 ],
@@ -123,16 +73,16 @@
         "developerApps": {
             "john@example.com": [
                 {
-                    "name": "coolapp",
-                    "apiProducts": [ "DecTraining" ],
+                    "name": "coolechoapp",
+                    "apiProducts": [ "EchoProduct" ],
                     "callbackUrl": "http://weatherapp.com",
                     "scopes": []
                 }
             ],
             "bill@unesco.com": [
                 {
-                    "name": "oneapp",
-                    "apiProducts": [ "DecTraining" ],
+                    "name": "oneechoapp",
+                    "apiProducts": [ "EchoProduct" ],
                     "callbackUrl": "http://weatherapp.com",
                     "scopes": []
                 }

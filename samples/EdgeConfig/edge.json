@@ -120,24 +120,24 @@
         ],
         "developers": [
             {
-                "email": "john@example.com",
-                "firstName": "John",
-                "lastName": "Example",
-                "userName": "johnexample",
-                "attributes": []
+                "attributes": [],
+                "email": "hugh@example.com",
+                "firstName": "Hugh",
+                "lastName": "Jack",
+                "userName": "hughexample"
             },
             {
-                "email": "bill@unesco.com",
-                "firstName": "Bill",
-                "lastName": "Buffalo",
-                "userName": "billunesco",
-                "attributes": []
+                "attributes": [],
+                "email": "grant@enterprise.com",
+                "firstName": "Grant",
+                "lastName": "Smith",
+                "userName": "grantsmith"
             }
         ],
         "developerApps": {
-            "john@example.com": [
+            "hugh@example.com": [
                 {
-                    "name": "coolapp",
+                    "name": "coolhughapp",
                     "apiProducts": [
                         "weatherProduct"
                     ],
@@ -145,9 +145,9 @@
                     "scopes": []
                 }
             ],
-            "bill@unesco.com": [
+            "grant@enterprise.com": [
                 {
-                    "name": "oneapp",
+                    "name": "grantoneapp",
                     "apiProducts": [
                         "weatherProduct"
                     ],

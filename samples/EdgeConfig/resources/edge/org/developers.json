@@ -1,16 +1,16 @@
 [
     {
         "attributes": [],
-        "email": "john@example.com",
-        "firstName": "John",
-        "lastName": "Smith",
-        "userName": "johnexample"
+        "email": "hugh@example.com",
+        "firstName": "Hugh",
+        "lastName": "Jack",
+        "userName": "hughexample"
     },
     {
         "attributes": [],
-        "email": "bill@unesco.com",
-        "firstName": "Bill",
-        "lastName": "Grant",
-        "userName": "billunesco"
+        "email": "grant@enterprise.com",
+        "firstName": "Grant",
+        "lastName": "Smith",
+        "userName": "grantsmith"
     }
 ]
