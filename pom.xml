@@ -41,6 +41,12 @@
       <organization>Apigee Corporation</organization>
       <organizationUrl>http://www.apigee.com</organizationUrl>
     </developer>
+    <developer>
+      <name>Sai Saran Vaidyanathan</name>
+      <email>ssvaidyanathan@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>https://www.google.com</organizationUrl>
+    </developer>
   </developers>
 
   <scm>
