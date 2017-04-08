@@ -76,7 +76,9 @@
                     "name": "coolechoapp",
                     "apiProducts": [ "EchoProduct" ],
                     "callbackUrl": "http://weatherapp.com",
-                    "scopes": []
+                    "scopes": [],
+                    "consumerKey":"xACra3heveweChUkuwuphu6rupreSweb",
+                    "consumerSecret":"3rakagumeCEJuf3x"
                 }
             ],
             "bill@unesco.com": [

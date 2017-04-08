@@ -15,37 +15,27 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
-
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
-import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-
-import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create Apps in Apigee EDGE
@@ -73,6 +63,24 @@ public class AppMojo extends GatewayAbstractMojo
     public static class App {
         @Key
         public String name;
+        @Key
+        public String consumerKey;
+        @Key
+        public String consumerSecret;
+        @Key
+        public List<String> apiProducts;
+    }
+    
+    public static class Credentials {
+        @Key
+        public String consumerKey;
+    }
+    
+    public static class DevAppResponse {
+        @Key
+        public String name;
+        @Key
+        public List<Credentials> credentials;
     }
 	
 	public AppMojo() {
@@ -103,17 +111,42 @@ public class AppMojo extends GatewayAbstractMojo
 
 	}
 
-	protected String getAppName(String payload) 
+	protected App getAppObj(String payload) 
             throws MojoFailureException {
 		Gson gson = new Gson();
 		try {
 			App app = gson.fromJson(payload, App.class);
-			return app.name;
+			return app;
+		} catch (JsonParseException e) {
+		  throw new MojoFailureException(e.getMessage());
+		}
+	}
+	
+	private static DevAppResponse getDevAppResponseObj(String payload) 
+            throws MojoFailureException {
+		Gson gson = new Gson();
+		try {
+			DevAppResponse devAppResponseObj = gson.fromJson(payload, DevAppResponse.class);
+			return devAppResponseObj;
 		} catch (JsonParseException e) {
 		  throw new MojoFailureException(e.getMessage());
 		}
 	}
 
+	private static void deleteAppKeys(ServerProfile profile, String developerId, App appObj, String responseStr)
+			throws IOException, MojoFailureException {
+
+		DevAppResponse devAppResponseObj = null;
+		devAppResponseObj = getDevAppResponseObj(responseStr);
+		if (devAppResponseObj != null && devAppResponseObj.credentials != null
+				&& devAppResponseObj.credentials.size() > 0) {
+			for (Credentials cred : devAppResponseObj.credentials) {
+				logger.info("Deleting " + cred.consumerKey);
+				deleteAPIProductToKey(profile, developerId, appObj, cred.consumerKey);
+			}
+		}
+	}
+	
 	protected void doUpdate(Map<String, List<String>> devApps) 
             throws MojoFailureException {
 		try {
@@ -132,7 +165,8 @@ public class AppMojo extends GatewayAbstractMojo
                 existingApps = getApp(serverProfile, developerId);
 
     	        for (String app : entry.getValue()) {
-    	        	String appName = getAppName(app);
+    	        	App appObj = getAppObj(app);
+    	        	String appName = appObj.name;
     	        	if (appName == null) {
     	        		throw new IllegalArgumentException(
     	        			"App does not have a name.\n" + app + "\n");
@@ -143,8 +177,9 @@ public class AppMojo extends GatewayAbstractMojo
                             case update:
                                 logger.info("App \"" + appName + 
                                                         "\" exists. Updating.");
+                                
                                 updateApp(serverProfile, developerId,
-                                                        appName, app);
+                                                        appName, app, appObj);
                                 break;
                             case create:
                                 logger.info("App \"" + appName + 
@@ -160,7 +195,7 @@ public class AppMojo extends GatewayAbstractMojo
                                                 "\" already exists. Deleting and recreating.");
                                 deleteApp(serverProfile, developerId, appName);
                                 logger.info("Creating App - " + appName);
-                                createApp(serverProfile, developerId, app);
+                                createApp(serverProfile, developerId, app, appObj);
                                 break;
                         }
     	        	} else {
@@ -169,7 +204,7 @@ public class AppMojo extends GatewayAbstractMojo
                             case sync:
                             case update:
                                 logger.info("Creating App - " + appName);
-                                createApp(serverProfile, developerId, app);
+                                createApp(serverProfile, developerId, app, appObj);
                                 break;
                             case delete:
                                 logger.info("App \"" + appName + 
@@ -235,44 +270,89 @@ public class AppMojo extends GatewayAbstractMojo
      **/
     public static String createApp(ServerProfile profile, 
                                     String developerId,
-                                    String app)
-            throws IOException {
+                                    String app,
+                                    App appObj)
+            throws IOException, MojoFailureException {
 
         HttpResponse response = RestUtil.createOrgConfig(profile, 
                                         "developers/" + developerId + "/apps",
                                          app);
+        String responseStr = null;
         try {
-
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
+        	responseStr = response.parseAsString();
+        	logger.info("Response " + response.getContentType() + "\n" + responseStr);
             if (response.isSuccessStatusCode())
             	logger.info("Create Success.");
 
         } catch (HttpResponseException e) {
             logger.error("App create error " + e.getMessage());
             throw new IOException(e.getMessage());
+        } 
+        
+        //If consumerKey and consumerSecret is being passed in the configurations
+        	//Create the consumerKey and consumerSecret
+        	//Add API Products to Key
+        	//Delete the Key that was generated while creating the app so that only one key is available for the dev app
+        if(appObj!=null && appObj.consumerKey!=null && appObj.consumerSecret!=null){
+        	logger.info("Create Consumer Key and Secret");
+        	createConsumerKeySecret(profile, developerId, appObj);
+        	logger.info("Add API Product to Key");
+        	addAPIProductToKey(profile, developerId, appObj);
+        	logger.info("Delete API Product to Generated Key");
+        	logger.info("Delete Existing API Keys");
+	    	deleteAppKeys(profile, developerId, appObj, responseStr);
         }
-
+        
         return "";
     }
-
+    
     public static String updateApp(ServerProfile profile,
                                     String developerId, 
                                     String appName, 
-                                    String app)
-            throws IOException {
+                                    String app,
+                                    App appObj)
+            throws IOException, MojoFailureException {
 
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	HttpResponse response = null;
+        String responseStr = null;
+        
+        if(appObj!=null && appObj.consumerKey!=null && appObj.consumerSecret!=null){
+	    	//Delete all the App Keys first before updating the app
+	        logger.info("Getting Existing API Keys");
+	    	response = RestUtil.getOrgConfig(profile, 
+	                "developers/" + developerId + "/apps/"+appName);
+	    	
+	    	try{
+	    		responseStr = response.parseAsString();
+	    		logger.info("Delete Existing API Keys");
+	    		deleteAppKeys(profile, developerId, appObj, responseStr);
+	    	} catch (HttpResponseException e) {
+	            logger.error("App update error " + e.getMessage());
+	            throw new IOException(e.getMessage());
+	        }
+        }
+    	logger.info("Updating App");
+    	response = RestUtil.updateOrgConfig(profile, 
                                         "developers/" + developerId + "/apps", 
                                         appName,
                                         app);
         try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
+        	responseStr = response.parseAsString();
+            logger.info("Response " + response.getContentType() + "\n" + responseStr);
             if (response.isSuccessStatusCode())
             	logger.info("Update Success.");
-
+            //If consumerKey and consumerSecret is being passed in the configurations
+        	//Create the consumerKey and consumerSecret
+        	//Add API Products to Key
+            //Delete the generated key
+    	    if(appObj!=null && appObj.consumerKey!=null && appObj.consumerSecret!=null){
+    	    	logger.info("Create Consumer Key and Secret");
+    	    	createConsumerKeySecret(profile, developerId, appObj);
+    	    	logger.info("Add API Product to Key");
+    	    	addAPIProductToKey(profile, developerId, appObj);
+    	    	logger.info("Delete Existing API Keys");
+    	    	deleteAppKeys(profile, developerId, appObj, responseStr);
+    	    }
         } catch (HttpResponseException e) {
             logger.error("App update error " + e.getMessage());
             throw new IOException(e.getMessage());
@@ -303,6 +383,63 @@ public class AppMojo extends GatewayAbstractMojo
 
         return "";
     }
+    
+    public static String createConsumerKeySecret(ServerProfile profile, String developerId, App appObj) throws IOException {
+
+		String payload = "{"+
+				  "\"consumerKey\": \""+appObj.consumerKey+"\","+
+				  "\"consumerSecret\": \""+appObj.consumerSecret+"\""+
+				  "}";
+		HttpResponse response = RestUtil.createOrgConfig(profile, "developers/" + developerId + "/apps/"+ appObj.name+"/keys/create", payload);
+		try {
+
+			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+			if (response.isSuccessStatusCode())
+				logger.info("Create Success.");
+
+		} catch (HttpResponseException e) {
+			logger.error("Consumer Key create error " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return "";
+	}
+	
+	public static String addAPIProductToKey(ServerProfile profile, String developerId, App appObj) throws IOException {
+
+		String payload = "{"+
+				  	"\"apiProducts\":"+new Gson().toJson(appObj.apiProducts)+
+				  "}";
+		HttpResponse response = RestUtil.createOrgConfig(profile, "developers/" + developerId + "/apps/"+ appObj.name+"/keys/"+appObj.consumerKey, payload);
+		try {
+
+			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+			if (response.isSuccessStatusCode())
+				logger.info("Add API Product to Key Success.");
+
+		} catch (HttpResponseException e) {
+			logger.error("Add API Product to Key error " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return "";
+	}
+    
+    public static String deleteAPIProductToKey(ServerProfile profile, String developerId, App appObj, String consumerKey) throws IOException {
+		HttpResponse response = RestUtil.deleteOrgConfig(profile, "developers/" + developerId + "/apps/"+ appObj.name+"/keys", consumerKey);
+		try {
+
+			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+			if (response.isSuccessStatusCode())
+				logger.info("Delete Success.");
+
+		} catch (HttpResponseException e) {
+			logger.error("Delete API Product to Key error " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return "";
+	}
 
     public static List getApp(ServerProfile profile, String developerId)
             throws IOException {

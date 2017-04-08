@@ -142,7 +142,9 @@
                         "weatherProduct"
                     ],
                     "callbackUrl": "http://weatherapp.com",
-                    "scopes": []
+                    "scopes": [],
+                    "consumerKey":"5uswayedA8AthetuXanecr2tabEyawUs",
+                    "consumerSecret":"creTHebRAt4eFr2G"
                 }
             ],
             "grant@enterprise.com": [
