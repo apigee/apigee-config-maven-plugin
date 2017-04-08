@@ -415,7 +415,7 @@ public class AppMojo extends GatewayAbstractMojo
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
 			if (response.isSuccessStatusCode())
-				logger.info("Add API Product to Key Success.");
+				logger.info("Create Success.");
 
 		} catch (HttpResponseException e) {
 			logger.error("Add API Product to Key error " + e.getMessage());
