@@ -87,7 +87,6 @@ public class ExportKeysMojo extends GatewayAbstractMojo
 			logger.info("Apigee Export App Keys");
 			logger.info(____ATTENTION_MARKER____);
 
-			String options="";
 			serverProfile = super.getProfile();			
 			exportDir = super.getExportDir();
 			logger.debug("exportDir " + exportDir);
@@ -207,76 +206,6 @@ public class ExportKeysMojo extends GatewayAbstractMojo
     /***************************************************************************
      * REST call wrappers
      **/
-    public static String createApp(ServerProfile profile, 
-                                    String developerId,
-                                    String app)
-            throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
-                                        "developers/" + developerId + "/apps",
-                                         app);
-        try {
-
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-            	logger.info("Create Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("App create error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
-    public static String updateApp(ServerProfile profile,
-                                    String developerId, 
-                                    String appName, 
-                                    String app)
-            throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
-                                        "developers/" + developerId + "/apps", 
-                                        appName,
-                                        app);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-            	logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("App update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
-    public static String deleteApp(ServerProfile profile,
-                                    String developerId, 
-                                    String appName)
-            throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
-                                        "developers/" + developerId + "/apps", 
-                                        appName);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Delete Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("App delete error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
 
     public static List<String> getApp(ServerProfile profile, String developerId)
             throws IOException, MojoFailureException {
