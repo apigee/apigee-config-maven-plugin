@@ -114,7 +114,7 @@ public class ExportKeysMojo extends GatewayAbstractMojo
 	protected void doExport(Map<String, List<String>> apps) 
             throws MojoFailureException {
 		if(exportDir==null || exportDir ==""){
-    		throw new MojoFailureException("Please provide the directory where the devAppKeys.json file should be exported (-Dexport.dev.apps.keys)");
+    		throw new MojoFailureException("Please provide the directory where the devAppKeys.json file should be exported (-Dapigee.config.exportDir)");
     	}
 		try {
 			List<String> existingApps = null;
