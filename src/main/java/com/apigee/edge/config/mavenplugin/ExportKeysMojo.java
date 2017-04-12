@@ -219,7 +219,6 @@ public class ExportKeysMojo extends GatewayAbstractMojo
             logger.debug("output " + response.getContentType());
             // response can be read only once
             String payload = response.parseAsString();
-            logger.debug(payload);
             
             Gson gson = new Gson();
     		try {
@@ -244,7 +243,6 @@ public class ExportKeysMojo extends GatewayAbstractMojo
             logger.debug("output " + response.getContentType());
             // response can be read only once
             String payload = response.parseAsString();
-            logger.debug("payload: "+payload);
             
             Gson gson = new Gson();
     		try {
