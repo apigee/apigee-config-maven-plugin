@@ -16,6 +16,7 @@
 package com.apigee.edge.config.mavenplugin;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -149,7 +150,7 @@ public class ExportKeysMojo extends GatewayAbstractMojo
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String payload = gson.toJson(apps);
 			logger.debug("export payload: "+payload);
-			fw = new FileWriter(exportFilePath+"devAppKeys.json");
+			fw = new FileWriter(exportFilePath+ File.separator+"devAppKeys.json");
 			bw = new BufferedWriter(fw);
 			bw.write(payload);
 		} catch (IOException e) {
