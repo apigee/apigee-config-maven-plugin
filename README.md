@@ -31,6 +31,9 @@ mvn install -Ptest -Dapigee.config.options=create
 
   -Dapigee.config.dir=<dir>
      dir containing individual json files.
+     
+  -Dapigee.config.exportDir=<dir>
+     dir where the dev app keys are exported. This is only used for `exportAppKeys` goal. The file name is always devAppKeys.json
 
   # Individual goals
   You can also work with individual config class using goals directly. The available goals are,
@@ -41,9 +44,14 @@ mvn install -Ptest -Dapigee.config.options=create
   kvms
   targetservers
   maskconfigs
+  exportAppKeys
 
   To delete all apps mentioned in edge.json use the following.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=delete
+  
+  To export the dev app keys, use the following:
+  mvn apigee-config:exportAppKeys -Ptest -Dapigee.config.exportDir=./target
+  
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 

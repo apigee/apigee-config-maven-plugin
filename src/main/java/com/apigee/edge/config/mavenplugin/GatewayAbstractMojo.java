@@ -139,7 +139,23 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 * @parameter property="apigee.config.dir"
  	 */
 	private String configDir;
+	
+	/**
+	 * Export dir for Apigee Dev App Keys
+	 * 
+	 * @parameter property="apigee.config.exportDir"
+	 */
+	private String exportDir;
+	
 	// TODO set resources/edge as default value
+
+	public String getExportDir() {
+		return exportDir;
+	}
+
+	public void setExportDir(String exportDir) {
+		this.exportDir = exportDir;
+	}
 
 	/**
 	* Skip running this plugin.
