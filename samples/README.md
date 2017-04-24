@@ -20,10 +20,13 @@ To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements 
       <apigee.org>myorg</apigee.org>
       <apigee.env>test</apigee.env>
 
-To run jump to samples project `cd /samples/EdgeConfig` and run 
+To run the plugin and use edge.json jump to samples project `cd /samples/EdgeConfig` and run 
 
 `mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
 
+To run the plugin and use the multi-file format jump to samples project `cd /samples/EdgeConfig` and run 
+
+`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create -Dapigee.config.dir=resources/edge`
 
 ## APIandConfig
 

@@ -1,16 +1,16 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create/update Apigee config like Cache, KVM, Target Server, API Products, Developers and Developer Apps.
+Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, API Products, Developers, Developer Apps and Mask Config.
 
-Help teams follow API development best practices with Apigee.
-  * Prefer config like Cache, Target Servers over hard-coded alternatives in the API
-  * Scope config to the least visibility level required (API, env, org)
-  * Track Config in source control
-  * Deploy changes to config alongwith API deployment
+Help API teams follow API development best practices with Apigee.
+  * Track Apigee Config (KVM, cache, target servers, etc.) in source control
+  * Deploy config changes along with the API in a CI pipeline
+  * Simplify, automate config management during API development
+  * Track config changes in prod environment as releases
 
-A new config file edge.json is used to hold all the config data to create the corresponding entities in Apigee Edge.
+Small API projects can use the single file format in edge.json to manage their config. Large, complex projects with several config entities can use the multi-file format to organize config in source control. Checkout samples for examples.
 
-This is the plugin source code project. Refer to samples folder for plugin usage samples.
+This plugin is available in public maven repo and can be used just by referring to it in pom.xml. This github repo is the plugin source code and unless you make changes to the code you do not have to build this repo to use the plugin. Read this document further for plugin usage instructions.
 
 ## Plugin Usage
 ```
@@ -19,8 +19,8 @@ mvn install -Ptest -Dapigee.config.options=create
   # Options
 
   -P<profile>
-    used to pick a profile in the parent pom.xml (shared-pom.xml in the example). Apigee org and env
-    information comes from the profile.
+    Pick a profile in the parent pom.xml (shared-pom.xml in the example).
+    Apigee org and env information comes from the profile.
 
   -Dapigee.config.options
     none   - No action (default)
@@ -30,13 +30,15 @@ mvn install -Ptest -Dapigee.config.options=create
     sync   - Delete and recreate.
 
   -Dapigee.config.dir=<dir>
-     dir containing individual json files.
+     directory containing multi-file format config files.
      
   -Dapigee.config.exportDir=<dir>
      dir where the dev app keys are exported. This is only used for `exportAppKeys` goal. The file name is always devAppKeys.json
 
   # Individual goals
-  You can also work with individual config class using goals directly. The available goals are,
+  You can also work with an individual config type using the 
+  corresponding goal directly. The goals available are,
+
   apiproducts 
   developerapps
   caches
@@ -46,17 +48,16 @@ mvn install -Ptest -Dapigee.config.options=create
   maskconfigs
   exportAppKeys
 
-  To delete all apps mentioned in edge.json use the following.
-  mvn apigee-config:apps -Ptest -Dapigee.config.options=delete
+  For example, the apps goal is used below to only create apps and ignore all other config types.
+  mvn apigee-config:apps -Ptest -Dapigee.config.options=create
   
   To export the dev app keys, use the following:
-  mvn apigee-config:exportAppKeys -Ptest -Dapigee.config.exportDir=./target
-  
+  mvn apigee-config:exportAppKeys -Ptest -Dapigee.config.exportDir=./target  
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
 ## Sample project
-Refer to an example API project at [/samples/EdgeConfig](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/EdgeConfig)
+Refer to an example project at [/samples/EdgeConfig](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/EdgeConfig)
 
 This project demonstrates the creation and management of Apigee Edge Config and performs the following steps in sequence.
   - Creates Caches
@@ -71,14 +72,45 @@ To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements 
       <apigee.org>myorg</apigee.org>
       <apigee.env>test</apigee.env>
 
-To run jump to samples project `cd /samples/EdgeConfig` and run 
+To run the plugin and use edge.json jump to samples project `cd /samples/EdgeConfig` and run 
 
 `mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
 
-Refer to [samples/APIandConfig/HelloWorld](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/APIandConfig/HelloWorld) for config management alongwith API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](https://github.com/apigee/apigee-config-maven-plugin/blob/master/samples/README.md)
+To run the plugin and use the multi-file config format jump to samples project `cd /samples/EdgeConfig` and run 
 
-## edge.json - v1.0
-edge.json contains all config entities to be created in Apigee Edge. It is organized into 3 scopes corresponding to the scopes of config entities that can be created in Edge.
+`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create -Dapigee.config.dir=resources/edge`
+
+Refer to [samples/APIandConfig/HelloWorld](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/APIandConfig/HelloWorld) for config management along with API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](https://github.com/apigee/apigee-config-maven-plugin/blob/master/samples/README.md)
+
+## Multi-file config
+Projects with several config entities can utilize the multi-file structure to organize config while keeping individual file sizes within manageable limits. The plugin requires the use of specific file names and directories to organize config. 
+
+The apigee.config.dir option must be used to identify the top most directory containing the following config structure.
+
+
+      ├── api
+      │   ├── forecastweatherapi
+      │   │   └── kvms.json
+      │   └── oauth
+      │       ├── kvms.json
+      │       └── maskconfigs.json
+      ├── env
+      │   ├── prod
+      │   │   └── caches.json
+      │   └── test
+      │       ├── caches.json
+      │       ├── kvms.json
+      │       └── targetServers.json
+      └── org
+          ├── apiProducts.json
+          ├── developerApps.json
+          ├── developers.json
+          ├── kvms.json
+          └── maskconfigs.json
+
+
+## Single file config structure - edge.json
+Projects with fewer config entities can use the single file edge.json format to capture all config of an API project. The edge.json file organizes config into 3 scopes corresponding to the scopes of config entities that can be created in Edge. The plugin looks for edge.json in the current directory by default.
    ```
      envConfig
      orgConfig
@@ -115,24 +147,7 @@ Config entities like "developerApps" are grouped under the developerId (email) t
 
 Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
-## Contributing
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
-## Latest Release
-[Version 1.1.3](https://github.com/apigee/apigee-config-maven-plugin/releases/tag/apigee-config-maven-plugin-1.1.3) - Adds support for individual config files and maskconfig.
-[Older Releases](https://github.com/apigee/apigee-config-maven-plugin/releases)
-
-## License
-* see [LICENSE](https://github.com/apigee/apigee-config-maven-plugin/blob/master/LICENSE) file
-
 ## Support
 * Post a question in [Apigee community](https://community.apigee.com/index.html)
 * Create an [issue](https://github.com/apigee/apigee-config-maven-plugin/issues/new)
-
-## Credits
-Madhan Sadasivam, Prashanth K S, Meghdeep Basu
 
