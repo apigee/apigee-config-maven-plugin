@@ -138,18 +138,32 @@ public class RestUtil {
     }
 
     public static HttpResponse deleteEnvConfig(ServerProfile profile, 
+									            String resource,
+									            String resourceId)
+	throws IOException {
+    	return deleteEnvConfig(profile, resource, resourceId, null);
+    }
+    
+    public static HttpResponse deleteEnvConfig(ServerProfile profile, 
                                                 String resource,
-                                                String resourceId)
+                                                String resourceId,
+                                                String payload)
             throws IOException {
-
+    	HttpRequest restRequest;
         String importCmd = profile.getHostUrl() + "/"
                             + profile.getApi_version() + "/organizations/"
                             + profile.getOrg() + "/environments/"
                             + profile.getEnvironment() + "/" + resource + "/"
                             + URLEncoder.encode(resourceId, "UTF-8");
-
-        HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(
-                new GenericUrl(importCmd));
+        
+        if(payload!=null && !payload.equalsIgnoreCase("")){
+        	ByteArrayContent content = new ByteArrayContent("application/json", 
+                    payload.getBytes());
+        	restRequest = REQUEST_FACTORY.buildRequest(HttpMethod.DELETE, new GenericUrl(importCmd), content);
+        }else{
+        	restRequest = REQUEST_FACTORY.buildDeleteRequest(
+                    new GenericUrl(importCmd));
+        }
         restRequest.setReadTimeout(0);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept("application/json");
