@@ -118,10 +118,10 @@
                 <apigee.profile>test</apigee.profile>
                 <apigee.hosturl>https://api.enterprise.apigee.com</apigee.hosturl>
                 <apigee.apiversion>v1</apigee.apiversion>
-                <apigee.org>saisarantest</apigee.org>
-                <apigee.env>test</apigee.env>
-                <apigee.username>ssvaidyanathan@apigee.com</apigee.username>
-                <apigee.password>Tittu12345</apigee.password>
+                <apigee.org>${org}</apigee.org>
+                <apigee.env>${env}</apigee.env>
+                <apigee.username>${username}</apigee.username>
+                <apigee.password>${password}</apigee.password>
             </properties>
         </profile>
         <profile>
