@@ -212,7 +212,15 @@
                         "/apigee:Greeting/apigee:User"
                     ]
                 }
-            ]
+            ],
+            "resourcefiles": [
+             {
+           	  "name": "test-api.js",
+           	  "type": "jsc",
+           	  "revision": 1,
+           	  "file": "./resources/edge/api/forecastweatherapi/resourceFiles/jsc/test.js"
+              }    
+           ]
         }
     }
 }

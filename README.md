@@ -1,6 +1,6 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, API Products, Developers, Developer Apps and Mask Config.
+Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps and Mask Config.
 
 Help API teams follow API development best practices with Apigee.
   * Track Apigee Config (KVM, cache, target servers, etc.) in source control
@@ -45,6 +45,7 @@ mvn install -Ptest -Dapigee.config.options=create
   developers
   kvms
   targetservers
+  resourcefiles
   maskconfigs
   exportAppKeys
 
@@ -63,6 +64,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates Caches
   - Creates Target servers
   - Creates KVM
+  - Creates Resource File
   - Creates API products
   - Creates Developers
   - Creates Developer Apps
@@ -90,7 +92,11 @@ The apigee.config.dir option must be used to identify the top most directory con
 
       ├── api
       │   ├── forecastweatherapi
+      |   |   ├── resourceFiles
+      |   |   |   ├── jsc
+      |   |   |   |    ├── test.js
       │   │   └── kvms.json
+      │   │   └── resourcefiles.json
       │   └── oauth
       │       ├── kvms.json
       │       └── maskconfigs.json

@@ -15,32 +15,22 @@
  */
 package com.apigee.edge.config.rest;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.apigee.edge.config.utils.PrintUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.client.testing.http.MockHttpContent;
-import com.google.api.client.util.GenericData;
-import com.google.api.client.util.Key;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.net.URLEncoder;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.lang.reflect.Type;
 
 public class RestUtil {
 
@@ -100,6 +90,35 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String filePath)
+			throws IOException {
+		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+							+ "/environments/" + profile.getEnvironment()
+							+ "/" + resource;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
+    
     public static HttpResponse updateEnvConfig(ServerProfile profile, 
                                                 String resource,
                                                 String resourceId,
@@ -137,6 +156,63 @@ public class RestUtil {
         return response;
     }
 
+	public static HttpResponse updateEnvConfigUpload(ServerProfile profile, String resource, String resourceId,
+			String filePath) throws IOException {
+
+		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+							+ "/environments/"+ profile.getEnvironment()
+							+ "/" + resource + "/" + resourceId;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
+	
+	public static HttpResponse deleteEnvResourceFileConfig(ServerProfile profile, String resource, String resourceId)
+			throws IOException {
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+							+ "/environments/" + profile.getEnvironment()
+							+ "/" + resource + "/" + resourceId;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(new GenericUrl(importCmd));
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
+    
     public static HttpResponse deleteEnvConfig(ServerProfile profile, 
                                                 String resource,
                                                 String resourceId)
@@ -236,6 +312,34 @@ public class RestUtil {
 
         return response;
     }
+    
+	public static HttpResponse createOrgConfigUpload(ServerProfile profile, String resource, String filePath)
+			throws IOException {
+		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+				+ "/" + resource;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
 
     public static HttpResponse updateOrgConfig(ServerProfile profile, 
                                                 String resource,
@@ -272,6 +376,37 @@ public class RestUtil {
 
         return response;
     }
+    
+	public static HttpResponse updateOrgConfigUpload(ServerProfile profile, 
+													String resource,
+													String resourceId,
+													String filePath) throws IOException {
+
+		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+		
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+		+ "/" + resource+"/"+resourceId;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
 
     public static HttpResponse deleteOrgConfig(ServerProfile profile, 
                                                 String resource,
@@ -304,6 +439,32 @@ public class RestUtil {
 
         return response;
     }
+    
+	public static HttpResponse deleteOrgResourceFileConfig(ServerProfile profile, String resource, String resourceId)
+			throws IOException {
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+				+ "/" + resource + "/" + resourceId;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(new GenericUrl(importCmd));
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
 
     public static HttpResponse getOrgConfig(ServerProfile profile, 
                                                 String resource) 
@@ -372,6 +533,35 @@ public class RestUtil {
 
         return response;
     }
+        
+        public static HttpResponse createAPIConfigUpload(ServerProfile profile, String api, String resource, String filePath)
+    			throws IOException {
+    		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+    		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+    		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+    							+ "/apis/" + api
+    							+ "/" + resource;
+
+    		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(new GenericUrl(importCmd), content);
+    		restRequest.setReadTimeout(0);
+    		HttpHeaders headers = new HttpHeaders();
+    		headers.setAccept("application/json");
+    		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+    		restRequest.setHeaders(headers);
+
+    		logger.info(PrintUtil.formatRequest(restRequest));
+
+    		HttpResponse response;
+    		try {
+    			response = restRequest.execute();
+    		} catch (HttpResponseException e) {
+    			logger.error("Apigee call failed " + e.getMessage());
+    			throw new IOException(e.getMessage());
+    		}
+
+    		return response;
+    	}
 
     public static HttpResponse updateAPIConfig(ServerProfile profile, 
                                                 String api,
@@ -410,6 +600,36 @@ public class RestUtil {
 
         return response;
     }
+    
+    public static HttpResponse updateAPIConfigUpload(ServerProfile profile, String api, String resource, String resourceId,
+			String filePath) throws IOException {
+
+		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+							+ "/apis/"+ api
+							+ "/" + resource + "/" + resourceId;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
 
     public static HttpResponse deleteAPIConfig(ServerProfile profile, 
                                                 String api,
@@ -477,5 +697,31 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse deleteAPIResourceFileConfig(ServerProfile profile, String api, String resource, String resourceId)
+			throws IOException {
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+				+ "/apis/"+api
+				+ "/" + resource + "/" + resourceId;
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(new GenericUrl(importCmd));
+		restRequest.setReadTimeout(0);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept("application/json");
+		headers.setBasicAuthentication(profile.getCredential_user(), profile.getCredential_pwd());
+		restRequest.setHeaders(headers);
+
+		logger.info(PrintUtil.formatRequest(restRequest));
+
+		HttpResponse response;
+		try {
+			response = restRequest.execute();
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
 
 }
