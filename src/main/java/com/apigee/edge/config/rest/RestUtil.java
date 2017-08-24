@@ -86,11 +86,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -124,11 +119,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -158,11 +148,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(
                 new GenericUrl(importCmd));
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -188,12 +173,7 @@ public class RestUtil {
                         + profile.getOrg() + "/environments/"
                         + profile.getEnvironment() + "/" + resource));
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
-
+        
         //logger.debug(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response = null;
@@ -227,12 +207,7 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
-
+        
         //logger.info(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response;
@@ -264,12 +239,7 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
-
+        
         //logger.info(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response;
@@ -297,11 +267,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(
                                                     new GenericUrl(importCmd));
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -326,11 +291,6 @@ public class RestUtil {
                         + profile.getApi_version() + "/organizations/"
                         + profile.getOrg() + "/" + resource));
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.debug(PrintUtil.formatRequest(restRequest));
 
@@ -367,11 +327,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -406,11 +361,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -442,11 +392,6 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(
                 new GenericUrl(importCmd));
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
 
         //logger.info(PrintUtil.formatRequest(restRequest));
 
@@ -473,12 +418,7 @@ public class RestUtil {
                         + profile.getOrg() + "/apis/"
                         + api + "/" + resource));
         restRequest.setReadTimeout(0);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept("application/json");
-        headers.setBasicAuthentication(profile.getCredential_user(),
-                profile.getCredential_pwd());
-        restRequest.setHeaders(headers);
-
+        
         //logger.debug(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response = null;
@@ -507,6 +447,7 @@ public class RestUtil {
         String tokenUrl = profile.getTokenUrl();
         String mgmtAPIClientId = (profile.getClientId()!=null && !profile.getClientId().equalsIgnoreCase(""))?profile.getClientId():"edgecli";
         String mgmtAPIClientSecret = (profile.getClientSecret()!=null && !profile.getClientSecret().equalsIgnoreCase(""))?profile.getClientSecret():"edgeclisecret";
+        headers.setAccept("application/json");
         /**** Basic Auth - Backward compatibility ****/
         if (profile.getAuthType() != null &&
             profile.getAuthType().equalsIgnoreCase("basic")) {
