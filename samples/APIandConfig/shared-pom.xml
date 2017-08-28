@@ -122,7 +122,7 @@
                 <apigee.env>${env}</apigee.env>
                 <apigee.username>${username}</apigee.username>
                 <apigee.password>${password}</apigee.password>
-                <apigee.authtype>oauth</apigee.authtype> <!-- optional: oauth|basic(default) -->
+                <apigee.authtype>basic</apigee.authtype> <!-- optional: oauth|basic(default) -->
                 <apigee.tokenurl>https://login.apigee.com/oauth/token</apigee.tokenurl> <!-- optional: oauth -->
                 <apigee.mfatoken>${mfatoken}</apigee.mfatoken> <!-- optional: mfa -->
                 <apigee.clientid>${clientId}</apigee.clientid> <!-- optional: Oauth Client Id - Default is edgecli-->

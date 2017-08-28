@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
@@ -127,8 +128,8 @@ public class AppMojo extends GatewayAbstractMojo
 
             for (Map.Entry<String, List<String>> entry : devApps.entrySet()) {
 
-                String developerId = entry.getKey();
-                logger.info("Retrieving Apps of " + developerId);
+            	logger.info("Retrieving Apps of " + entry.getKey());
+                String developerId = URLEncoder.encode(entry.getKey(), "UTF-8");
                 existingApps = getApp(serverProfile, developerId);
 
     	        for (String app : entry.getValue()) {
