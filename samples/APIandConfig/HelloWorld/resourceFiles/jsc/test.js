@@ -1,2 +1,1 @@
-//Trying
-print(context.getVariable("request.verb"));
+context.setVariable("response.header.X-Apigee-Demo-Target", context.getVariable("target.name"));
