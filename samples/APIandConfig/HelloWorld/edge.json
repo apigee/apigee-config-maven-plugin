@@ -23,12 +23,24 @@
               }            
           ],
           "resourcefiles":[
-          {
-        	  "name": "test",
-        	  "type": "jsc",
-        	  "file": "./resourceFiles/jsc/test.js"
-           }    
-        ]
+              {
+                "name": "test",
+                "type": "jsc",
+                "file": "./resourceFiles/jsc/test.js"
+              }    
+          ],
+          "flowhooks":[
+               {
+                  "name":"PreProxyFlowHook",
+                  "continueOnError":"true",
+                  "sharedFlow":"corspreflow"
+               },
+               {
+                  "name":"PreTargetFlowHook",
+                  "continueOnError":"true",
+                  "sharedFlow":"corspreflow"
+               }
+            ]
         }
     },
     "orgConfig": {
