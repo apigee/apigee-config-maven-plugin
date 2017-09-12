@@ -21,7 +21,19 @@
                     "valuesNull": false
                 }
               }            
-          ]
+          ],
+          "flowhooks":[
+               {
+                  "name":"PreProxyFlowHook",
+                  "continueOnError":"true",
+                  "sharedFlow":"corspreflow"
+               },
+               {
+                  "name":"PreTargetFlowHook",
+                  "continueOnError":"true",
+                  "sharedFlow":"corspreflow"
+               }
+            ]
         }
     },
     "orgConfig": {
