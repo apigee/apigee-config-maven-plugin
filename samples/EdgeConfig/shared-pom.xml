@@ -50,6 +50,13 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>create-config-resourcefiles</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>resourcefiles</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>create-config-apiproduct</id>
                         <phase>install</phase>                        
                         <goals>
