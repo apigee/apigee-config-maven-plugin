@@ -147,6 +147,55 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 */
 	private String exportDir;
 	
+	/**
+	 * Mgmt API OAuth token endpoint
+	 * 
+	 * @parameter expression="${apigee.tokenurl}" default-value="https://login.apigee.com/oauth/token"
+	 */
+	private String tokenURL;
+
+	/**
+	 * Mgmt API OAuth MFA - TOTP
+	 * 
+	 * @parameter expression="${apigee.mfatoken}"
+	 */
+	private String mfaToken;
+
+	/**
+	 * Mgmt API authn type
+	 * 
+	 * @parameter expression="${apigee.authtype}" default-value="basic"
+	 */
+	private String authType;
+	
+	/**
+	 * Gateway bearer token
+	 * 
+	 * @parameter expression="${apigee.bearer}"
+	 */
+	private String bearer;
+	
+	/**
+	 * Gateway refresh token
+	 * 
+	 * @parameter expression="${apigee.refresh}"
+	 */
+	private String refresh;
+	
+	/**
+	 * Gateway OAuth clientId
+	 * 
+	 * @parameter expression="${apigee.clientid}"
+	 */
+	private String clientid;
+	
+	/**
+	 * Gateway OAuth clientSecret
+	 * 
+	 * @parameter expression="${apigee.clientsecret}"
+	 */
+	private String clientsecret;
+	
 	// TODO set resources/edge as default value
 
 	public String getExportDir() {
@@ -183,6 +232,13 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile.setCredential_pwd(this.password);
 		this.buildProfile.setProfileId(this.id);
 		this.buildProfile.setOptions(this.options);
+		this.buildProfile.setTokenUrl(this.tokenURL);
+		this.buildProfile.setMFAToken(this.mfaToken);
+		this.buildProfile.setAuthType(this.authType);
+		this.buildProfile.setBearerToken(this.bearer);
+		this.buildProfile.setRefreshToken(this.refresh);
+		this.buildProfile.setClientId(this.clientid);
+		this.buildProfile.setClientSecret(this.clientsecret);
 		return buildProfile;
 	}
 

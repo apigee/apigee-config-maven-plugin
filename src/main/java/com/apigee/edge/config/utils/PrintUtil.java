@@ -29,7 +29,7 @@ public class PrintUtil {
 
     public static String formatRequest(HttpRequest request) {
 
-        String prettyRequest = "Request \n";
+        String prettyRequest = "\n\n\nRequest prepared for the server \n **************************\n";
 
         // Print all headers except auth
 
@@ -47,7 +47,11 @@ public class PrintUtil {
                     String headervalue = ""+headers.get(headerkey);
                     prettyRequest = prettyRequest + "\n" + headerkey + ": " + headervalue;
                 }else {
-                    prettyRequest = prettyRequest + "\n" + "authorization" + ": " + "Basic [Not shown in log]";
+                    String headervalue = ""+headers.get(headerkey);
+                    String arr[] = headervalue.split(" ", 2);
+                    String prefix = arr[0];   // Basic, Bearer
+                    prettyRequest = prettyRequest + "\n" + 
+                                    "authorization" + ": " + prefix + " [Not shown in log]";
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -83,7 +87,7 @@ public class PrintUtil {
 
     public static String formatResponse(HttpResponse response, String body) {
 
-        String prettyString = "Response returned by the server \n **************************\n";
+        String prettyString = "\n\n\nResponse returned by the server \n **************************\n";
 
         // Print all headers except auth
 

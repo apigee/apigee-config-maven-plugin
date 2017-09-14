@@ -29,6 +29,78 @@ public class ServerProfile {
 	private String profileId; //Profile id as in parent pom
 	private String options;
 	
+	private String tokenURL; // Mgmt API OAuth token endpoint
+	private String mfaToken; // Mgmt API OAuth MFA - TOTP
+	private String clientId; //Mgmt API OAuth Client Id (optional)
+	private String clientSecret; //Mgmt API OAuth Client Secret (optional)
+	private String bearerToken; //Mgmt API OAuth Token
+	private String refreshToken; //Mgmt API OAuth Refresh Token
+	private String authType; // Mgmt API Auth Type oauth|basic
+	
+	public String getHostURL() {
+		return hostURL;
+	}
+
+	public void setHostURL(String hostURL) {
+		this.hostURL = hostURL;
+	}
+
+	public String getTokenUrl() {
+		return tokenURL;
+	}
+
+	public void setTokenUrl(String tokenURL) {
+		this.tokenURL = tokenURL;
+	}
+
+	public String getMFAToken() {
+		return mfaToken;
+	}
+
+	public void setMFAToken(String mfaToken) {
+		this.mfaToken = mfaToken;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientSecret() {
+		return clientSecret;
+	}
+
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
+
+	public String getBearerToken() {
+		return bearerToken;
+	}
+
+	public void setBearerToken(String bearerToken) {
+		this.bearerToken = bearerToken;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public String getAuthType() {
+		return authType;
+	}
+
+	public void setAuthType(String authType) {
+		this.authType = authType;
+	}
+
 	public String getApplication() {
 		return application;
 	}
