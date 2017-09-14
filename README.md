@@ -176,7 +176,7 @@ TOTP can be generated using command line tools for use in CI tools like Jenkins.
 ### Using Two-Factor Authentication token
 **Note** OAuth needs to be enabled before Two-Factor Authentication can be used. 
 
-To enable Two-Factor Authentication, add the following options to all profiles as required. Refer to [shared-pom.xml](https://github.com/apigee/apigee-deploy-maven-plugin/blob/oauth/samples/forecastweatherapi-recommended/src/gateway/shared-pom.xml) example.
+To enable Two-Factor Authentication, add the following options to all profiles as required. Refer to [shared-pom.xml](https://github.com/apigee/apigee-config-maven-plugin/blob/oauth/samples/EdgeConfig/shared-pom.xml) example.
 
     <apigee.mfatoken>${mfatoken}</apigee.mfatoken> <!-- optional: mfa -->
 
