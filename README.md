@@ -25,7 +25,7 @@ mvn install -Ptest -Dapigee.config.options=create
   -Dapigee.config.options
     none   - No action (default)
     create - Create when not found. Pre-existing config is NOT updated even if it is different.
-    update - Update when found; create when not found. Refreshes all config to reflect edge.json.
+    update - Update when found; create when not found, updates individual entries for kvms. Refreshes all config to reflect edge.json.
     delete - Delete all config listed in edge.json.
     sync   - Delete and recreate.
 

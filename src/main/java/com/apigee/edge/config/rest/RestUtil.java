@@ -270,6 +270,54 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse updateKvmEntriesForEnv(ServerProfile profile,
+                                                      String kvmName,
+                                                      String entryName,
+                                                      String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries/"
+                + entryName;
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
+    public static HttpResponse createKvmEntriesForEnv(ServerProfile profile,
+                                                      String kvmName,
+                                                      String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries";
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
+    public static HttpResponse getKvmEntriesForEnv(ServerProfile profile,
+                                                   String kvmName,
+                                                   String entryName)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries/"
+                + entryName;
+
+        return callApiGeeGet(profile, importCmd);
+    }
+
     /***************************************************************************
      * Org Config - get, create, update
      **/
@@ -462,6 +510,51 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateKvmEntriesForOrg(ServerProfile profile,
+                                                      String kvmName,
+                                                      String entryName,
+                                                      String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries/"
+                + entryName;
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
+    public static HttpResponse createKvmEntriesForOrg(ServerProfile profile,
+                                                      String kvmName,
+                                                      String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries";
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
+    public static HttpResponse getKvmEntriesForOrg(ServerProfile profile,
+                                                   String kvmName,
+                                                   String entryName)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries/"
+                + entryName;
+
+        return callApiGeeGet(profile, importCmd);
     }
 
     /***************************************************************************
@@ -667,6 +760,57 @@ public class RestUtil {
 
 		return response;
 	}
+
+    public static HttpResponse updateKvmEntriesForApi(ServerProfile profile,
+                                                      String api,
+                                                      String kvmName,
+                                                      String entryName,
+                                                      String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries/"
+                + entryName;
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
+    public static HttpResponse createKvmEntriesForApi(ServerProfile profile,
+                                                      String api,
+                                                      String kvmName,
+                                                      String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries";
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
+    public static HttpResponse getKvmEntriesForApi(ServerProfile profile,
+                                                   String api,
+                                                   String kvmName,
+                                                   String entryName)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/keyvaluemaps/"
+                + URLEncoder.encode(kvmName, "UTF-8")
+                + "/entries/"
+                + entryName;
+
+        return callApiGeeGet(profile, importCmd);
+    }
     
     public static void initMfa(ServerProfile profile) throws IOException {
 
@@ -695,6 +839,49 @@ public class RestUtil {
 	            throw e;
 	        }
     	}
+    }
+
+    private static HttpResponse callApiGeeGet(ServerProfile profile,String importCmd)
+            throws IOException {
+
+        HttpRequest restRequest = REQUEST_FACTORY
+                .buildGetRequest(
+                        new GenericUrl(importCmd));
+        restRequest.setReadTimeout(0);
+
+        HttpResponse response;
+        try {
+            response = RestUtil.executeAPI(profile, restRequest);
+        } catch (HttpResponseException e) {
+            if (e.getStatusCode() == 404) return null;
+            logger.error("Apigee call failed " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return response;
+    }
+
+    private static HttpResponse callApiGeePost(ServerProfile profile,String payload,
+                                           String importCmd)
+            throws IOException {
+
+        ByteArrayContent content = new ByteArrayContent("application/json",
+                payload.getBytes());
+
+        HttpRequest restRequest = REQUEST_FACTORY
+                .buildPostRequest(
+                        new GenericUrl(importCmd), content);
+        restRequest.setReadTimeout(0);
+
+        HttpResponse response;
+        try {
+            response = RestUtil.executeAPI(profile, restRequest);
+        } catch (HttpResponseException e) {
+            logger.error("Apigee call failed " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return response;
     }
   
     /**
