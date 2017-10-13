@@ -19,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +122,7 @@ public class ExportKeysMojo extends GatewayAbstractMojo
 			List<App> devApps = new ArrayList<App>();
             for (Map.Entry<String, List<String>> entry : apps.entrySet()) {
 
-                String developerId = entry.getKey();
+                String developerId = URLEncoder.encode(entry.getKey(), "UTF-8");
                 logger.info("Retrieving Apps of " + developerId);
                 existingApps = getApp(serverProfile, developerId);
                 
