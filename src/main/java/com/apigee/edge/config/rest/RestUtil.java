@@ -101,7 +101,7 @@ public class RestUtil {
         String importCmd = profile.getHostUrl() + "/"
                 + profile.getApi_version() + "/organizations/"
                 + profile.getOrg() + "/environments/"
-                + profile.getEnvironment() + "/" + resource
+                + profile.getEnvironment() + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
                 + "/" + subResource;
 
