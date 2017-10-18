@@ -105,7 +105,7 @@ public class RestUtil {
                 + URLEncoder.encode(resourceId, "UTF-8")
                 + "/" + subResource;
 
-        return callApiGeePost(profile, payload, importCmd);
+        return executeAPIPost(profile, payload, importCmd);
     }
 
     public static HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String filePath)
@@ -183,7 +183,7 @@ public class RestUtil {
                 + "/" + subResource +"/"
                 + subResourceId;
 
-        return callApiGeePost(profile, payload, importCmd);
+        return executeAPIPost(profile, payload, importCmd);
     }
 
 	public static HttpResponse updateEnvConfigUpload(ServerProfile profile, String resource, String resourceId,
@@ -321,7 +321,7 @@ public class RestUtil {
                 + "/" + subResource + "/"
                 + subResourceId;
 
-        return callApiGeeGet(profile, importCmd);
+        return executeAPIGet(profile, importCmd);
     }
 
     /***************************************************************************
@@ -370,7 +370,7 @@ public class RestUtil {
                 + URLEncoder.encode(resourceId, "UTF-8")
                 + "/" + subResource;
 
-        return callApiGeePost(profile, payload, importCmd);
+        return executeAPIPost(profile, payload, importCmd);
     }
     
 	public static HttpResponse createOrgConfigUpload(ServerProfile profile, String resource, String filePath)
@@ -445,7 +445,7 @@ public class RestUtil {
                 + "/" + subResource + "/"
                 + subResourceId;
 
-        return callApiGeePost(profile, payload, importCmd);
+        return executeAPIPost(profile, payload, importCmd);
     }
     
 	public static HttpResponse updateOrgConfigUpload(ServerProfile profile, 
@@ -566,7 +566,7 @@ public class RestUtil {
                 + "/" + subResource + "/"
                 + subResourceId;
 
-        return callApiGeeGet(profile, importCmd);
+        return executeAPIGet(profile, importCmd);
     }
 
     /***************************************************************************
@@ -619,7 +619,7 @@ public class RestUtil {
                 + URLEncoder.encode(resourceId, "UTF-8")
                 + "/" + subResource;
 
-        return callApiGeePost(profile, payload, importCmd);
+        return executeAPIPost(profile, payload, importCmd);
     }
         
         public static HttpResponse createAPIConfigUpload(ServerProfile profile, String api, String resource, String filePath)
@@ -699,7 +699,7 @@ public class RestUtil {
                 + "/" + subResource + "/"
                 + subResourceId;
 
-        return callApiGeePost(profile, payload, importCmd);
+        return executeAPIPost(profile, payload, importCmd);
     }
     
     public static HttpResponse updateAPIConfigUpload(ServerProfile profile, String api, String resource, String resourceId,
@@ -803,7 +803,7 @@ public class RestUtil {
                 + "/" + subResource + "/"
                 + subResourceId;
 
-        return callApiGeeGet(profile, importCmd);
+        return executeAPIGet(profile, importCmd);
     }
 
     public static HttpResponse deleteAPIResourceFileConfig(ServerProfile profile, String api, String resource, String resourceId)
@@ -859,7 +859,7 @@ public class RestUtil {
     	}
     }
 
-    private static HttpResponse callApiGeeGet(ServerProfile profile,String importCmd)
+    private static HttpResponse executeAPIGet(ServerProfile profile, String importCmd)
             throws IOException {
 
         HttpRequest restRequest = REQUEST_FACTORY
@@ -879,8 +879,8 @@ public class RestUtil {
         return response;
     }
 
-    private static HttpResponse callApiGeePost(ServerProfile profile,String payload,
-                                           String importCmd)
+    private static HttpResponse executeAPIPost(ServerProfile profile, String payload,
+                                               String importCmd)
             throws IOException {
 
         ByteArrayContent content = new ByteArrayContent("application/json",
