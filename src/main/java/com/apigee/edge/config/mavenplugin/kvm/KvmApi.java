@@ -30,6 +30,15 @@ public class KvmApi extends KvmOperations implements Kvm {
     }
 
     @Override
+    public HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException {
+        return RestUtil.updateAPIConfig(kvmValueObject.getProfile(),
+                kvmValueObject.getApi(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName(),
+                kvmValueObject.getKvm());
+    }
+
+    @Override
     public HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
         return RestUtil.createAPIConfig(kvmValueObject.getProfile(),
                 kvmValueObject.getApi(),

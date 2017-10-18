@@ -28,6 +28,14 @@ public class KvmEnv extends KvmOperations implements Kvm {
     }
 
     @Override
+    public HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException {
+        return RestUtil.updateEnvConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName(),
+                kvmValueObject.getKvm());
+    }
+
+    @Override
     public HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
         return RestUtil.createEnvConfig(kvmValueObject.getProfile(),
                 "keyvaluemaps",
