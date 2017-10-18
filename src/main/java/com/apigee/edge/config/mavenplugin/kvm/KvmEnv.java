@@ -10,23 +10,29 @@ public class KvmEnv extends KvmOperations implements Kvm {
 
     @Override
     public HttpResponse getEntriesForKvm(KvmValueObject kvmValueObject, String kvmEntryName) throws IOException {
-        return RestUtil.getKvmEntriesForEnv(kvmValueObject.getProfile(),
+        return RestUtil.getEnvConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
                 kvmValueObject.getKvmName(),
+                "entries",
                 kvmEntryName);
     }
 
     @Override
     public HttpResponse updateKvmEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue) throws IOException {
-        return RestUtil.updateKvmEntriesForEnv(kvmValueObject.getProfile(),
+        return RestUtil.updateEnvConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
                 kvmValueObject.getKvmName(),
+                "entries",
                 kvmEntryName,
                 kvmEntryValue);
     }
 
     @Override
     public HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
-        return RestUtil.createKvmEntriesForEnv(kvmValueObject.getProfile(),
+        return RestUtil.createEnvConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
                 kvmValueObject.getKvmName(),
+                "entries",
                 kvmEntryValue);
     }
 

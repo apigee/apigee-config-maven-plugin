@@ -91,6 +91,23 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse createEnvConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/" + resource
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
+
+        return callApiGeePost(profile, payload, importCmd);
+    }
+
     public static HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String filePath)
 			throws IOException {
 		byte[] file = Files.readAllBytes(new File(filePath).toPath());
@@ -148,6 +165,25 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateEnvConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String subResourceId,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource +"/"
+                + subResourceId;
+
+        return callApiGeePost(profile, payload, importCmd);
     }
 
 	public static HttpResponse updateEnvConfigUpload(ServerProfile profile, String resource, String resourceId,
@@ -270,50 +306,20 @@ public class RestUtil {
         return response;
     }
 
-    public static HttpResponse updateKvmEntriesForEnv(ServerProfile profile,
-                                                      String kvmName,
-                                                      String entryName,
-                                                      String payload)
+    public static HttpResponse getEnvConfig(ServerProfile profile,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource,
+                                            String subResourceId)
             throws IOException {
 
         String importCmd = profile.getHostUrl() + "/"
                 + profile.getApi_version() + "/organizations/"
                 + profile.getOrg() + "/environments/"
-                + profile.getEnvironment() + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries/"
-                + entryName;
-
-        return callApiGeePost(profile, payload, importCmd);
-    }
-
-    public static HttpResponse createKvmEntriesForEnv(ServerProfile profile,
-                                                      String kvmName,
-                                                      String payload)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/environments/"
-                + profile.getEnvironment() + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries";
-
-        return callApiGeePost(profile, payload, importCmd);
-    }
-
-    public static HttpResponse getKvmEntriesForEnv(ServerProfile profile,
-                                                   String kvmName,
-                                                   String entryName)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/environments/"
-                + profile.getEnvironment() + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries/"
-                + entryName;
+                + profile.getEnvironment()  + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
 
         return callApiGeeGet(profile, importCmd);
     }
@@ -349,6 +355,22 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse createOrgConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg()+ "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
+
+        return callApiGeePost(profile, payload, importCmd);
     }
     
 	public static HttpResponse createOrgConfigUpload(ServerProfile profile, String resource, String filePath)
@@ -406,6 +428,24 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateOrgConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String subResourceId,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return callApiGeePost(profile, payload, importCmd);
     }
     
 	public static HttpResponse updateOrgConfigUpload(ServerProfile profile, 
@@ -512,47 +552,19 @@ public class RestUtil {
         return response;
     }
 
-    public static HttpResponse updateKvmEntriesForOrg(ServerProfile profile,
-                                                      String kvmName,
-                                                      String entryName,
-                                                      String payload)
+    public static HttpResponse getOrgConfig(ServerProfile profile,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource,
+                                            String subResourceId)
             throws IOException {
 
         String importCmd = profile.getHostUrl() + "/"
                 + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries/"
-                + entryName;
-
-        return callApiGeePost(profile, payload, importCmd);
-    }
-
-    public static HttpResponse createKvmEntriesForOrg(ServerProfile profile,
-                                                      String kvmName,
-                                                      String payload)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries";
-
-        return callApiGeePost(profile, payload, importCmd);
-    }
-
-    public static HttpResponse getKvmEntriesForOrg(ServerProfile profile,
-                                                   String kvmName,
-                                                   String entryName)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries/"
-                + entryName;
+                + profile.getOrg()  + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
 
         return callApiGeeGet(profile, importCmd);
     }
@@ -590,6 +602,24 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse createAPIConfig(ServerProfile profile,
+                                               String api,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api+ "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
+
+        return callApiGeePost(profile, payload, importCmd);
     }
         
         public static HttpResponse createAPIConfigUpload(ServerProfile profile, String api, String resource, String filePath)
@@ -650,6 +680,26 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateAPIConfig(ServerProfile profile,
+                                               String api,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String subResourceId,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return callApiGeePost(profile, payload, importCmd);
     }
     
     public static HttpResponse updateAPIConfigUpload(ServerProfile profile, String api, String resource, String resourceId,
@@ -737,6 +787,25 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse getAPIConfig(ServerProfile profile,
+                                            String api,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource,
+                                            String subResourceId)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return callApiGeeGet(profile, importCmd);
+    }
+
     public static HttpResponse deleteAPIResourceFileConfig(ServerProfile profile, String api, String resource, String resourceId)
 			throws IOException {
 
@@ -760,57 +829,6 @@ public class RestUtil {
 
 		return response;
 	}
-
-    public static HttpResponse updateKvmEntriesForApi(ServerProfile profile,
-                                                      String api,
-                                                      String kvmName,
-                                                      String entryName,
-                                                      String payload)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/apis/"
-                + api + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries/"
-                + entryName;
-
-        return callApiGeePost(profile, payload, importCmd);
-    }
-
-    public static HttpResponse createKvmEntriesForApi(ServerProfile profile,
-                                                      String api,
-                                                      String kvmName,
-                                                      String payload)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/apis/"
-                + api + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries";
-
-        return callApiGeePost(profile, payload, importCmd);
-    }
-
-    public static HttpResponse getKvmEntriesForApi(ServerProfile profile,
-                                                   String api,
-                                                   String kvmName,
-                                                   String entryName)
-            throws IOException {
-
-        String importCmd = profile.getHostUrl() + "/"
-                + profile.getApi_version() + "/organizations/"
-                + profile.getOrg() + "/apis/"
-                + api + "/keyvaluemaps/"
-                + URLEncoder.encode(kvmName, "UTF-8")
-                + "/entries/"
-                + entryName;
-
-        return callApiGeeGet(profile, importCmd);
-    }
     
     public static void initMfa(ServerProfile profile) throws IOException {
 
