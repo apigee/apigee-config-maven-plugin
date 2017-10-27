@@ -178,12 +178,14 @@ public class ConfigReader {
             throws ParseException, IOException {
 
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
-
-        Set<String> out = new HashSet<String>();
+        Set<String> out = null;
         File[] files = new File(apiConfigDir).listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                out.add(file.getName());
+        if(files!=null && files.length>0){
+        	out = new HashSet<String>();
+        	for (File file : files) {
+                if (file.isDirectory()) {
+                    out.add(file.getName());
+                }
             }
         }
         return out;
