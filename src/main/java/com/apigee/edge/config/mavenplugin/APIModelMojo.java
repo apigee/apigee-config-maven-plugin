@@ -186,7 +186,7 @@ public class APIModelMojo extends GatewayAbstractMojo {
       }
     }
     catch (IOException e) {
-      throw new RuntimeException("Failed authentication: " + e.getMessage());
+      throw new RuntimeException("Update failure: " + e.getMessage());
     }
   }
   
@@ -200,7 +200,7 @@ public class APIModelMojo extends GatewayAbstractMojo {
       }
     }
     catch (IOException e) {
-      throw new RuntimeException("Failed authentication: " + e.getMessage());
+      throw new RuntimeException("Render failure: " + e.getMessage());
     }
   }
   
@@ -214,7 +214,7 @@ public class APIModelMojo extends GatewayAbstractMojo {
       }
     }
     catch (IOException e) {
-      throw new RuntimeException("Failed authentication: " + e.getMessage());
+      throw new RuntimeException("Deletion failure: " + e.getMessage());
     }
   }
 
