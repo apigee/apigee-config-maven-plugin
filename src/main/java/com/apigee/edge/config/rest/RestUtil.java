@@ -43,7 +43,7 @@ public class RestUtil {
     static String versionRevision;
     static Logger logger = LoggerFactory.getLogger(RestUtil.class);
     static String accessToken = null;
-    
+
     static HttpRequestFactory REQUEST_FACTORY = HTTP_TRANSPORT
             .createRequestFactory(new HttpRequestInitializer() {
                 // @Override
@@ -60,12 +60,12 @@ public class RestUtil {
     /***************************************************************************
      * Env Config - get, create, update
      **/
-    public static HttpResponse createEnvConfig(ServerProfile profile, 
+    public static HttpResponse createEnvConfig(ServerProfile profile,
                                                 String resource,
                                                 String payload)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json", 
+        ByteArrayContent content = new ByteArrayContent("application/json",
                                                             payload.getBytes());
 
         String importCmd = profile.getHostUrl() + "/"
@@ -116,14 +116,14 @@ public class RestUtil {
 
 		return response;
 	}
-    
-    public static HttpResponse updateEnvConfig(ServerProfile profile, 
+
+    public static HttpResponse updateEnvConfig(ServerProfile profile,
                                                 String resource,
                                                 String resourceId,
                                                 String payload)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json", 
+        ByteArrayContent content = new ByteArrayContent("application/json",
                                                             payload.getBytes());
 
         String importCmd = profile.getHostUrl() + "/"
@@ -176,7 +176,7 @@ public class RestUtil {
 
 		return response;
 	}
-	
+
 	public static HttpResponse deleteEnvResourceFileConfig(ServerProfile profile, String resource, String resourceId)
 			throws IOException {
 
@@ -200,15 +200,15 @@ public class RestUtil {
 
 		return response;
 	}
-    
-    public static HttpResponse deleteEnvConfig(ServerProfile profile, 
+
+    public static HttpResponse deleteEnvConfig(ServerProfile profile,
 									            String resource,
 									            String resourceId)
 	throws IOException {
     	return deleteEnvConfig(profile, resource, resourceId, null);
     }
-    
-    public static HttpResponse deleteEnvConfig(ServerProfile profile, 
+
+    public static HttpResponse deleteEnvConfig(ServerProfile profile,
                                                 String resource,
                                                 String resourceId,
                                                 String payload)
@@ -219,11 +219,11 @@ public class RestUtil {
                             + profile.getOrg() + "/environments/"
                             + profile.getEnvironment() + "/" + resource + "/"
                             + URLEncoder.encode(resourceId, "UTF-8");
-        
+
         if(payload!=null && !payload.equalsIgnoreCase("")){
-        	ByteArrayContent content = new ByteArrayContent("application/json", 
+        	ByteArrayContent content = new ByteArrayContent("application/json",
                     payload.getBytes());
-        	restRequest = REQUEST_FACTORY.buildRequest(HttpMethod.DELETE, new GenericUrl(importCmd), content);
+        	restRequest = REQUEST_FACTORY.buildRequest(HttpMethods.DELETE, new GenericUrl(importCmd), content);
         }else{
         	restRequest = REQUEST_FACTORY.buildDeleteRequest(
                     new GenericUrl(importCmd));
@@ -244,8 +244,8 @@ public class RestUtil {
         return response;
     }
 
-    public static HttpResponse getEnvConfig(ServerProfile profile, 
-                                                String resource) 
+    public static HttpResponse getEnvConfig(ServerProfile profile,
+                                                String resource)
             throws IOException {
 
         HttpRequest restRequest = REQUEST_FACTORY
@@ -254,7 +254,7 @@ public class RestUtil {
                         + profile.getOrg() + "/environments/"
                         + profile.getEnvironment() + "/" + resource));
         restRequest.setReadTimeout(0);
-        
+
         //logger.debug(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response = null;
@@ -273,12 +273,12 @@ public class RestUtil {
     /***************************************************************************
      * Org Config - get, create, update
      **/
-    public static HttpResponse createOrgConfig(ServerProfile profile, 
+    public static HttpResponse createOrgConfig(ServerProfile profile,
                                                 String resource,
                                                 String payload)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json", 
+        ByteArrayContent content = new ByteArrayContent("application/json",
                                                             payload.getBytes());
 
         String importCmd = profile.getHostUrl() + "/"
@@ -288,7 +288,7 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        
+
         //logger.info(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response;
@@ -302,7 +302,7 @@ public class RestUtil {
 
         return response;
     }
-    
+
 	public static HttpResponse createOrgConfigUpload(ServerProfile profile, String resource, String filePath)
 			throws IOException {
 		byte[] file = Files.readAllBytes(new File(filePath).toPath());
@@ -328,13 +328,13 @@ public class RestUtil {
 		return response;
 	}
 
-    public static HttpResponse updateOrgConfig(ServerProfile profile, 
+    public static HttpResponse updateOrgConfig(ServerProfile profile,
                                                 String resource,
                                                 String resourceId,
                                                 String payload)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json", 
+        ByteArrayContent content = new ByteArrayContent("application/json",
                                                             payload.getBytes());
 
         String importCmd = profile.getHostUrl() + "/"
@@ -345,7 +345,7 @@ public class RestUtil {
         HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(
                 new GenericUrl(importCmd), content);
         restRequest.setReadTimeout(0);
-        
+
         //logger.info(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response;
@@ -359,15 +359,15 @@ public class RestUtil {
 
         return response;
     }
-    
-	public static HttpResponse updateOrgConfigUpload(ServerProfile profile, 
+
+	public static HttpResponse updateOrgConfigUpload(ServerProfile profile,
 													String resource,
 													String resourceId,
 													String filePath) throws IOException {
 
 		byte[] file = Files.readAllBytes(new File(filePath).toPath());
 		ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
-		
+
 		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
 		+ "/" + resource+"/"+resourceId;
 
@@ -388,7 +388,7 @@ public class RestUtil {
 		return response;
 	}
 
-    public static HttpResponse deleteOrgConfig(ServerProfile profile, 
+    public static HttpResponse deleteOrgConfig(ServerProfile profile,
                                                 String resource,
                                                 String resourceId)
             throws IOException {
@@ -415,7 +415,7 @@ public class RestUtil {
 
         return response;
     }
-    
+
 	public static HttpResponse deleteOrgResourceFileConfig(ServerProfile profile, String resource, String resourceId)
 			throws IOException {
 
@@ -439,8 +439,8 @@ public class RestUtil {
 		return response;
 	}
 
-    public static HttpResponse getOrgConfig(ServerProfile profile, 
-                                                String resource) 
+    public static HttpResponse getOrgConfig(ServerProfile profile,
+                                                String resource)
             throws IOException {
 
         HttpRequest restRequest = REQUEST_FACTORY.buildGetRequest(
@@ -467,13 +467,13 @@ public class RestUtil {
     /***************************************************************************
      * API Config - get, create, update
      **/
-        public static HttpResponse createAPIConfig(ServerProfile profile, 
+        public static HttpResponse createAPIConfig(ServerProfile profile,
                                                     String api,
                                                     String resource,
                                                     String payload)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json", 
+        ByteArrayContent content = new ByteArrayContent("application/json",
                                                             payload.getBytes());
 
         String importCmd = profile.getHostUrl() + "/"
@@ -498,7 +498,7 @@ public class RestUtil {
 
         return response;
     }
-        
+
         public static HttpResponse createAPIConfigUpload(ServerProfile profile, String api, String resource, String filePath)
     			throws IOException {
     		byte[] file = Files.readAllBytes(new File(filePath).toPath());
@@ -525,14 +525,14 @@ public class RestUtil {
     		return response;
     	}
 
-    public static HttpResponse updateAPIConfig(ServerProfile profile, 
+    public static HttpResponse updateAPIConfig(ServerProfile profile,
                                                 String api,
                                                 String resource,
                                                 String resourceId,
                                                 String payload)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json", 
+        ByteArrayContent content = new ByteArrayContent("application/json",
                                                             payload.getBytes());
 
         String importCmd = profile.getHostUrl() + "/"
@@ -558,7 +558,7 @@ public class RestUtil {
 
         return response;
     }
-    
+
     public static HttpResponse updateAPIConfigUpload(ServerProfile profile, String api, String resource, String resourceId,
 			String filePath) throws IOException {
 
@@ -586,7 +586,7 @@ public class RestUtil {
 		return response;
 	}
 
-    public static HttpResponse deleteAPIConfig(ServerProfile profile, 
+    public static HttpResponse deleteAPIConfig(ServerProfile profile,
                                                 String api,
                                                 String resource,
                                                 String resourceId)
@@ -619,7 +619,7 @@ public class RestUtil {
 
     public static HttpResponse getAPIConfig(ServerProfile profile,
                                                 String api,
-                                                String resource) 
+                                                String resource)
             throws IOException {
 
         HttpRequest restRequest = REQUEST_FACTORY
@@ -628,7 +628,7 @@ public class RestUtil {
                         + profile.getOrg() + "/apis/"
                         + api + "/" + resource));
         restRequest.setReadTimeout(0);
-        
+
         //logger.debug(PrintUtil.formatRequest(restRequest));
 
         HttpResponse response = null;
@@ -667,26 +667,26 @@ public class RestUtil {
 
 		return response;
 	}
-    
+
     public static void initMfa(ServerProfile profile) throws IOException {
 
     	// any simple get request can be used to - we just need to get an access token
     	// whilst the mfatoken is still valid
-    	
+
         // trying to construct the URL like
         // https://api.enterprise.apigee.com/v1/organizations/apigee-cs/apis/
         // success response is ignored
     	if (accessToken == null) {
 			logger.info("=============Initialising MFA================");
-	
+
 	        HttpRequest restRequest = REQUEST_FACTORY
 	                .buildGetRequest(new GenericUrl(profile.getHostUrl() + "/"
 	                        + profile.getApi_version() + "/organizations/"
 	                        + profile.getOrg() + "/apis/"));
 	        restRequest.setReadTimeout(0);
-	
+
 	        try {
-	            HttpResponse response = executeAPI(profile, restRequest);            
+	            HttpResponse response = executeAPI(profile, restRequest);
 	            //ignore response - we just wanted the MFA initialised
 	            logger.info("=============MFA Initialised================");
 	        } catch (HttpResponseException e) {
@@ -696,13 +696,13 @@ public class RestUtil {
 	        }
     	}
     }
-  
+
     /**
      * OAuth token acquisition for calling management APIs
      * Access Token expiry 1799 sec = 30 mins long enough to finish any maven task
      * MFA Token: TOTP expires in 30 secs. User needs to give a token with some validity
      */
-    private static HttpResponse executeAPI(ServerProfile profile, HttpRequest request) 
+    private static HttpResponse executeAPI(ServerProfile profile, HttpRequest request)
             throws IOException {
         HttpHeaders headers = request.getHeaders();
         MgmtAPIClient client = new MgmtAPIClient();
@@ -721,10 +721,10 @@ public class RestUtil {
         }
         /**** OAuth ****/
         if (profile.getBearerToken() != null && !profile.getBearerToken().equalsIgnoreCase("")){
-        	//Need to validate access token only if refresh token is provided. 
-	        	//If access token is not valid, create a bearer token using the refresh token 
-	        	//If access token is valid, use that 
-        	accessToken = (accessToken!=null)?accessToken:profile.getBearerToken();        	
+        	//Need to validate access token only if refresh token is provided.
+	        	//If access token is not valid, create a bearer token using the refresh token
+	        	//If access token is valid, use that
+        	accessToken = (accessToken!=null)?accessToken:profile.getBearerToken();
         	if(profile.getRefreshToken() != null && !profile.getRefreshToken().equalsIgnoreCase("")){
         		if(isValidBearerToken(accessToken, profile, mgmtAPIClientId)){
         			logger.info("Access Token valid");
@@ -735,7 +735,7 @@ public class RestUtil {
                 		 logger.info("Access token not valid so acquiring new access token using Refresh Token");
                 		 token = client.getAccessTokenFromRefreshToken(
 		     			 			tokenUrl,
-		     			 			mgmtAPIClientId, mgmtAPIClientSecret, 
+		     			 			mgmtAPIClientId, mgmtAPIClientSecret,
 		     			 			profile.getRefreshToken());
                 		 logger.info("New Access Token acquired");
 			         	 accessToken = token.getAccess_token();
@@ -757,7 +757,7 @@ public class RestUtil {
         			logger.error("Access token not valid");
         			throw new IOException ("Access token not valid");
         		}
-        		
+
         	}
         }
         else if (accessToken != null) {
@@ -794,8 +794,8 @@ public class RestUtil {
         logger.info(PrintUtil.formatRequest(request));
         return request.execute();
     }
-    
-    
+
+
     /**
      * This method is used to validate the Bearer token. It validates the source and the expiration and if the token is about to expire in 30 seconds, set as invalid token
      * @param accessToken
@@ -823,5 +823,5 @@ public class RestUtil {
 		}
     	return isValid;
     }
-    
+
 }

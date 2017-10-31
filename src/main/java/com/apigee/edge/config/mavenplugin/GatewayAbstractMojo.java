@@ -34,102 +34,102 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 	/**
 	 * Directory containing the build files.
-	 * 
+	 *
 	 * @parameter property="project.build.directory"
 	 */
 	private File buildDirectory;
-	
+
 	/**
 	 * Base directory of the project.
-	 * 
+	 *
 	 * @parameter property="basedir"
 	 */
 	private File baseDirectory;
 
 	/**
 	 * Project Name
-	 * 
+	 *
 	 * @parameter property="project.name"
 	 */
 	private String projectName;
-	
+
 	/**
 	 * Project version
-	 * 
+	 *
 	 * @parameter property="project.version"
 	 */
 	private String projectVersion;
 
 	/**
 	 * Project artifact id
-	 * 
+	 *
 	 * @parameter property="project.artifactId"
 	 */
 	private String artifactId;
-	
+
 	/**
 	 * Profile id
-	 * 
+	 *
 	 * @parameter property="apigee.profile"
 	 */
 	private String id;
-	
+
 
 	/**
 	 * Gateway host URL
-	 * 
+	 *
 	 * @parameter property="apigee.hosturl"
 	 */
 	private String hostURL;
-	
+
 
 	/**
 	 * Gateway env profile
-	 * 
+	 *
 	 * @parameter property="apigee.env" default-value="${apigee.profile}"
 	 */
 	private String deploymentEnv;
-	
+
 	/**
 	 * Gateway api version
-	 * 
+	 *
 	 * @parameter property="apigee.apiversion"
 	 */
 	private String apiVersion;
-	
-	
+
+
 	/**
 	 * Gateway org name
-	 * 
+	 *
 	 * @parameter property="apigee.org"
 	 */
 	private String orgName;
-	
+
 	/**
 	 * Gateway host username
-	 * 
+	 *
 	 * @parameter property="apigee.username"
 	 */
 	private String userName;
-	
+
 	/**
 	 * Gateway host password
-	 * 
+	 *
 	 * @parameter property="apigee.password"
 	 */
 	private String password;
 
 	/**
 	 * Build option
-	 * 
+	 *
 	 * @parameter property="build.option"
 	 */
 	private String buildOption;
-	
-	
+
+
 	/**
 	 * Gateway options
-	 * 
+	 *
 	 * @parameter property="apigee.config.options"
 	 */
 	private String options;
@@ -139,63 +139,105 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 * @parameter property="apigee.config.dir"
  	 */
 	private String configDir;
-	
+
 	/**
 	 * Export dir for Apigee Dev App Keys
-	 * 
+	 *
 	 * @parameter property="apigee.config.exportDir"
 	 */
 	private String exportDir;
-	
+
 	/**
 	 * Mgmt API OAuth token endpoint
-	 * 
+	 *
 	 * @parameter expression="${apigee.tokenurl}" default-value="https://login.apigee.com/oauth/token"
 	 */
 	private String tokenURL;
 
 	/**
 	 * Mgmt API OAuth MFA - TOTP
-	 * 
+	 *
 	 * @parameter expression="${apigee.mfatoken}"
 	 */
 	private String mfaToken;
 
 	/**
 	 * Mgmt API authn type
-	 * 
+	 *
 	 * @parameter expression="${apigee.authtype}" default-value="basic"
 	 */
 	private String authType;
-	
+
 	/**
 	 * Gateway bearer token
-	 * 
+	 *
 	 * @parameter expression="${apigee.bearer}"
 	 */
 	private String bearer;
-	
+
 	/**
 	 * Gateway refresh token
-	 * 
+	 *
 	 * @parameter expression="${apigee.refresh}"
 	 */
 	private String refresh;
-	
+
 	/**
 	 * Gateway OAuth clientId
-	 * 
+	 *
 	 * @parameter expression="${apigee.clientid}"
 	 */
 	private String clientid;
-	
+
 	/**
 	 * Gateway OAuth clientSecret
-	 * 
+	 *
 	 * @parameter expression="${apigee.clientsecret}"
 	 */
 	private String clientsecret;
-	
+
+  /**
+   * Portal User Name
+   *
+   * @parameter property="portal.username"
+   */
+  private String portalUserName;
+
+  /**
+   * Portal Password
+   *
+   * @parameter property="portal.password"
+   */
+  private String portalPassword;
+
+  /**
+   * OpenAPI Spec Directory
+   *
+   * @parameter property="portal.directory"
+   */
+  private String portalDirectory;
+
+  /**
+   * Portal URL
+   *
+   * @parameter property="portal.url"
+   */
+  private String portalURL;
+
+  /**
+   * Portal Path
+   *
+   * @parameter property="portal.path"
+   */
+  private String portalPath;
+
+/**
+   * Portal Format
+   *
+   * @parameter property="portal.format"
+   */
+  private String portalFormat;
+
 	// TODO set resources/edge as default value
 
 	public String getExportDir() {
@@ -218,7 +260,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 	public GatewayAbstractMojo(){
 		super();
-		
+
 	}
 
 	public ServerProfile getProfile() {
@@ -239,6 +281,14 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile.setRefreshToken(this.refresh);
 		this.buildProfile.setClientId(this.clientid);
 		this.buildProfile.setClientSecret(this.clientsecret);
+
+		this.buildProfile.setPortalUserName(this.portalUserName);
+		this.buildProfile.setPortalPassword(this.portalPassword);
+		this.buildProfile.setPortalDirectory(this.portalDirectory);
+		this.buildProfile.setPortalURL(this.portalURL);
+		this.buildProfile.setPortalPath(this.portalPath);
+		this.buildProfile.setPortalFormat(this.portalFormat);
+
 		return buildProfile;
 	}
 
@@ -251,7 +301,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	}
 
 	public String getBuildDirectory() {
-		return this.buildDirectory.getAbsolutePath(); 
+		return this.buildDirectory.getAbsolutePath();
 	}
 
 	public String getBaseDirectoryPath(){

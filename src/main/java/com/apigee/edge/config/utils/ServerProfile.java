@@ -28,7 +28,7 @@ public class ServerProfile {
 	private String bundle_zip_full_path;
 	private String profileId; //Profile id as in parent pom
 	private String options;
-	
+
 	private String tokenURL; // Mgmt API OAuth token endpoint
 	private String mfaToken; // Mgmt API OAuth MFA - TOTP
 	private String clientId; //Mgmt API OAuth Client Id (optional)
@@ -36,7 +36,15 @@ public class ServerProfile {
 	private String bearerToken; //Mgmt API OAuth Token
 	private String refreshToken; //Mgmt API OAuth Refresh Token
 	private String authType; // Mgmt API Auth Type oauth|basic
-	
+
+	// Portal Parameters
+	private String portalUserName; // Developer Portal Username
+	private String portalPassword; // Developer Portal Password
+	private String portalDirectory; // Directory holding OpenAPI specs
+	private String portalURL; // Developer Portal URL
+	private String portalPath; // Developer Portal REST base path
+	private String portalFormat; // OpenAPI spec format
+
 	public String getHostURL() {
 		return hostURL;
 	}
@@ -179,10 +187,94 @@ public class ServerProfile {
 		this.profileId = id;
 	}
 
+  /**
+   * @return the portalUser
+   */
+  public String getPortalUserName() {
+    return portalUserName;
+  }
+
+  /**
+   * @param portalUserName the portalUserName to set
+   */
+  public void setPortalUserName(String portalUserName) {
+    this.portalUserName = portalUserName;
+  }
+
+  /**
+   * @return the portalPassword
+   */
+  public String getPortalPassword() {
+    return portalPassword;
+  }
+
+  /**
+   * @param portalPassword the portalPassword to set
+   */
+  public void setPortalPassword(String portalPassword) {
+    this.portalPassword = portalPassword;
+  }
+
+  /**
+   * @return the portalDirectory
+   */
+  public String getPortalDirectory() {
+    return portalDirectory;
+  }
+
+  /**
+   * @param portalDirectory the portalDirectory to set
+   */
+  public void setPortalDirectory(String portalDirectory) {
+    this.portalDirectory = portalDirectory;
+  }
+
+  /**
+   * @return the portalURL
+   */
+  public String getPortalURL() {
+    return portalURL;
+  }
+
+  /**
+   * @param portalURL the portalURL to set
+   */
+  public void setPortalURL(String portalURL) {
+    this.portalURL = portalURL;
+  }
+
+  /**
+   * @return the portalPath
+   */
+  public String getPortalPath() {
+    return portalPath;
+  }
+
+  /**
+   * @param portalPath the portalPath to set
+   */
+  public void setPortalPath(String portalPath) {
+    this.portalPath = portalPath;
+  }
+
+  /**
+   * @return the portalFormat
+   */
+  public String getPortalFormat() {
+    return portalFormat;
+  }
+
+  /**
+   * @param portalFormat the portalFormat to set
+   */
+  public void setPortalFormat(String portalFormat) {
+    this.portalFormat = portalFormat;
+  }
+
 	/**
 	 * @param options the options to set
 	 */
-	
+
 	public String getOptions() {
 		return options;
 	}
