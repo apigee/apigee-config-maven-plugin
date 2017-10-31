@@ -40,6 +40,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import com.google.api.client.http.*;
+import java.util.Arrays;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -184,6 +185,7 @@ public class APIModelMojo extends GatewayAbstractMojo {
       for (File file : files) {
         PortalRestUtil.postAPIModel(serverProfile, file);
       }
+      logger.info("Updated all models found in the OpenAPI Spec directory.");
     }
     catch (IOException e) {
       throw new RuntimeException("Update failure: " + e.getMessage());
@@ -198,6 +200,7 @@ public class APIModelMojo extends GatewayAbstractMojo {
       for (File file : files) {
         PortalRestUtil.renderAPIModel(serverProfile, file);
       }
+      logger.info("Rendered all models found in the OpenAPI Spec directory.");
     }
     catch (IOException e) {
       throw new RuntimeException("Render failure: " + e.getMessage());
@@ -209,9 +212,21 @@ public class APIModelMojo extends GatewayAbstractMojo {
    */
   public void doDelete() throws MojoExecutionException {
     try {
+      // Create a list of all specs we have on the file system.
+      List<String> specNames = new ArrayList<String>();
       for (File file : files) {
-        PortalRestUtil.deleteAPIModel(serverProfile, "Fake");
+        PortalRestUtil.SpecObject spec = PortalRestUtil.parseSpec(file);
+        specNames.add(spec.getName());
       }
+
+      // Iterate over all models and if one does not exist on the file system, delete it.
+      PortalRestUtil.ModelObjects modelObjectArray = PortalRestUtil.getAPIModels(serverProfile);
+      for (PortalRestUtil.ModelObject mo : modelObjectArray.modelObjects) {
+        if (!specNames.contains(mo.name)) {
+          PortalRestUtil.deleteAPIModel(serverProfile, mo.name);
+        }
+      }
+      logger.info("Deleted all models not found in the OpenAPI Spec directory.");
     }
     catch (IOException e) {
       throw new RuntimeException("Deletion failure: " + e.getMessage());

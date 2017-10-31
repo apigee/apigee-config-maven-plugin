@@ -41,8 +41,18 @@ import com.google.api.client.json.jackson.JacksonFactory;
 
 import com.google.api.client.util.Key;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PortalRestUtil {
 
@@ -104,7 +114,14 @@ public class PortalRestUtil {
         return description;   
       }
     }
-    
+
+    public static class ModelObjects {
+      public List<ModelObject> modelObjects = new ArrayList<ModelObject>();
+      public void addModelObject(ModelObject modelObject) {
+        modelObjects.add(modelObject);
+      }
+    }
+
     public static class ModelObject {
       public String id;
       public String name;
@@ -113,6 +130,27 @@ public class PortalRestUtil {
       public String latestRevisionNumber;
       public String createdTime;
       public String modifiedTime;
+    }
+
+    /**
+     * Helps with deserializing the object return into a list of modelobject items.
+     */
+    public static class ModelObjectsDeserializer implements JsonDeserializer<ModelObjects> {
+
+        public ModelObjects deserialize
+          (JsonElement jElement, Type typeOfT, JsonDeserializationContext context) 
+          throws JsonParseException {
+            ModelObjects mos = new ModelObjects();
+            JsonObject jObject = jElement.getAsJsonObject();
+            Set<Map.Entry<String, JsonElement>> entries = jObject.entrySet();//will return members of your object
+            for (Map.Entry<String, JsonElement> entry: entries) {
+              Gson gson = new Gson();
+              ModelObject mo = gson.fromJson(entry.getValue(), ModelObject.class);
+              mos.addModelObject(mo);
+            }
+
+            return mos;
+        }
     }
 
     // Get headers that have been set.
@@ -170,6 +208,45 @@ public class PortalRestUtil {
     return response;
   }
   
+  /**
+   * Retrieve all existing models.
+   */
+  public static ModelObjects getAPIModels(ServerProfile profile) throws IOException {
+    HttpResponse response = null;
+    try {
+      // First authenticate.
+      authenticate(profile);
+
+      HttpRequest restRequest = REQUEST_FACTORY
+        .buildGetRequest(new GenericUrl(
+          profile.getPortalURL() + "/" + profile.getPortalPath() +
+          "/smartdocs.json"));
+          restRequest.setReadTimeout(0);
+      logger.info("Retrieving all models.");
+
+      response = restRequest.execute();
+
+      Gson gson = new Gson();
+      InputStream source = response.getContent(); //Get the data in the entity
+      Reader reader = new InputStreamReader(source);
+
+      GsonBuilder gsonBldr = new GsonBuilder();
+      gsonBldr.registerTypeAdapter(ModelObjects.class, new ModelObjectsDeserializer());
+      ModelObjects models = gsonBldr.create().fromJson(reader, ModelObjects.class);
+
+      return models;
+    }
+    catch (HttpResponseException e) {
+      if (e.getStatusCode() == 404) {
+        logger.info("Model does not currently exist.");
+        return null;
+      }
+      else {
+        throw e;
+      }
+    }
+  }
+
   /**
    * Retrieve an existing model element. Returns null if the model does
    * not currently exist.
@@ -404,7 +481,7 @@ public class PortalRestUtil {
    * Helper function to parse a json formatted OpenAPI spec and turn it into
    * an object containing the properties we will reuse. 
    */
-  private static SpecObject parseSpec(File file) throws FileNotFoundException {
+  public static SpecObject parseSpec(File file) throws FileNotFoundException {
     FileContent tempFileContent = new FileContent("application/json", file);
     Reader reader = new InputStreamReader(tempFileContent.getInputStream());
 
