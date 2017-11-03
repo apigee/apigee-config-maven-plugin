@@ -146,7 +146,7 @@ Each config entity is the payload of the corresponding management API. The examp
 
 Config entities like "developerApps" are grouped under the developerId (email) they belong to.
 
-## OAuth
+## OAuth (supported from v1.2 or higher)
 Apigee management APIs are secured using OAuth tokens as an alternative to the Basic Auth security. Additionally Two-Factor authentication (MFA) using TOTP can also be configured as an additional layer of security. This plugin has the capability to acquire OAuth tokens and invoke management API calls.
 
 Refer to [How to get OAuth2 tokens](http://docs.apigee.com/api-services/content/using-oauth2-security-apigee-edge-management-api#howtogetoauth2tokens) and [Two-Factor authentication](http://docs.apigee.com/api-services/content/enable-two-factor-auth-your-apigee-account)for details.
