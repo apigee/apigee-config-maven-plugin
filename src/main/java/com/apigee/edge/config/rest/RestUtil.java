@@ -91,6 +91,23 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse createEnvConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
+
+        return executeAPIPost(profile, payload, importCmd);
+    }
+
     public static HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String filePath)
 			throws IOException {
 		byte[] file = Files.readAllBytes(new File(filePath).toPath());
@@ -148,6 +165,25 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateEnvConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String subResourceId,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment() + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource +"/"
+                + subResourceId;
+
+        return executeAPIPost(profile, payload, importCmd);
     }
 
 	public static HttpResponse updateEnvConfigUpload(ServerProfile profile, String resource, String resourceId,
@@ -270,6 +306,24 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse getEnvConfig(ServerProfile profile,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource,
+                                            String subResourceId)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/environments/"
+                + profile.getEnvironment()  + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return executeAPIGet(profile, importCmd);
+    }
+
     /***************************************************************************
      * Org Config - get, create, update
      **/
@@ -301,6 +355,22 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse createOrgConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg()+ "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
+
+        return executeAPIPost(profile, payload, importCmd);
     }
     
 	public static HttpResponse createOrgConfigUpload(ServerProfile profile, String resource, String filePath)
@@ -358,6 +428,24 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateOrgConfig(ServerProfile profile,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String subResourceId,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return executeAPIPost(profile, payload, importCmd);
     }
     
 	public static HttpResponse updateOrgConfigUpload(ServerProfile profile, 
@@ -464,6 +552,23 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse getOrgConfig(ServerProfile profile,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource,
+                                            String subResourceId)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg()  + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return executeAPIGet(profile, importCmd);
+    }
+
     /***************************************************************************
      * API Config - get, create, update
      **/
@@ -497,6 +602,24 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse createAPIConfig(ServerProfile profile,
+                                               String api,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api+ "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
+
+        return executeAPIPost(profile, payload, importCmd);
     }
         
         public static HttpResponse createAPIConfigUpload(ServerProfile profile, String api, String resource, String filePath)
@@ -557,6 +680,26 @@ public class RestUtil {
         }
 
         return response;
+    }
+
+    public static HttpResponse updateAPIConfig(ServerProfile profile,
+                                               String api,
+                                               String resource,
+                                               String resourceId,
+                                               String subResource,
+                                               String subResourceId,
+                                               String payload)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return executeAPIPost(profile, payload, importCmd);
     }
     
     public static HttpResponse updateAPIConfigUpload(ServerProfile profile, String api, String resource, String resourceId,
@@ -644,6 +787,25 @@ public class RestUtil {
         return response;
     }
 
+    public static HttpResponse getAPIConfig(ServerProfile profile,
+                                            String api,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource,
+                                            String subResourceId)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/apis/"
+                + api + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        return executeAPIGet(profile, importCmd);
+    }
+
     public static HttpResponse deleteAPIResourceFileConfig(ServerProfile profile, String api, String resource, String resourceId)
 			throws IOException {
 
@@ -695,6 +857,49 @@ public class RestUtil {
 	            throw e;
 	        }
     	}
+    }
+
+    private static HttpResponse executeAPIGet(ServerProfile profile, String importCmd)
+            throws IOException {
+
+        HttpRequest restRequest = REQUEST_FACTORY
+                .buildGetRequest(
+                        new GenericUrl(importCmd));
+        restRequest.setReadTimeout(0);
+
+        HttpResponse response;
+        try {
+            response = RestUtil.executeAPI(profile, restRequest);
+        } catch (HttpResponseException e) {
+            if (e.getStatusCode() == 404) return null;
+            logger.error("Apigee call failed " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return response;
+    }
+
+    private static HttpResponse executeAPIPost(ServerProfile profile, String payload,
+                                               String importCmd)
+            throws IOException {
+
+        ByteArrayContent content = new ByteArrayContent("application/json",
+                payload.getBytes());
+
+        HttpRequest restRequest = REQUEST_FACTORY
+                .buildPostRequest(
+                        new GenericUrl(importCmd), content);
+        restRequest.setReadTimeout(0);
+
+        HttpResponse response;
+        try {
+            response = RestUtil.executeAPI(profile, restRequest);
+        } catch (HttpResponseException e) {
+            logger.error("Apigee call failed " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return response;
     }
   
     /**

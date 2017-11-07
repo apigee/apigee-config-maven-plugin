@@ -15,13 +15,10 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
+import com.apigee.edge.config.mavenplugin.kvm.*;
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -33,15 +30,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 import java.io.IOException;
-import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-
 import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -69,6 +62,9 @@ public class KVMMojo extends GatewayAbstractMojo
 	OPTIONS buildOption = OPTIONS.none;
 
 	private ServerProfile serverProfile;
+	private Kvm kvmOrg;
+	private Kvm kvmApi;
+	private Kvm kvmEnv;
 
     public static class KVM {
         @Key
@@ -88,7 +84,10 @@ public class KVMMojo extends GatewayAbstractMojo
 			logger.info(____ATTENTION_MARKER____);
 
 			String options="";
-			serverProfile = super.getProfile();			
+			serverProfile = super.getProfile();
+            kvmOrg = new KvmOrg();
+            kvmApi = new KvmApi();
+            kvmEnv = new KvmEnv();
 	
 			options = super.getOptions();
 			if (options != null) {
@@ -137,7 +136,7 @@ public class KVMMojo extends GatewayAbstractMojo
                         case update:
                             logger.info("Org KVM \"" + kvmName + 
                                                     "\" exists. Updating.");
-                            updateOrgKVM(serverProfile, kvmName, kvm);
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case create:
                             logger.info("Org KVM \"" + kvmName + 
@@ -203,7 +202,7 @@ public class KVMMojo extends GatewayAbstractMojo
                         case update:
                             logger.info("Env KVM \"" + kvmName + 
                                                     "\" exists. Updating.");
-                            updateEnvKVM(serverProfile, kvmName, kvm);
+                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case create:
                             logger.info("Env KVM \"" + kvmName + 
@@ -237,7 +236,7 @@ public class KVMMojo extends GatewayAbstractMojo
                     }
                 }
             }
-        
+
         } catch (IOException e) {
             throw new MojoFailureException("Apigee network call error " +
                                                          e.getMessage());
@@ -269,7 +268,7 @@ public class KVMMojo extends GatewayAbstractMojo
                         case update:
                             logger.info("API KVM \"" + kvmName + 
                                                     "\" exists. Updating.");
-                            updateAPIKVM(serverProfile, api, kvmName, kvm);
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
                             break;
                         case create:
                             logger.info("API KVM \"" + kvmName + 
@@ -385,7 +384,7 @@ public class KVMMojo extends GatewayAbstractMojo
     public static String createOrgKVM(ServerProfile profile, String kvm)
             throws IOException {
 
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+        HttpResponse response = RestUtil.createOrgConfig(profile,
                                                             "keyvaluemaps", 
                                                             kvm);
         try {
@@ -403,34 +402,10 @@ public class KVMMojo extends GatewayAbstractMojo
         return "";
     }
 
-    public static String updateOrgKVM(ServerProfile profile, 
-                                        String kvmEntry, 
-                                        String kvm)
-            throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
-                                                            "keyvaluemaps", 
-                                                            kvmEntry,
-                                                            kvm);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("KVM update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
     public static String deleteOrgKVM(ServerProfile profile, String kvmEntry)
             throws IOException {
 
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+        HttpResponse response = RestUtil.deleteOrgConfig(profile,
                                                             "keyvaluemaps", 
                                                             kvmEntry);
         try {
@@ -482,7 +457,7 @@ public class KVMMojo extends GatewayAbstractMojo
     public static String createEnvKVM(ServerProfile profile, String kvm)
             throws IOException {
 
-        HttpResponse response = RestUtil.createEnvConfig(profile, 
+        HttpResponse response = RestUtil.createEnvConfig(profile,
                                                     "keyvaluemaps", 
                                                     kvm);
         try {
@@ -500,35 +475,11 @@ public class KVMMojo extends GatewayAbstractMojo
         return "";
     }
 
-    public static String updateEnvKVM(ServerProfile profile, 
-                                        String kvmEntry, 
-                                        String kvm)
-            throws IOException {
-
-        HttpResponse response = RestUtil.updateEnvConfig(profile, 
-                                                    "keyvaluemaps", 
-                                                    kvmEntry,
-                                                    kvm);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-            	logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("KVM update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
     public static String deleteEnvKVM(ServerProfile profile, 
                                         String kvmEntry)
             throws IOException {
 
-        HttpResponse response = RestUtil.deleteEnvConfig(profile, 
+        HttpResponse response = RestUtil.deleteEnvConfig(profile,
                                                     "keyvaluemaps", 
                                                     kvmEntry);
         try {
@@ -582,7 +533,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                         String kvm)
             throws IOException {
 
-        HttpResponse response = RestUtil.createAPIConfig(profile, 
+        HttpResponse response = RestUtil.createAPIConfig(profile,
                                                             api,
                                                             "keyvaluemaps", 
                                                             kvm);
@@ -601,38 +552,12 @@ public class KVMMojo extends GatewayAbstractMojo
         return "";
     }
 
-    public static String updateAPIKVM(ServerProfile profile, 
-                                        String api,
-                                        String kvmEntry, 
-                                        String kvm)
-            throws IOException {
-
-        HttpResponse response = RestUtil.updateAPIConfig(profile, 
-                                                            api,
-                                                            "keyvaluemaps", 
-                                                            kvmEntry,
-                                                            kvm);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("KVM update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
     public static String deleteAPIKVM(ServerProfile profile, 
                                         String api,
                                         String kvmEntry)
             throws IOException {
 
-        HttpResponse response = RestUtil.deleteAPIConfig(profile, 
+        HttpResponse response = RestUtil.deleteAPIConfig(profile,
                                                             api,
                                                             "keyvaluemaps", 
                                                             kvmEntry);
@@ -654,7 +579,7 @@ public class KVMMojo extends GatewayAbstractMojo
     public static List getAPIKVM(ServerProfile profile, String api)
             throws IOException {
 
-        HttpResponse response = RestUtil.getAPIConfig(profile, api, 
+        HttpResponse response = RestUtil.getAPIConfig(profile, api,
                                                         "keyvaluemaps");
         if(response == null) return new ArrayList();
         JSONArray kvms = null;
