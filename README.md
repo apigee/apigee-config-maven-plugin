@@ -43,7 +43,7 @@ mvn install -Ptest -Dapigee.config.options=create
   developerapps
   caches
   developers
-  kvms
+  kvms                      # CPS support from v1.2.1
   targetservers
   resourcefiles
   flowhooks
@@ -222,7 +222,6 @@ Provide the token when invoking the plugin.
 
 
 ## ROADMAP
-  - KVM (CPS)
   - Keystore, Truststore support
   - Virtual host (on-prem)
   - Custom roles
