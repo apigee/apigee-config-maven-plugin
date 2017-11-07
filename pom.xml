@@ -9,7 +9,7 @@
   
   <groupId>com.apigee.edge.config</groupId>
   <artifactId>apigee-config-maven-plugin</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.1</version>
   <packaging>maven-plugin</packaging>
   <name>apigee-config-maven-plugin</name>
   <description>Plugin to manage configuration in Apigee</description>
