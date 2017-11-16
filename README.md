@@ -207,7 +207,7 @@ Provide the token when invoking the plugin.
     mvn install -Ptest -Dusername=$ae_username -Dorg=testmyapi \
                          -Dauthtype=oauth -Dbearer=c912eu1201c -Dapigee.config.options=create
                     
-**when using bearer token - please provide the username as well as it is used for token validation**
+**when using bearer token - please provide the username as well, as it is used for token validation**
                         
 ### Passing the Refresh Token as a parameter
 If you would like to generate the refresh token outside of this plugin and provide it as a command line parameter, you can add the following: 
