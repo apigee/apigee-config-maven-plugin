@@ -38,16 +38,16 @@ mvn install -Ptest -Dapigee.config.options=create
   # Individual goals
   You can also work with an individual config type using the 
   corresponding goal directly. The goals available are,
-
-  apiproducts 
-  developerapps
+ 
   caches
-  developers
   kvms                      # CPS support from v1.2.1
   targetservers
   resourcefiles
   flowhooks
   maskconfigs
+  apiproducts
+  developers
+  apps
   exportAppKeys
   
 
