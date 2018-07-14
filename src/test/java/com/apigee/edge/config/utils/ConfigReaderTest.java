@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ConfigReaderTest {
 
@@ -191,5 +192,15 @@ public class ConfigReaderTest {
         Assert.assertEquals("MYVALUE", ((Map) entries.get(0)).get("value"));
         Assert.assertEquals("MYOTHERNAME", ((Map) entries.get(1)).get("name"));
         Assert.assertEquals("MYOTHERVALUE", ((Map) entries.get(1)).get("value"));
+    }
+
+    @Test
+    public void testGetAPIList() {
+        Set<String> actual = ConfigReader.getAPIList(basePath.resolve("testGetAPIList").toString());
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(3, actual.size());
+        Assert.assertTrue(actual.contains("my-api-v1"));
+        Assert.assertTrue(actual.contains("my-api-v2"));
+        Assert.assertTrue(actual.contains("my-awesome-api-v1"));
     }
 }
