@@ -1,0 +1,18 @@
+[
+  {
+    "apiProducts": [
+      "weatherProduct"
+    ],
+    "callbackUrl": "http://weatherapp.com",
+    "name": "grantoneapp",
+    "scopes": []
+  },
+  {
+    "apiProducts": [
+      "weatherProduct"
+    ],
+    "callbackUrl": "http://weatherapp.com",
+    "name": "granttwoapp",
+    "scopes": []
+  }
+]
