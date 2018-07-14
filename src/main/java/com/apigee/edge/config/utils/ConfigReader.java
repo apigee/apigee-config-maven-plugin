@@ -29,37 +29,8 @@ public class ConfigReader {
      * Returns List of
      * [ {cache1}, {cache2}, {cache3} ]
      */
-    public static List getEnvConfig(String env,
-                                     File configFile)
-            throws ParseException, IOException {
-
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
-
-        JSONParser parser = new JSONParser();
-        ArrayList out;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(
-                new java.io.FileReader(configFile));
-
-            JSONArray  configs      = (JSONArray)parser.parse(bufferedReader);
-
-            if (configs == null) return null;
-
-            out = new ArrayList();
-            for (Object config: configs) {
-                out.add(((JSONObject)config).toJSONString());
-            }
-        }
-        catch(IOException ie) {
-            logger.info(ie.getMessage());
-            throw ie;
-        }
-        catch(ParseException pe) {
-            logger.info(pe.getMessage());
-            throw pe;
-        }
-
-        return out;
+    public static List getEnvConfig(String env, File configFile) throws ParseException, IOException {
+        return getOrgConfig(configFile);
     }
 
     /**
@@ -69,8 +40,7 @@ public class ConfigReader {
      */
 
     // TODO convert parse exception error message more human friendly
-    public static List getOrgConfig(File configFile)
-            throws ParseException, IOException {
+    public static List getOrgConfig(File configFile) throws ParseException, IOException {
 
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
         try {
