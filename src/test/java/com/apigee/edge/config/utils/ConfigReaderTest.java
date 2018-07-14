@@ -130,4 +130,35 @@ public class ConfigReaderTest {
         Assert.assertEquals("My other product", actual2.get("displayName"));
         Assert.assertEquals("This is my other awesome product", actual2.get("description"));
     }
+
+    @Test(expected = IOException.class)
+    public void testGetAPIConfigWithMissingFile() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetAPIConfigWithMissingFile-input.json");
+        ConfigReader.getAPIConfig(input.toFile());
+    }
+
+    @Test
+    public void testGetAPIConfigKVMs() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetAPIConfigKVMs-input.json");
+        List actual = ConfigReader.getAPIConfig(input.toFile());
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(2, actual.size());
+
+        ObjectMapper om = new ObjectMapper();
+        Map actual1 = om.readValue((String) actual.get(0), Map.class);
+        Map expected1 = om.readValue(basePath.resolve("testGetAPIConfigKVMs-expected.json").toFile(), Map.class);
+        Assert.assertEquals(expected1, actual1);
+
+        Map actual2 = om.readValue((String) actual.get(1), Map.class);
+        Assert.assertEquals("my_other_config", actual2.get("name"));
+        Assert.assertNotNull(actual2.get("entry"));
+        Assert.assertTrue(actual2.get("entry") instanceof List);
+        List entries = (List) actual2.get("entry");
+        Assert.assertEquals(2, entries.size());
+        Assert.assertTrue(entries.get(0) instanceof Map);
+        Assert.assertEquals("MYNAME", ((Map) entries.get(0)).get("name"));
+        Assert.assertEquals("MYVALUE", ((Map) entries.get(0)).get("value"));
+        Assert.assertEquals("MYOTHERNAME", ((Map) entries.get(1)).get("name"));
+        Assert.assertEquals("MYOTHERVALUE", ((Map) entries.get(1)).get("value"));
+    }
 }
