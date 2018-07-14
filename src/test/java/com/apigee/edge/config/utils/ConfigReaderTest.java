@@ -242,4 +242,42 @@ public class ConfigReaderTest {
         List expected2 = om.readValue(basePath.resolve("testGetOrgConfigWithId-expected2.json").toFile(), List.class);
         Assert.assertEquals(expected2, actual2);
     }
+
+    @Test(expected = IOException.class)
+    public void testGetOrgConfigWithIdWithMissingYamlFile() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetOrgConfigWithIdWithMissingYamlFile-input.json");
+        ConfigReader.getOrgConfigWithId(input.toFile());
+    }
+
+    @Test
+    public void testGetOrgConfigWithIdFromYaml() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetOrgConfigWithIdFromYaml-input.yaml");
+        Map actual = ConfigReader.getOrgConfigWithId(input.toFile());
+
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(2, actual.size());
+        Assert.assertTrue(actual.containsKey("grant@enterprise.com"));
+        Assert.assertTrue(actual.containsKey("hugh@example.com"));
+
+        // Developer 1
+        ObjectMapper om = new ObjectMapper();
+        Assert.assertNotNull(actual.get("grant@enterprise.com"));
+        Assert.assertTrue(actual.get("grant@enterprise.com") instanceof List);
+        List<Map> actual1 = new LinkedList<>();
+        for (Object s : (List) actual.get("grant@enterprise.com")) {
+            actual1.add(om.readValue((String) s, Map.class));
+        }
+        List expected1 = om.readValue(basePath.resolve("testGetOrgConfigWithIdFromYaml-expected1.json").toFile(), List.class);
+        Assert.assertEquals(expected1, actual1);
+
+        // Developer 2
+        Assert.assertNotNull(actual.get("hugh@example.com"));
+        Assert.assertTrue(actual.get("hugh@example.com") instanceof List);
+        List<Map> actual2 = new LinkedList<>();
+        for (Object s : (List) actual.get("hugh@example.com")) {
+            actual2.add(om.readValue((String) s, Map.class));
+        }
+        List expected2 = om.readValue(basePath.resolve("testGetOrgConfigWithIdFromYaml-expected2.json").toFile(), List.class);
+        Assert.assertEquals(expected2, actual2);
+    }
 }

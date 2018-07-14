@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,10 +63,10 @@ public class ConfigReader {
     }
 
     private static List<String> getOrgConfigFromJson(File file) throws IOException, ParseException {
-        BufferedReader bufferedReader = new BufferedReader(new java.io.FileReader(file));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
         JSONParser parser = new JSONParser();
-        JSONArray configs = (JSONArray)parser.parse(bufferedReader);
+        JSONArray configs = (JSONArray) parser.parse(bufferedReader);
         if (configs == null) {
             return null;
         }
@@ -94,44 +95,52 @@ public class ConfigReader {
      * Returns Map of
      * <developerId> => [ {app1}, {app2}, {app3} ]
      */
-    public static Map<String, List<String>> getOrgConfigWithId(File configFile)
-            throws ParseException, IOException {
-
+    public static Map<String, List<String>> getOrgConfigWithId(File configFile) throws ParseException, IOException {
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
 
-        JSONParser parser = new JSONParser();
-        Map <String, List<String>> out;
-        List<String> outStrs;
         try {
-            BufferedReader bufferedReader = new BufferedReader(
-                new java.io.FileReader(configFile));
-
-            Map sConfig     = (Map)parser.parse(bufferedReader);
-            if (sConfig == null) return null;
-
-            // orgConfig.developerApps.<developerId>
-            Iterator it = sConfig.entrySet().iterator();
-            out = new HashMap<String, List<String>> ();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                JSONArray confs = (JSONArray)pair.getValue();
-                outStrs = new ArrayList<String>();
-                for (Object conf: confs) {
-                    outStrs.add(((JSONObject)conf).toJSONString());
-                }
-                out.put((String)pair.getKey(), outStrs);
+            if (configFile.getName().endsWith(".yaml")) {
+                return getOrgConfigWithIdFromYaml(configFile);
             }
-
+            else {
+                return getOrgConfigWithIdFromJson(configFile);
+            }
         }
-        catch(IOException ie) {
+        catch(IOException | ParseException ie) {
             logger.info(ie.getMessage());
             throw ie;
         }
-        catch(ParseException pe) {
-            logger.info(pe.getMessage());
-            throw pe;
+    }
+
+    private static Map<String, List<String>> getOrgConfigWithIdFromJson(File configFile) throws IOException, ParseException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile));
+        Map<?, ?> sConfig = (Map) new JSONParser().parse(bufferedReader);
+        if (sConfig == null) {
+            return null;
         }
 
+        // orgConfig.developerApps.<developerId>
+        Map <String, List<String>> out = new HashMap<>();
+        for (Object key : sConfig.keySet()) {
+            out.put((String) key, new LinkedList<>());
+            for (Object conf : (JSONArray) sConfig.get(key)) {
+                out.get(key).add(((JSONObject) conf).toJSONString());
+            }
+        }
+        return out;
+    }
+
+    private static Map<String, List<String>> getOrgConfigWithIdFromYaml(File configFile) throws IOException {
+        ObjectMapper om = new ObjectMapper();
+        Map<String, List<String>> out = new HashMap<>();
+
+        Map map = new ObjectMapper(new YAMLFactory()).readValue(configFile, Map.class);
+        for (Object key : map.keySet()) {
+            out.put((String) key, new LinkedList<>());
+            for (Object v : (List) map.get(key)) {
+                out.get(key).add(om.writeValueAsString(v));
+            }
+        }
         return out;
     }
 
