@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Read config from resources/edge/.../*.json files
@@ -138,17 +139,15 @@ public class ConfigReader {
      * List of APIs under configDir/api
      */
     public static Set<String> getAPIList(String apiConfigDir) {
-        Set<String> out = null;
-        File[] files = new File(apiConfigDir).listFiles();
-        if(files!=null && files.length>0){
-        	out = new HashSet<String>();
-        	for (File file : files) {
-                if (file.isDirectory()) {
-                    out.add(file.getName());
-                }
-            }
-        }
-        return out;
+        File[] baseDir = Optional.ofNullable(new File(apiConfigDir).listFiles())
+                .orElse(new File[0]);
+
+        Set<String> apis = Arrays.stream(baseDir)
+                .filter(File::isDirectory)
+                .map(File::getName)
+                .collect(Collectors.toSet());
+
+        return apis.isEmpty() ? null : apis;
     }
 
     /**
