@@ -6,7 +6,7 @@
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent>
-  
+
   <groupId>com.apigee.edge.config</groupId>
   <artifactId>apigee-config-maven-plugin</artifactId>
   <version>1.2.2-SNAPSHOT</version>
@@ -147,6 +147,11 @@
       <artifactId>json-simple</artifactId>
       <version>1.1.1</version>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>2.9.6</version>
+    </dependency>
     <!-- mgmt-api-java-sdk -->
        <dependency>
            <groupId>org.springframework</groupId>
@@ -172,13 +177,18 @@
            <groupId>cglib</groupId>
            <artifactId>cglib</artifactId>
            <version>2.2.2</version>
-       </dependency>        
+       </dependency>
        <dependency>
   		 	<groupId>com.auth0</groupId>
    		<artifactId>java-jwt</artifactId>
    		<version>3.1.0</version>
 	</dependency>
-       <!-- mgmt-api-java-sdk --> 
+      <!-- mgmt-api-java-sdk -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.2.0</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -316,7 +326,7 @@
                 </plugin>
             </plugins>
         </build>
-    </profile>    
+    </profile>
   </profiles>
 
 </project>
