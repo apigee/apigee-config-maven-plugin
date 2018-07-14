@@ -16,6 +16,40 @@ public class ConfigReaderTest {
     private final Path basePath = Paths.get("src/test/resources", getClass().getName());
 
     @Test(expected = IOException.class)
+    public void testGetEnvConfigWithMissingFile() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetEnvConfigWithMissingFile-input.json");
+        ConfigReader.getOrgConfig(input.toFile());
+    }
+
+    @Test
+    public void testGetEnvConfigTargetServers() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetEnvConfigTargetServers-input.json");
+        List actual = ConfigReader.getEnvConfig("dev", input.toFile());
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(2, actual.size());
+
+        ObjectMapper om = new ObjectMapper();
+        Map actual1 = om.readValue((String) actual.get(0), Map.class);
+        Map expected1 = om.readValue(basePath.resolve("testGetEnvConfigTargetServers-expected.json").toFile(), Map.class);
+        Assert.assertEquals(expected1, actual1);
+
+        Map actual2 = om.readValue((String) actual.get(1), Map.class);
+        Assert.assertEquals("ESBTarget", actual2.get("name"));
+        Assert.assertEquals("enterprise.com", actual2.get("host"));
+        Assert.assertEquals(true, actual2.get("isEnabled"));
+        Assert.assertEquals(8080, actual2.get("port"));
+        Assert.assertNotNull(actual2.get("sSLInfo"));
+        Assert.assertTrue(actual2.get("sSLInfo") instanceof Map);
+        Map sslInfo = (Map) actual2.get("sSLInfo");
+        Assert.assertEquals("false", sslInfo.get("clientAuthEnabled"));
+        Assert.assertEquals("true", sslInfo.get("enabled"));
+        Assert.assertEquals("false", sslInfo.get("ignoreValidationErrors"));
+        Assert.assertEquals("key_alias", sslInfo.get("keyAlias"));
+        Assert.assertEquals("keystore_name", sslInfo.get("keyStore"));
+        Assert.assertEquals("truststore_name", sslInfo.get("trustStore"));
+    }
+
+    @Test(expected = IOException.class)
     public void testGetOrgConfigWithMissingFile() throws IOException, ParseException {
         Path input = basePath.resolve("testGetOrgConfigWithMissingFile-input.json");
         ConfigReader.getOrgConfig(input.toFile());
