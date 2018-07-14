@@ -1,39 +1,18 @@
-/**
- * Copyright (C) 2016 Apigee Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.apigee.edge.config.utils;
 
-import java.io.File;
-import java.io.BufferedReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
-import org.json.simple.JSONValue;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * Read config from resources/edge/.../*.json files
@@ -46,18 +25,18 @@ public class ConfigReader {
     /**
      * Example Hierarchy
      * envConfig.cache.<env>.caches
-     * 
+     *
      * Returns List of
      * [ {cache1}, {cache2}, {cache3} ]
      */
-    public static List getEnvConfig(String env, 
+    public static List getEnvConfig(String env,
                                      File configFile)
             throws ParseException, IOException {
 
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
-        ArrayList out = null;    
+        ArrayList out;
         try {
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
@@ -67,7 +46,7 @@ public class ConfigReader {
             if (configs == null) return null;
 
             out = new ArrayList();
-            for (Object config: configs) {              
+            for (Object config: configs) {
                 out.add(((JSONObject)config).toJSONString());
             }
         }
@@ -84,11 +63,9 @@ public class ConfigReader {
     }
 
     /**
-     * Example Hierarchy
-     * orgConfig.apiProducts
-     * 
-     * Returns List of
-     * [ {apiProduct1}, {apiProduct2}, {apiProduct3} ]
+     * Example hierarchy orgConfig.apiProducts
+     *
+     * @return List of JSON strings, e.g. [ {apiProduct1}, {apiProduct2}, {apiProduct3} ]
      */
 
     // TODO convert parse exception error message more human friendly
@@ -96,37 +73,50 @@ public class ConfigReader {
             throws ParseException, IOException {
 
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
-
-        JSONParser parser = new JSONParser();
-        ArrayList out = null;    
         try {
-            BufferedReader bufferedReader = new BufferedReader(
-                new java.io.FileReader(configFile));
-
-            JSONArray configs = (JSONArray)parser.parse(bufferedReader);
-            if (configs == null) return null;
-
-            out = new ArrayList();
-            for (Object config: configs) {              
-                out.add(((JSONObject)config).toJSONString());
+            if (configFile.getName().endsWith(".yaml")) {
+                return getOrgConfigFromYaml(configFile);
+            }
+            else {
+                return getOrgConfigFromJson(configFile);
             }
         }
-        catch(IOException ie) {
+        catch(IOException | ParseException ie) {
             logger.info(ie.getMessage());
             throw ie;
         }
-        catch(ParseException pe) {
-            logger.info(pe.getMessage());
-            throw pe;
+    }
+
+    private static List<String> getOrgConfigFromJson(File file) throws IOException, ParseException {
+        BufferedReader bufferedReader = new BufferedReader(new java.io.FileReader(file));
+
+        JSONParser parser = new JSONParser();
+        JSONArray configs = (JSONArray)parser.parse(bufferedReader);
+        if (configs == null) {
+            return null;
         }
 
+        List<String> out = new ArrayList<>();
+        for (Object config: configs) {
+            out.add(((JSONObject)config).toJSONString());
+        }
+        return out;
+    }
+
+    private static List<String> getOrgConfigFromYaml(File configFile) throws IOException {
+        ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
+        ObjectMapper om = new ObjectMapper();
+        List<String> out = new ArrayList<>();
+        for (Object config : yamlReader.readValue(configFile, List.class)) {
+            out.add(om.writeValueAsString(config));
+        }
         return out;
     }
 
     /**
      * Example Hierarchy
      * orgConfig.developerApps.<developerId>.apps
-     * 
+     *
      * Returns Map of
      * <developerId> => [ {app1}, {app2}, {app3} ]
      */
@@ -136,8 +126,8 @@ public class ConfigReader {
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
-        Map <String, List<String>> out = null;
-        List<String> outStrs = null;
+        Map <String, List<String>> out;
+        List<String> outStrs;
         try {
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
@@ -152,7 +142,7 @@ public class ConfigReader {
                 Map.Entry pair = (Map.Entry)it.next();
                 JSONArray confs = (JSONArray)pair.getValue();
                 outStrs = new ArrayList<String>();
-                for (Object conf: confs) {              
+                for (Object conf: confs) {
                     outStrs.add(((JSONObject)conf).toJSONString());
                 }
                 out.put((String)pair.getKey(), outStrs);
@@ -174,10 +164,7 @@ public class ConfigReader {
     /**
      * List of APIs under configDir/api
      */
-    public static Set<String> getAPIList(String apiConfigDir)
-            throws ParseException, IOException {
-
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+    public static Set<String> getAPIList(String apiConfigDir) {
         Set<String> out = null;
         File[] files = new File(apiConfigDir).listFiles();
         if(files!=null && files.length>0){
@@ -201,7 +188,7 @@ public class ConfigReader {
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
-        ArrayList out = null;    
+        ArrayList out;
         try {
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
@@ -210,7 +197,7 @@ public class ConfigReader {
             if (resourceConfigs == null) return null;
 
             out = new ArrayList();
-            for (Object config: resourceConfigs) {              
+            for (Object config: resourceConfigs) {
                 out.add(((JSONObject)config).toJSONString());
             }
         }

@@ -1,0 +1,28 @@
+---
+- name: weatherProduct
+  displayName: weatherProduct
+  description: weatherProduct
+  apiResources:
+    - /**
+    - /
+  approvalType: auto
+  attributes:
+    - name: description
+      value: json Product
+    - name: developer.quota.limit
+      value: "10000"
+    - name: developer.quota.interval
+      value: "1"
+    - name: developer.quota.timeunit
+      value: month
+  environments:
+    - test
+  proxies:
+   - forecastweatherapi
+  quota: "10000"
+  quotaInterval: "1"
+  quotaTimeUnit: month
+  scopes: []
+- name: myOtherProduct
+  displayName: My other product
+  description: This is my other awesome product
