@@ -18,6 +18,7 @@ package com.apigee.edge.config.mavenplugin;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,7 +135,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 */
 	private String options;
 
-	/**
+    /**
 	 * Config dir
 	 * @parameter property="apigee.config.dir"
  	 */
@@ -246,6 +247,10 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile = profile;
 	}
 
+    void setConfigDir(String configDir) {
+        this.configDir = configDir;
+    }
+
 	public void setBaseDirectory(File baseDirectory) {
 		this.baseDirectory = baseDirectory;
 	}
@@ -309,14 +314,19 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		return null;
 	}
 
-	private File findConfigFile(String scope, String config)
-			throws MojoExecutionException {
+	File findConfigFile(String scope, String config) throws MojoExecutionException {
 		File configFile = new File(configDir + File.separator +
 									scope + File.separator +
 									config + ".json");
 		if (configFile.exists()) {
 			return configFile;
 		}
+
+		File yamlFile = Paths.get(configDir, scope, config + ".yaml").toFile();
+		if (yamlFile.isFile()) {
+			return yamlFile;
+		}
+
 		return null;
 	}
 
