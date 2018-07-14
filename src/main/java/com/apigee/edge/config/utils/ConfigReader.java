@@ -30,7 +30,7 @@ public class ConfigReader {
      * [ {cache1}, {cache2}, {cache3} ]
      */
     public static List getEnvConfig(String env, File configFile) throws ParseException, IOException {
-        return getOrgConfig(configFile);
+        return getListConfig(configFile);
     }
 
     /**
@@ -41,7 +41,10 @@ public class ConfigReader {
 
     // TODO convert parse exception error message more human friendly
     public static List getOrgConfig(File configFile) throws ParseException, IOException {
+        return getListConfig(configFile);
+    }
 
+    private static List getListConfig(File configFile) throws IOException, ParseException {
         Logger logger = LoggerFactory.getLogger(ConfigReader.class);
         try {
             if (configFile.getName().endsWith(".yaml")) {
@@ -152,35 +155,7 @@ public class ConfigReader {
      * API Config
      * [ {apiProduct1}, {apiProduct2}, {apiProduct3} ]
      */
-    public static List getAPIConfig(File configFile)
-            throws ParseException, IOException {
-
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
-
-        JSONParser parser = new JSONParser();
-        ArrayList out;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(
-                new java.io.FileReader(configFile));
-
-            JSONArray  resourceConfigs = (JSONArray)parser.parse(bufferedReader);
-            if (resourceConfigs == null) return null;
-
-            out = new ArrayList();
-            for (Object config: resourceConfigs) {
-                out.add(((JSONObject)config).toJSONString());
-            }
-        }
-        catch(IOException ie) {
-            logger.info(ie.getMessage());
-            throw ie;
-        }
-        catch(ParseException pe) {
-            logger.info(pe.getMessage());
-            throw pe;
-        }
-
-        return out;
+    public static List getAPIConfig(File configFile) throws ParseException, IOException {
+        return getListConfig(configFile);
     }
-
 }

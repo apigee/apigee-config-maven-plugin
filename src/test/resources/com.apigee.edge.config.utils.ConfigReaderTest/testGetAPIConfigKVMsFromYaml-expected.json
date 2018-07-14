@@ -1,0 +1,13 @@
+{
+  "entry": [
+    {
+      "name": "EXCHANGE",
+      "value": "0.5"
+    },
+    {
+      "name": "OTHEREXCHANGE",
+      "value": "1"
+    }
+  ],
+  "name": "exchange_config"
+}

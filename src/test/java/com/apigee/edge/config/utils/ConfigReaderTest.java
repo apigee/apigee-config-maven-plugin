@@ -161,4 +161,35 @@ public class ConfigReaderTest {
         Assert.assertEquals("MYOTHERNAME", ((Map) entries.get(1)).get("name"));
         Assert.assertEquals("MYOTHERVALUE", ((Map) entries.get(1)).get("value"));
     }
+
+    @Test(expected = IOException.class)
+    public void testGetAPIConfigWithMissingYamlFile() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetAPIConfigWithMissingYamlFile-input.yaml");
+        ConfigReader.getAPIConfig(input.toFile());
+    }
+
+    @Test
+    public void testGetAPIConfigKVMsFromYaml() throws IOException, ParseException {
+        Path input = basePath.resolve("testGetAPIConfigKVMsFromYaml-input.yaml");
+        List actual = ConfigReader.getAPIConfig(input.toFile());
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(2, actual.size());
+
+        ObjectMapper om = new ObjectMapper();
+        Map actual1 = om.readValue((String) actual.get(0), Map.class);
+        Map expected1 = om.readValue(basePath.resolve("testGetAPIConfigKVMsFromYaml-expected.json").toFile(), Map.class);
+        Assert.assertEquals(expected1, actual1);
+
+        Map actual2 = om.readValue((String) actual.get(1), Map.class);
+        Assert.assertEquals("my_other_config", actual2.get("name"));
+        Assert.assertNotNull(actual2.get("entry"));
+        Assert.assertTrue(actual2.get("entry") instanceof List);
+        List entries = (List) actual2.get("entry");
+        Assert.assertEquals(2, entries.size());
+        Assert.assertTrue(entries.get(0) instanceof Map);
+        Assert.assertEquals("MYNAME", ((Map) entries.get(0)).get("name"));
+        Assert.assertEquals("MYVALUE", ((Map) entries.get(0)).get("value"));
+        Assert.assertEquals("MYOTHERNAME", ((Map) entries.get(1)).get("name"));
+        Assert.assertEquals("MYOTHERVALUE", ((Map) entries.get(1)).get("value"));
+    }
 }
