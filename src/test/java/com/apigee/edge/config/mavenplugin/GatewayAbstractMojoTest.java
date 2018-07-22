@@ -48,4 +48,15 @@ class GatewayAbstractMojoTest {
         Path expected = Paths.get("src/test/resources", getClass().getName(), "./findConfigFileFromYaml.yaml");
         Assert.assertEquals(expected.toFile(), actual);
     }
+
+    @Test
+    void findConsolidatedConfigFile() {
+        Path baseDirectory = Paths.get("src/test/resources", getClass().getName(), "findConsolidatedConfigFile");
+        gatewayAbstractMojo.setBaseDirectory(baseDirectory.toFile());
+
+        File actual = gatewayAbstractMojo.findConsolidatedConfigFile();
+        Assert.assertNotNull(actual);
+        Path expected = Paths.get(baseDirectory.toString(), "edge.json").toAbsolutePath();
+        Assert.assertEquals(expected.toFile(), actual);
+    }
 }
