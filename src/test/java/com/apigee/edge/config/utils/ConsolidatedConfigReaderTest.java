@@ -226,6 +226,19 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
+    void getAPIListFromYaml() throws IOException, ParseException {
+        Path input = basePath.resolve("getAPIListFromYaml-input.yaml");
+        Set<String> actual = ConsolidatedConfigReader.getAPIList(input.toFile());
+
+        assertNotNull(actual);
+        assertAll(
+                () -> assertEquals(2, actual.size()),
+                () -> assertTrue(actual.contains("forecastweatherapi")),
+                () -> assertTrue(actual.contains("myotherapi"))
+        );
+    }
+
+    @Test
     void getAPIConfigWithMissingFile() {
         Path input = basePath.resolve("getOrgConfigWithIdWithMissingFile-input.json");
         Executable getAPIConfig = () -> ConsolidatedConfigReader.getAPIConfig(input.toFile(), "forecastweatherapi", "kvms");

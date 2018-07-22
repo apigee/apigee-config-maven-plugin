@@ -17,19 +17,13 @@ package com.apigee.edge.config.utils;
 
 import java.io.File;
 import java.io.BufferedReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
-import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
-import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -278,6 +272,10 @@ public class ConsolidatedConfigReader {
         JSONParser parser = new JSONParser();
         ArrayList<String> out = null;    
         try {
+            if (configFile.getName().endsWith(".yaml")) {
+                return getAPIListFromYaml(configFile);
+            }
+
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
 
@@ -301,6 +299,13 @@ public class ConsolidatedConfigReader {
             logger.info(pe.getMessage());
             throw pe;
         }
+    }
+
+    public static Set getAPIListFromYaml(File configFile) throws IOException {
+        Map yaml = new ObjectMapper(new YAMLFactory()).readValue(configFile, Map.class);
+        return Optional.ofNullable(yaml.get("apiConfig"))
+                .map(o -> ((Map) o).keySet())
+                .orElse(null);
     }
 
 
