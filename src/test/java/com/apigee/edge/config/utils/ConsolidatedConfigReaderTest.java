@@ -103,6 +103,24 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
+    void getOrgConfigFromYaml() throws IOException, ParseException {
+        Path input = basePath.resolve("getOrgConfigFromYaml-input.yaml");
+        List actual = ConsolidatedConfigReader.getOrgConfig(input.toFile(), "orgConfig", "apiProducts");
+
+        assertNotNull(actual);
+        assertEquals(2, actual.size());
+
+        ObjectMapper om = new ObjectMapper();
+        Map actual0 = om.readValue((String) actual.get(0), Map.class);
+        Map expected0 = om.readValue(basePath.resolve("getOrgConfigFromYaml-expected0.json").toFile(), Map.class);
+        assertEquals(actual0, expected0);
+
+        Map actual1 = om.readValue((String) actual.get(1), Map.class);
+        Map expected1 = om.readValue(basePath.resolve("getOrgConfigFromYaml-expected1.json").toFile(), Map.class);
+        assertEquals(actual1, expected1);
+    }
+
+    @Test
     void getOrgConfigWithIdWithMissingFile() {
         Path input = basePath.resolve("getOrgConfigWithIdWithMissingFile-input.json");
         Executable getOrgConfigWithId = () -> ConsolidatedConfigReader.getOrgConfigWithId(input.toFile(), "orgConfig", "developerApps");
