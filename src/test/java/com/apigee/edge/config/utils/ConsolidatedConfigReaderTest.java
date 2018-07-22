@@ -46,6 +46,13 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
+    void getOrgConfigWithMissingFile() {
+        Path input = basePath.resolve("getOrgConfigWithMissingFile-input.json");
+        Executable getOrgConfig = () -> ConsolidatedConfigReader.getOrgConfig(input.toFile(), "orgConfig", "apiProducts");
+        assertThrows(IOException.class, getOrgConfig);
+    }
+
+    @Test
     void getOrgConfig() throws IOException, ParseException {
         Path input = basePath.resolve("getOrgConfig-input.json");
         List actual = ConsolidatedConfigReader.getOrgConfig(input.toFile(), "orgConfig", "apiProducts");
@@ -61,6 +68,13 @@ class ConsolidatedConfigReaderTest {
         Map actual1 = om.readValue((String) actual.get(1), Map.class);
         Map expected1 = om.readValue(basePath.resolve("getOrgConfig-expected1.json").toFile(), Map.class);
         assertEquals(actual1, expected1);
+    }
+
+    @Test
+    void getOrgConfigWithIdWithMissingFile() {
+        Path input = basePath.resolve("getOrgConfigWithIdWithMissingFile-input.json");
+        Executable getOrgConfigWithId = () -> ConsolidatedConfigReader.getOrgConfigWithId(input.toFile(), "orgConfig", "developerApps");
+        assertThrows(IOException.class, getOrgConfigWithId);
     }
 
     @Test
@@ -96,6 +110,13 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
+    void getAPIListWithMissingFile() {
+        Path input = basePath.resolve("getAPIListWithMissingFile-input.json");
+        Executable getAPIList = () -> ConsolidatedConfigReader.getAPIList(input.toFile());
+        assertThrows(IOException.class, getAPIList);
+    }
+
+    @Test
     void getAPIList() throws IOException, ParseException {
         Path input = basePath.resolve("getAPIList-input.json");
         Set<String> actual = ConsolidatedConfigReader.getAPIList(input.toFile());
@@ -106,6 +127,13 @@ class ConsolidatedConfigReaderTest {
                 () -> assertTrue(actual.contains("forecastweatherapi")),
                 () -> assertTrue(actual.contains("myotherapi"))
         );
+    }
+
+    @Test
+    void getAPIConfigWithMissingFile() {
+        Path input = basePath.resolve("getOrgConfigWithIdWithMissingFile-input.json");
+        Executable getAPIConfig = () -> ConsolidatedConfigReader.getAPIConfig(input.toFile(), "forecastweatherapi", "kvms");
+        assertThrows(IOException.class, getAPIConfig);
     }
 
     @Test
