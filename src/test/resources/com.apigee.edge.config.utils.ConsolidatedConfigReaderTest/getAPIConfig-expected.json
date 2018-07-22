@@ -1,0 +1,28 @@
+[
+  {
+    "entry": [
+      {
+        "name": "EXCHANGE",
+        "value": "0.5"
+      },
+      {
+        "name": "OTHEREXCHANGE",
+        "value": "1"
+      }
+    ],
+    "name": "exchange_config"
+  },
+  {
+    "name": "my_other_config",
+    "entry": [
+      {
+        "name": "MYNAME",
+        "value": "MYVALUE"
+      },
+      {
+        "name": "MYOTHERNAME",
+        "value": "MYOTHERVALUE"
+      }
+    ]
+  }
+]
