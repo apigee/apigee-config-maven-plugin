@@ -318,6 +318,10 @@ public class ConsolidatedConfigReader {
         JSONParser parser = new JSONParser();
         ArrayList out = null;    
         try {
+            if (configFile.getName().endsWith(".yaml")) {
+                return getAPIConfigFromYaml(configFile, api, resource);
+            }
+
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
 
@@ -350,4 +354,21 @@ public class ConsolidatedConfigReader {
         return out;
     }
 
+    private static List<String> getAPIConfigFromYaml(File configFile, String api, String resource) throws IOException {
+        Map yaml = new ObjectMapper(new YAMLFactory()).readValue(configFile, Map.class);
+        Optional<List> configs = Optional.ofNullable(yaml.get("apiConfig"))
+                .map(o -> ((Map) o).get(api))
+                .map(o -> (List) ((Map) o).get(resource));
+
+        if (!configs.isPresent()) {
+            return null;
+        }
+
+        ObjectMapper om = new ObjectMapper();
+        List<String> out = new ArrayList<>();
+        for (Object config : configs.get()) {
+            out.add(om.writeValueAsString(config));
+        }
+        return out;
+    }
 }

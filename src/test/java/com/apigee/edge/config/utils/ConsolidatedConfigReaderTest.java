@@ -255,4 +255,21 @@ class ConsolidatedConfigReaderTest {
         List expected = om.readValue(basePath.resolve("getAPIConfig-expected.json").toFile(), List.class);
         assertEquals(expected, actual0);
     }
+
+    @Test
+    void getAPIConfigFromYaml() throws IOException, ParseException {
+        Path input = basePath.resolve("getAPIConfigFromYaml-input.yaml");
+        List actual = ConsolidatedConfigReader.getAPIConfig(input.toFile(), "forecastweatherapi", "kvms");
+
+        assertNotNull(actual);
+        assertEquals(2, actual.size());
+
+        ObjectMapper om = new ObjectMapper();
+        List<Map> actual0 = new LinkedList<>();
+        for (Object o : actual) {
+            actual0.add(om.readValue((String) o, Map.class));
+        }
+        List expected = om.readValue(basePath.resolve("getAPIConfigFromYaml-expected.json").toFile(), List.class);
+        assertEquals(expected, actual0);
+    }
 }
