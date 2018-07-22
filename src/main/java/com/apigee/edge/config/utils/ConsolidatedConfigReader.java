@@ -19,14 +19,11 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Iterator;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -66,6 +63,10 @@ public class ConsolidatedConfigReader {
         JSONParser parser = new JSONParser();
         ArrayList out = null;    
         try {
+            if (configFile.getName().endsWith(".yaml")) {
+                return getEnvConfigFromYaml(env, configFile, scope, resource);
+            }
+
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
 
@@ -95,6 +96,24 @@ public class ConsolidatedConfigReader {
             throw pe;
         }
 
+        return out;
+    }
+
+    private static List<String> getEnvConfigFromYaml(String env, File configFile, String scope, String resource) throws IOException {
+        ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
+        Optional<List> configs = Optional.ofNullable(yamlReader.readValue(configFile, Map.class).get(scope))
+                .map(o -> ((Map) o).get(env))
+                .map(o -> (List) ((Map) o).get(resource));
+
+        if (!configs.isPresent()) {
+            return null;
+        }
+
+        ObjectMapper om = new ObjectMapper();
+        List<String> out = new ArrayList<>();
+        for (Object config : configs.get()) {
+            out.add(om.writeValueAsString(config));
+        }
         return out;
     }
 
