@@ -167,6 +167,38 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
+    void getOrgConfigWithIdFromYaml() throws IOException, ParseException {
+        Path input = basePath.resolve("getOrgConfigWithIdFromYaml-input.yaml");
+        Map<String, List<String>> actual = ConsolidatedConfigReader.getOrgConfigWithId(input.toFile(), "orgConfig", "developerApps");
+
+        assertNotNull(actual);
+        assertAll(
+                () -> assertEquals(2, actual.size()),
+                () -> assertTrue(actual.containsKey("grant@enterprise.com")),
+                () -> assertTrue(actual.containsKey("hugh@example.com"))
+        );
+
+        // Developer 1
+        ObjectMapper om = new ObjectMapper();
+        Assert.assertNotNull(actual.get("grant@enterprise.com"));
+        List<Map> actual0 = new LinkedList<>();
+        for (Object s : actual.get("grant@enterprise.com")) {
+            actual0.add(om.readValue((String) s, Map.class));
+        }
+        List expected0 = om.readValue(basePath.resolve("getOrgConfigWithIdFromYaml-expected0.json").toFile(), List.class);
+        assertEquals(expected0, actual0);
+
+        // Developer 2
+        Assert.assertNotNull(actual.get("hugh@example.com"));
+        List<Map> actual1 = new LinkedList<>();
+        for (Object s : actual.get("hugh@example.com")) {
+            actual1.add(om.readValue((String) s, Map.class));
+        }
+        List expected1 = om.readValue(basePath.resolve("getOrgConfigWithIdFromYaml-expected1.json").toFile(), List.class);
+        assertEquals(expected1, actual1);
+    }
+
+    @Test
     void getAPIListWithMissingFile() {
         Path input = basePath.resolve("getAPIListWithMissingFile-input.json");
         Executable getAPIList = () -> ConsolidatedConfigReader.getAPIList(input.toFile());

@@ -100,8 +100,8 @@ public class ConsolidatedConfigReader {
     }
 
     private static List<String> getEnvConfigFromYaml(String env, File configFile, String scope, String resource) throws IOException {
-        ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-        Optional<List> configs = Optional.ofNullable(yamlReader.readValue(configFile, Map.class).get(scope))
+        Map yaml = new ObjectMapper(new YAMLFactory()).readValue(configFile, Map.class);
+        Optional<List> configs = Optional.ofNullable(yaml.get(scope))
                 .map(o -> ((Map) o).get(env))
                 .map(o -> (List) ((Map) o).get(resource));
 
@@ -168,8 +168,8 @@ public class ConsolidatedConfigReader {
     }
 
     private static List<String> getOrgConfigFromYaml(File configFile, String scope, String resource) throws IOException {
-        ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-        Optional<List> configs = Optional.ofNullable(yamlReader.readValue(configFile, Map.class).get(scope))
+        Map yaml = new ObjectMapper(new YAMLFactory()).readValue(configFile, Map.class);
+        Optional<List> configs = Optional.ofNullable(yaml.get(scope))
                 .map(o -> (List) ((Map) o).get(resource));
 
         if (!configs.isPresent()) {
@@ -202,6 +202,10 @@ public class ConsolidatedConfigReader {
         Map <String, List<String>> out = null;
         List<String> outStrs = null;
         try {
+            if (configFile.getName().endsWith(".yaml")) {
+                return getOrgConfigWithIdFromYaml(configFile, scope, resource);
+            }
+
             BufferedReader bufferedReader = new BufferedReader(
                 new java.io.FileReader(configFile));
 
@@ -239,6 +243,27 @@ public class ConsolidatedConfigReader {
             throw pe;
         }
 
+        return out;
+    }
+
+    private static Map<String, List<String>> getOrgConfigWithIdFromYaml(File configFile, String scope, String resource) throws IOException {
+        Map yaml = new ObjectMapper(new YAMLFactory()).readValue(configFile, Map.class);
+        Optional<Map> map = Optional.ofNullable(yaml.get(scope))
+                .map(o -> (Map) ((Map) o).get(resource));
+
+        if (!map.isPresent()) {
+            return null;
+        }
+
+        ObjectMapper om = new ObjectMapper();
+        Map<String, List<String>> out = new HashMap<>();
+
+        for (Object key : map.get().keySet()) {
+            out.put((String) key, new LinkedList<>());
+            for (Object v : (List) map.get().get(key)) {
+                out.get(key).add(om.writeValueAsString(v));
+            }
+        }
         return out;
     }
 
