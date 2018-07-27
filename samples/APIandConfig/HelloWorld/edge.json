@@ -10,6 +10,14 @@
                 "port" : 80
               }
           ],
+          "virtualHosts": [
+              {
+                "name" : "example",
+                "hostAliases" : ["example.com"],
+                "isEnabled" : true,
+                "port" : 80
+              }
+          ],
           "caches": [
               {
                 "name": "echocache",

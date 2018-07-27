@@ -1,0 +1,22 @@
+[
+    {
+        "name": "EnterpriseHost",
+        "hostAliases": ["example.com", "api.example.com"],
+        "isEnabled": true,
+        "port": 80
+    },
+    {
+        "name": "ESBSecureHost",
+        "hostAliases": ["enterprise.com"],
+        "isEnabled": true,
+        "port": 443,
+        "sSLInfo": {
+            "enabled": "true",
+            "clientAuthEnabled": "false",
+            "keyStore": "keystore_name",
+            "trustStore": "truststore_name",
+            "keyAlias": "key_alias",
+            "ignoreValidationErrors": "false"
+        }
+    }
+]
