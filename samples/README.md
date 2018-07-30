@@ -11,6 +11,7 @@ Two sample projects are provided here.
 This project demonstrates the creation and management of Apigee Edge Config and performs the following steps in sequence.
   - Creates Caches
   - Creates Target servers
+  - Creates Virtual Hosts (needs truststores and keyRef's setup using ManagementUI)
   - Creates API products
   - Creates Developers
   - Creates Developer Apps
@@ -38,6 +39,7 @@ Create config and deploy API
 This project demonstrates use of apigee-config-maven-plugin and [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin) to create API as well as manage config. The example project performs the following steps in sequence. This sequence is inherent to the platform and is managed using the sequencing of goals in pom.xml
   - Creates Caches
   - Creates Target servers
+  - Creates Virtual Hosts (needs truststores and keyRef's setup using ManagementUI)
   - Deploy API  (from deploy plugin)
   - Creates API products
   - Creates Developers
