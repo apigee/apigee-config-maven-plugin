@@ -65,6 +65,7 @@ Refer to an example project at [/samples/EdgeConfig](https://github.com/apigee/a
 This project demonstrates the creation and management of Apigee Edge Config and performs the following steps in sequence.
   - Creates Caches
   - Creates Target servers
+  - Creates Virtual Hosts
   - Creates KVM
   - Creates Resource File
   - Creates API products
@@ -94,10 +95,10 @@ The apigee.config.dir option must be used to identify the top most directory con
 
       ├── api
       │   ├── forecastweatherapi
-      |   |   ├── resourceFiles
-      |   |   |   ├── jsc
-      |   |   |   |    ├── test.js
-      │   │   └── kvms.json
+      │   │   ├── resourceFiles
+      │   │   │   ├── jsc
+      │   │   │   │    ├── test.js
+      │   │   ├── kvms.json
       │   │   └── resourcefiles.json
       │   └── oauth
       │       ├── kvms.json
@@ -105,11 +106,12 @@ The apigee.config.dir option must be used to identify the top most directory con
       ├── env
       │   ├── prod
       │   │   ├── caches.json
-      │       └── flowhooks.json
+      │   │   └── flowhooks.json
       │   └── test
       │       ├── caches.json
       │       ├── kvms.json
-      │       └── targetServers.json
+      │       ├── targetServers.json
+      │       └── virtualHosts.json   
       └── org
           ├── apiProducts.json
           ├── developerApps.json
@@ -140,6 +142,7 @@ The final level is the config entities.
      orgConfig.developerApps[]
      envConfig.test.caches[]
      envConfig.test.targetServers[]
+     envConfig.test.virtualHosts[]
    ```
 
 Each config entity is the payload of the corresponding management API. The example project may not show all the attributes of config entities, but any valid input of a management API would work.
@@ -224,7 +227,6 @@ Provide the token when invoking the plugin.
 
 ## ROADMAP
   - Keystore, Truststore support
-  - Virtual host (on-prem)
   - Custom roles
   - User role association
 
