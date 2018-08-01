@@ -1,0 +1,33 @@
+{
+  "name": "weatherProduct",
+  "displayName": "weather Product",
+  "description": "weather Product",
+  "apiResources": [
+    "/**"
+  ],
+  "approvalType": "auto",
+  "attributes": [
+    {
+      "name": "developer.quota.limit",
+      "value": "10000"
+    },
+    {
+      "name": "developer.quota.interval",
+      "value": "1"
+    },
+    {
+      "name": "developer.quota.timeunit",
+      "value": "month"
+    }
+  ],
+  "environments": [
+    "test"
+  ],
+  "proxies": [
+    "forecastweatherapi"
+  ],
+  "quota": "10000",
+  "quotaInterval": "1",
+  "quotaTimeUnit": "month",
+  "scopes": []
+}

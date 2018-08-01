@@ -1,0 +1,10 @@
+[
+  {
+    "name": "grantoneapp",
+    "apiProducts": [
+      "weatherProduct"
+    ],
+    "callbackUrl": "http://weatherapp.com",
+    "scopes": []
+  }
+]

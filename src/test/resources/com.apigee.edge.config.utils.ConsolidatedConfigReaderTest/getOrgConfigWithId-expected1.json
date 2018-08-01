@@ -1,0 +1,10 @@
+[
+  {
+    "name": "coolhughapp",
+    "apiProducts": [
+      "weatherProduct"
+    ],
+    "callbackUrl": "http://weatherapp.com",
+    "scopes": []
+  }
+]

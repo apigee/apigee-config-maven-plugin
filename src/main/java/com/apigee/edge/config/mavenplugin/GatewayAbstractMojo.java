@@ -18,6 +18,7 @@ package com.apigee.edge.config.mavenplugin;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +29,6 @@ import com.apigee.edge.config.utils.ConsolidatedConfigReader;
 import org.apache.maven.plugin.AbstractMojo;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 
 public abstract class GatewayAbstractMojo extends AbstractMojo {
 
@@ -134,7 +134,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 */
 	private String options;
 
-	/**
+    /**
 	 * Config dir
 	 * @parameter property="apigee.config.dir"
  	 */
@@ -246,6 +246,10 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile = profile;
 	}
 
+    void setConfigDir(String configDir) {
+        this.configDir = configDir;
+    }
+
 	public void setBaseDirectory(File baseDirectory) {
 		this.baseDirectory = baseDirectory;
 	}
@@ -299,28 +303,38 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.skip = skip;
 	}
 
-	private File findConsolidatedConfigFile()
-			throws MojoExecutionException {
+	File findConsolidatedConfigFile() {
 		File configFile = new File(getBaseDirectoryPath() + File.separator +
 									"edge.json");
 		if (configFile.exists()) {
 			return configFile;
 		}
+
+		File yamlFile = Paths.get(getBaseDirectoryPath(), "edge.yaml").toFile();
+		if (yamlFile.isFile()) {
+			return yamlFile;
+		}
+
 		return null;
 	}
 
-	private File findConfigFile(String scope, String config)
-			throws MojoExecutionException {
+	File findConfigFile(String scope, String config) {
 		File configFile = new File(configDir + File.separator +
 									scope + File.separator +
 									config + ".json");
 		if (configFile.exists()) {
 			return configFile;
 		}
+
+		File yamlFile = Paths.get(configDir, scope, config + ".yaml").toFile();
+		if (yamlFile.isFile()) {
+			return yamlFile;
+		}
+
 		return null;
 	}
 
-	protected List getAPIConfig(Logger logger, String config, String api)
+	List getAPIConfig(Logger logger, String config, String api)
 			throws MojoExecutionException {
 		File configFile;
 		String scope = "api" + File.separator + api;
@@ -329,11 +343,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		if (configDir != null && configDir.length() > 0) {
 			configFile = findConfigFile(scope, config);
 			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				logger.info("Config file " + scope + File.separator + config + ".(json|yaml) not found.");
 				return null;
 			}
 
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			logger.info("Retrieving config from " + configFile.getName());
 			try {
 				return ConfigReader.getAPIConfig(configFile);
 			} catch (Exception e) {
@@ -346,10 +360,10 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 		if (configFile == null) {
 			logger.info("No edge.json found.");
-			throw new MojoExecutionException("config file edge.json not found");
+			throw new MojoExecutionException("config file edge.(json|yaml) not found");
 		}
 
-		logger.debug("Retrieving config from edge.json");
+		logger.debug("Retrieving config from edge.(json|yaml)");
 		try {
 
 			return ConsolidatedConfigReader.getAPIConfig(configFile,
@@ -360,7 +374,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		}
 	}
 
-	protected Set<String> getAPIList(Logger logger)
+	Set<String> getAPIList(Logger logger)
 			throws MojoExecutionException {
 		File configFile;
 		String scope = configDir + File.separator + "api";
@@ -403,11 +417,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		if (configDir != null && configDir.length() > 0) {
 			configFile = findConfigFile(scope, config);
 			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				logger.info("Config file " + scope + File.separator + config + ".(json|yaml) not found.");
 				return null;
 			}
 
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			logger.info("Retrieving config from " + configFile.getName());
 			try {
 				return ConfigReader.getEnvConfig(this.buildProfile.getEnvironment(),
 													configFile);
@@ -426,12 +440,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 		logger.debug("Retrieving config from edge.json");
 		try {
-			List envConfigs = ConsolidatedConfigReader.getEnvConfig(
+			return ConsolidatedConfigReader.getEnvConfig(
 					this.buildProfile.getEnvironment(),
 							configFile,
 							"envConfig",
 							config);
-			return envConfigs;
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage());
 		}
@@ -446,11 +459,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		if (configDir != null && configDir.length() > 0) {
 			configFile = findConfigFile(scope, config);
 			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				logger.info("Config file " + scope + File.separator + config + ".(json|yaml) not found.");
 				return null;
 			}
 
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			logger.info("Retrieving config from " + configFile.getName());
 			try {
 				return ConfigReader.getOrgConfig(configFile);
 			} catch (Exception e) {
@@ -476,7 +489,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		}
 	}
 
-	protected Map getOrgConfigWithId(Logger logger, String config)
+	Map getOrgConfigWithId(Logger logger, String config)
 			throws MojoExecutionException {
 		File configFile;
 		String scope = "org";
@@ -485,11 +498,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		if (configDir != null && configDir.length() > 0) {
 			configFile = findConfigFile(scope, config);
 			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
+				logger.info("Config file " + scope + File.separator + config + ".(json|yaml) not found.");
 				return null;
 			}
 
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
+			logger.info("Retrieving config from " + configFile.getName());
 			try {
 				return ConfigReader.getOrgConfigWithId(configFile);
 			} catch (Exception e) {

@@ -1,0 +1,6 @@
+{
+  "name": "Enterprisetarget",
+  "host": "example.com",
+  "isEnabled": true,
+  "port": 8080
+}
