@@ -1,7 +1,6 @@
 package com.apigee.edge.config.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,13 +17,13 @@ public class ConfigReaderTest {
     private final Path basePath = Paths.get("src/test/resources", getClass().getName());
 
     @Test(expected = IOException.class)
-    public void testGetEnvConfigWithMissingFile() throws IOException, ParseException {
+    public void testGetEnvConfigWithMissingFile() throws IOException {
         Path input = basePath.resolve("testGetEnvConfigWithMissingFile-input.json");
         ConfigReader.getOrgConfig(input.toFile());
     }
 
     @Test
-    public void testGetEnvConfigTargetServers() throws IOException, ParseException {
+    public void testGetEnvConfigTargetServers() throws IOException {
         Path input = basePath.resolve("testGetEnvConfigTargetServers-input.json");
         List actual = ConfigReader.getEnvConfig("dev", input.toFile());
         Assert.assertNotNull(actual);
@@ -52,13 +51,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetEnvConfigWithMissingYamlFile() throws IOException, ParseException {
+    public void testGetEnvConfigWithMissingYamlFile() throws IOException {
         Path input = basePath.resolve("testGetEnvConfigWithMissingYamlFile-input.yaml");
         ConfigReader.getOrgConfig(input.toFile());
     }
 
     @Test
-    public void testGetEnvConfigTargetServersFromYaml() throws IOException, ParseException {
+    public void testGetEnvConfigTargetServersFromYaml() throws IOException {
         Path input = basePath.resolve("testGetEnvConfigTargetServersFromYaml-input.yaml");
         List actual = ConfigReader.getEnvConfig("dev", input.toFile());
         Assert.assertNotNull(actual);
@@ -86,13 +85,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetOrgConfigWithMissingFile() throws IOException, ParseException {
+    public void testGetOrgConfigWithMissingFile() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigWithMissingFile-input.json");
         ConfigReader.getOrgConfig(input.toFile());
     }
 
     @Test
-    public void testGetOrgConfigApiProducts() throws IOException, ParseException {
+    public void testGetOrgConfigApiProducts() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigApiProducts-input.json");
         List actual = ConfigReader.getOrgConfig(input.toFile());
         Assert.assertNotNull(actual);
@@ -110,13 +109,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetOrgConfigWithMissingYamlFile() throws IOException, ParseException {
+    public void testGetOrgConfigWithMissingYamlFile() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigWithMissingYamlFile-input.yaml");
         ConfigReader.getOrgConfig(input.toFile());
     }
 
     @Test
-    public void testGetOrgConfigApiProductsFromYaml() throws IOException, ParseException {
+    public void testGetOrgConfigApiProductsFromYaml() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigApiProductsFromYaml-input.yaml");
         List actual = ConfigReader.getOrgConfig(input.toFile());
         Assert.assertNotNull(actual);
@@ -134,13 +133,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetAPIConfigWithMissingFile() throws IOException, ParseException {
+    public void testGetAPIConfigWithMissingFile() throws IOException {
         Path input = basePath.resolve("testGetAPIConfigWithMissingFile-input.json");
         ConfigReader.getAPIConfig(input.toFile());
     }
 
     @Test
-    public void testGetAPIConfigKVMs() throws IOException, ParseException {
+    public void testGetAPIConfigKVMs() throws IOException {
         Path input = basePath.resolve("testGetAPIConfigKVMs-input.json");
         List actual = ConfigReader.getAPIConfig(input.toFile());
         Assert.assertNotNull(actual);
@@ -165,13 +164,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetAPIConfigWithMissingYamlFile() throws IOException, ParseException {
+    public void testGetAPIConfigWithMissingYamlFile() throws IOException {
         Path input = basePath.resolve("testGetAPIConfigWithMissingYamlFile-input.yaml");
         ConfigReader.getAPIConfig(input.toFile());
     }
 
     @Test
-    public void testGetAPIConfigKVMsFromYaml() throws IOException, ParseException {
+    public void testGetAPIConfigKVMsFromYaml() throws IOException {
         Path input = basePath.resolve("testGetAPIConfigKVMsFromYaml-input.yaml");
         List actual = ConfigReader.getAPIConfig(input.toFile());
         Assert.assertNotNull(actual);
@@ -206,13 +205,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetOrgConfigWithIdWithMissingFile() throws IOException, ParseException {
+    public void testGetOrgConfigWithIdWithMissingFile() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigWithIdWithMissingFile-input.json");
         ConfigReader.getOrgConfigWithId(input.toFile());
     }
 
     @Test
-    public void testGetOrgConfigWithId() throws IOException, ParseException {
+    public void testGetOrgConfigWithId() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigWithId-input.json");
         Map actual = ConfigReader.getOrgConfigWithId(input.toFile());
 
@@ -244,13 +243,13 @@ public class ConfigReaderTest {
     }
 
     @Test(expected = IOException.class)
-    public void testGetOrgConfigWithIdWithMissingYamlFile() throws IOException, ParseException {
+    public void testGetOrgConfigWithIdWithMissingYamlFile() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigWithIdWithMissingYamlFile-input.json");
         ConfigReader.getOrgConfigWithId(input.toFile());
     }
 
     @Test
-    public void testGetOrgConfigWithIdFromYaml() throws IOException, ParseException {
+    public void testGetOrgConfigWithIdFromYaml() throws IOException {
         Path input = basePath.resolve("testGetOrgConfigWithIdFromYaml-input.yaml");
         Map actual = ConfigReader.getOrgConfigWithId(input.toFile());
 

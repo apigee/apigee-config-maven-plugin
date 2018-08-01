@@ -1,7 +1,6 @@
 package com.apigee.edge.config.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -35,7 +34,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getEnvConfig() throws IOException, ParseException {
+    void getEnvConfig() throws IOException {
         Path input = basePath.resolve("getEnvConfig-input.json");
         List actual = ConsolidatedConfigReader.getEnvConfig("test", input.toFile(), "envConfig", "caches");
 
@@ -53,7 +52,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getEnvConfigFromYaml() throws IOException, ParseException {
+    void getEnvConfigFromYaml() throws IOException {
         Path input = basePath.resolve("getEnvConfigFromYaml-input.yaml");
         List actual = ConsolidatedConfigReader.getEnvConfig("test", input.toFile(), "envConfig", "caches");
 
@@ -85,7 +84,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getOrgConfig() throws IOException, ParseException {
+    void getOrgConfig() throws IOException {
         Path input = basePath.resolve("getOrgConfig-input.json");
         List actual = ConsolidatedConfigReader.getOrgConfig(input.toFile(), "orgConfig", "apiProducts");
 
@@ -103,7 +102,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getOrgConfigFromYaml() throws IOException, ParseException {
+    void getOrgConfigFromYaml() throws IOException {
         Path input = basePath.resolve("getOrgConfigFromYaml-input.yaml");
         List actual = ConsolidatedConfigReader.getOrgConfig(input.toFile(), "orgConfig", "apiProducts");
 
@@ -135,7 +134,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getOrgConfigWithId() throws IOException, ParseException {
+    void getOrgConfigWithId() throws IOException {
         Path input = basePath.resolve("getOrgConfigWithId-input.json");
         Map<String, List<String>> actual = ConsolidatedConfigReader.getOrgConfigWithId(input.toFile(), "orgConfig", "developerApps");
 
@@ -167,7 +166,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getOrgConfigWithIdFromYaml() throws IOException, ParseException {
+    void getOrgConfigWithIdFromYaml() throws IOException {
         Path input = basePath.resolve("getOrgConfigWithIdFromYaml-input.yaml");
         Map<String, List<String>> actual = ConsolidatedConfigReader.getOrgConfigWithId(input.toFile(), "orgConfig", "developerApps");
 
@@ -213,7 +212,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getAPIList() throws IOException, ParseException {
+    void getAPIList() throws IOException {
         Path input = basePath.resolve("getAPIList-input.json");
         Set<String> actual = ConsolidatedConfigReader.getAPIList(input.toFile());
 
@@ -226,7 +225,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getAPIListFromYaml() throws IOException, ParseException {
+    void getAPIListFromYaml() throws IOException {
         Path input = basePath.resolve("getAPIListFromYaml-input.yaml");
         Set<String> actual = ConsolidatedConfigReader.getAPIList(input.toFile());
 
@@ -253,7 +252,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getAPIConfig() throws IOException, ParseException {
+    void getAPIConfig() throws IOException {
         Path input = basePath.resolve("getAPIConfig-input.json");
         List actual = ConsolidatedConfigReader.getAPIConfig(input.toFile(), "forecastweatherapi", "kvms");
 
@@ -270,7 +269,7 @@ class ConsolidatedConfigReaderTest {
     }
 
     @Test
-    void getAPIConfigFromYaml() throws IOException, ParseException {
+    void getAPIConfigFromYaml() throws IOException {
         Path input = basePath.resolve("getAPIConfigFromYaml-input.yaml");
         List actual = ConsolidatedConfigReader.getAPIConfig(input.toFile(), "forecastweatherapi", "kvms");
 
