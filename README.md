@@ -48,6 +48,7 @@ mvn install -Ptest -Dapigee.config.options=create
   apiproducts
   developers
   apps
+  virtualhosts
   exportAppKeys
   
 
