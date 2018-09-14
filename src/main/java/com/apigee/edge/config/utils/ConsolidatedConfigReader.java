@@ -41,7 +41,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 /**
- * Read config from edge.json
+ * Read config from edge.json or config file
  *
  * @author madhan.sadasivam
  */
