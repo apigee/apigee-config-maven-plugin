@@ -196,6 +196,12 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 	 */
 	private String clientsecret;
 	
+	/**
+	 * configuration file
+	 * @parameter property="apigee.config.file"
+ 	 */
+	private String configFilePath;
+	
 	// TODO set resources/edge as default value
 
 	public String getExportDir() {
@@ -301,10 +307,14 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 	private File findConsolidatedConfigFile()
 			throws MojoExecutionException {
-		File configFile = new File(getBaseDirectoryPath() + File.separator +
-									"edge.json");
-		if (configFile.exists()) {
-			return configFile;
+		File fConfigFile = null;
+		if(configFilePath !=null && !configFilePath.equalsIgnoreCase("")){
+			fConfigFile = new File(configFilePath);
+		}else{
+			fConfigFile = new File(getBaseDirectoryPath() + File.separator +"edge.json");
+		}
+		if (fConfigFile.exists()) {
+			return fConfigFile;
 		}
 		return null;
 	}
@@ -345,11 +355,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		configFile = findConsolidatedConfigFile();
 
 		if (configFile == null) {
-			logger.info("No edge.json found.");
-			throw new MojoExecutionException("config file edge.json not found");
+			logger.info("No edge.json or config file found.");
+			throw new MojoExecutionException("config file edge.json or config file not found");
 		}
 
-		logger.debug("Retrieving config from edge.json");
+		logger.info("Retrieving config from " + configFile.getAbsolutePath());
 		try {
 
 			return ConsolidatedConfigReader.getAPIConfig(configFile,
@@ -379,11 +389,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		configFile = findConsolidatedConfigFile();
 
 		if (configFile == null) {
-			logger.info("No edge.json found.");
-			throw new MojoExecutionException("config file edge.json not found");
+			logger.info("No edge.json or config file found.");
+			throw new MojoExecutionException("config file edge.json or config file not found");
 		}
 
-		logger.debug("Retrieving config from edge.json");
+		logger.info("Retrieving config from " + configFile.getAbsolutePath());
 		try {
 			return ConsolidatedConfigReader.getAPIList(configFile);
 		} catch (Exception e) {
@@ -418,13 +428,13 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 		/* consolidated edge.json in CWD as fallback */
 		configFile = findConsolidatedConfigFile();
-
+		
 		if (configFile == null) {
-			logger.info("No edge.json found.");
-			throw new MojoExecutionException("config file edge.json not found");
+			logger.info("No edge.json or config file found.");
+			throw new MojoExecutionException("config file edge.json or config file not found");
 		}
 
-		logger.debug("Retrieving config from edge.json");
+		logger.info("Retrieving config from " + configFile.getAbsolutePath());
 		try {
 			List envConfigs = ConsolidatedConfigReader.getEnvConfig(
 					this.buildProfile.getEnvironment(),
@@ -462,11 +472,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		configFile = findConsolidatedConfigFile();
 
 		if (configFile == null) {
-			logger.info("No edge.json found.");
-			throw new MojoExecutionException("config file edge.json not found");
+			logger.info("No edge.json or config file found.");
+			throw new MojoExecutionException("config file edge.json or config file not found");
 		}
 
-		logger.debug("Retrieving config from edge.json");
+		logger.info("Retrieving config from " + configFile.getAbsolutePath());
 		try {
 			return ConsolidatedConfigReader.getOrgConfig(configFile,
 															"orgConfig",
@@ -501,11 +511,11 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		configFile = findConsolidatedConfigFile();
 
 		if (configFile == null) {
-			logger.info("No edge.json found.");
-			throw new MojoExecutionException("config file edge.json not found");
+			logger.info("No edge.json or config file found.");
+			throw new MojoExecutionException("config file edge.json or config file not found");
 		}
 
-		logger.debug("Retrieving config from edge.json");
+		logger.info("Retrieving config from " + configFile.getAbsolutePath());
 		try {
 			return ConsolidatedConfigReader.getOrgConfigWithId(configFile,
 					"orgConfig",

@@ -29,6 +29,9 @@ mvn install -Ptest -Dapigee.config.options=create
     delete - Delete all config listed in edge.json.
     sync   - Delete and recreate.
 
+  -Dapigee.config.file=<path-to-config>
+     path containing the configuration.
+  
   -Dapigee.config.dir=<dir>
      directory containing multi-file format config files.
      
@@ -81,6 +84,10 @@ To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements 
 To run the plugin and use edge.json jump to samples project `cd /samples/EdgeConfig` and run 
 
 `mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
+
+To run the plugin and use a config file similar to edge.json in any directory jump to samples project `cd /samples/EdgeConfig` and run 
+
+`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.file=<path-to-config-file> -Dapigee.config.options=create`
 
 To run the plugin and use the multi-file config format jump to samples project `cd /samples/EdgeConfig` and run 
 

@@ -281,7 +281,7 @@ public class MaskConfigMojo extends GatewayAbstractMojo
             /* API scoped Masks */
             Set<String> apis = getAPIList(logger);
             if (apis == null || apis.size() == 0) {
-                logger.info("No API scoped Mask config found in edge.json.");
+                logger.info("No API scoped Mask config found in edge.json or config file");
                 return;
             }
 
@@ -289,7 +289,7 @@ public class MaskConfigMojo extends GatewayAbstractMojo
                 maskConfigs = getAPIConfig(logger, "maskconfigs", api);
                 if (maskConfigs == null || maskConfigs.size() == 0) {
                     logger.info(
-                        "No API scoped Mask config found in edge.json.");
+                        "No API scoped Mask config found in edge.json or config file");
                 } else {
                     doAPIUpdate(api, maskConfigs);
                 }

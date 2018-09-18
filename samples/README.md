@@ -25,6 +25,10 @@ To run the plugin and use edge.json jump to samples project `cd /samples/EdgeCon
 
 `mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
 
+To run the plugin and use a config file similar to edge.json in any directory jump to samples project `cd /samples/EdgeConfig` and run 
+
+`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.file=<path-to-config-file> -Dapigee.config.options=create`
+
 To run the plugin and use the multi-file format jump to samples project `cd /samples/EdgeConfig` and run 
 
 `mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create -Dapigee.config.dir=resources/edge`
