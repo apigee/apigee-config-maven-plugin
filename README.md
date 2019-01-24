@@ -12,6 +12,12 @@ Small API projects can use the single file format in edge.json to manage their c
 
 This plugin is available in public maven repo and can be used just by referring to it in pom.xml. This github repo is the plugin source code and unless you make changes to the code you do not have to build this repo to use the plugin. Read this document further for plugin usage instructions.
 
+## Prerequisites
+You will need the following to run the samples:
+- Apigee Edge developer account. See [docs](http://docs.apigee.com/api-services/content/creating-apigee-edge-account) for more details on how to setup your account..
+- [Java SDK >= 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+- [Maven 3.x](https://maven.apache.org/)
+
 ## Plugin Usage
 ```
 mvn install -Ptest -Dapigee.config.options=create
