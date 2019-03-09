@@ -283,7 +283,7 @@ public class RestUtil {
         if(payload!=null && !payload.equalsIgnoreCase("")){
         	ByteArrayContent content = new ByteArrayContent("application/json", 
                     payload.getBytes());
-        	restRequest = REQUEST_FACTORY.buildRequest("DELETE", new GenericUrl(importCmd), content);
+        	restRequest = REQUEST_FACTORY.buildRequest(HttpMethods.DELETE, new GenericUrl(importCmd), content);
         }else{
         	restRequest = REQUEST_FACTORY.buildDeleteRequest(
                     new GenericUrl(importCmd));
