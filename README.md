@@ -1,6 +1,6 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks and Mask Config.
+Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions and Mask Config.
 
 Help API teams follow API development best practices with Apigee.
   * Track Apigee Config (KVM, cache, target servers, etc.) in source control
@@ -59,6 +59,7 @@ mvn install -Ptest -Dapigee.config.options=create
   apps
   virtualhosts
   exportAppKeys
+  extensions				#v1.2.3 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
