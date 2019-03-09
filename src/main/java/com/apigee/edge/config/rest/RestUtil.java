@@ -31,20 +31,44 @@ import com.apigee.mgmtapi.sdk.client.MgmtAPIClient;
 import com.apigee.mgmtapi.sdk.model.AccessToken;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.google.api.client.http.*;
+import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMethods;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 public class RestUtil {
 
     static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    static final HttpTransport APACHE_HTTP_TRANSPORT = new ApacheHttpTransport();
     static final JsonFactory JSON_FACTORY = new JacksonFactory();
     static String versionRevision;
     static Logger logger = LoggerFactory.getLogger(RestUtil.class);
     static String accessToken = null;
     
     static HttpRequestFactory REQUEST_FACTORY = HTTP_TRANSPORT
+            .createRequestFactory(new HttpRequestInitializer() {
+                // @Override
+                public void initialize(HttpRequest request) {
+                    request.setParser(JSON_FACTORY.createJsonObjectParser());
+                    XTrustProvider.install();
+                    FakeHostnameVerifier _hostnameVerifier = new FakeHostnameVerifier();
+                    // Install the all-trusting host name verifier:
+                    HttpsURLConnection.setDefaultHostnameVerifier(_hostnameVerifier);
+
+                }
+            });
+    
+    static HttpRequestFactory APACHE_REQUEST_FACTORY = APACHE_HTTP_TRANSPORT
             .createRequestFactory(new HttpRequestInitializer() {
                 // @Override
                 public void initialize(HttpRequest request) {
@@ -259,7 +283,7 @@ public class RestUtil {
         if(payload!=null && !payload.equalsIgnoreCase("")){
         	ByteArrayContent content = new ByteArrayContent("application/json", 
                     payload.getBytes());
-        	restRequest = REQUEST_FACTORY.buildRequest(HttpMethod.DELETE, new GenericUrl(importCmd), content);
+        	restRequest = REQUEST_FACTORY.buildRequest("DELETE", new GenericUrl(importCmd), content);
         }else{
         	restRequest = REQUEST_FACTORY.buildDeleteRequest(
                     new GenericUrl(importCmd));
@@ -323,6 +347,38 @@ public class RestUtil {
 
         return executeAPIGet(profile, importCmd);
     }
+    
+	public static HttpResponse patchEnvConfig(ServerProfile profile, 
+            String resource,
+            String resourceId,
+            String payload)
+	throws IOException {
+	
+		ByteArrayContent content = new ByteArrayContent("application/json", 
+		                        payload.getBytes());
+		
+		String importCmd = profile.getHostUrl() + "/"
+		+ profile.getApi_version() + "/organizations/"
+		+ profile.getOrg() + "/environments/"
+		+ profile.getEnvironment() + "/" + resource + "/"
+		+ URLEncoder.encode(resourceId, "UTF-8");
+		
+		HttpRequest restRequest = APACHE_REQUEST_FACTORY.buildRequest(HttpMethods.PATCH, new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		
+		//logger.info(PrintUtil.formatRequest(restRequest));
+		
+		HttpResponse response;
+		try {
+			//response = restRequest.execute();
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+	return response;
+	}
 
     /***************************************************************************
      * Org Config - get, create, update

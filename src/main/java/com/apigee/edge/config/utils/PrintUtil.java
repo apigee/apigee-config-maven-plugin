@@ -15,14 +15,14 @@
  */
 package com.apigee.edge.config.utils;
 
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpMethod;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMethods;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 
 
 public class PrintUtil {
@@ -33,7 +33,7 @@ public class PrintUtil {
 
         // Print all headers except auth
 
-        prettyRequest = prettyRequest + request.getMethod() + "  " + request.getUrl();
+        prettyRequest = prettyRequest + request.getRequestMethod() + "  " + request.getUrl();
 
         HttpHeaders headers = request.getHeaders();
 
@@ -60,7 +60,7 @@ public class PrintUtil {
         }
 
         try {
-        if (request.getMethod().compareTo(HttpMethod.POST) == 0  ){
+        if (request.getRequestMethod().compareTo(HttpMethods.POST) == 0  ){
 
             if (request.getContent()!=null && request.getContent().getType() !=null)
             {

@@ -48,7 +48,15 @@
                   "continueOnError":"true",
                   "sharedFlow":"corspreflow"
                }
-            ]
+            ],
+           "extensions":[
+        		{
+        		    "name": "test-extension",
+        		    "description": "Testing",
+        		    "packageName": "gcp-stackdriver-logging",
+        		    "version": "1.2.1"
+        		}
+           ]
         }
     },
     "orgConfig": {
