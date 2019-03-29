@@ -1,0 +1,27 @@
+[
+	{
+		  "displayName": "Policy errors",
+		  "chartType": "line",
+		  "properties": [
+		    {
+		      "property": "__ui__",
+		      "value": [
+		        {
+		          "name": "description",
+		          "value": "This report shows the total number policy errors for API proxies. Proxies with zero errors are not shown."
+		        } ]
+		    }
+		  ],
+		  "metrics": [
+		    {
+		      "function": "sum",
+		      "name": "policy_error"
+		    }
+		  ],
+		  "dimensions": [
+		    "apiproxy"
+		  ],
+		  "filter": "(policy_error gt 0)",
+		  "timeUnit": "hour"
+	}
+]
