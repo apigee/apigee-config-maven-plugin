@@ -49,7 +49,7 @@ mvn install -Ptest -Dapigee.config.options=create
   corresponding goal directly. The goals available are,
  
   caches
-  kvms                      # CPS support from v1.2.1
+  kvms                  # CPS support from v1.2.1
   targetservers
   resourcefiles
   flowhooks
@@ -59,7 +59,8 @@ mvn install -Ptest -Dapigee.config.options=create
   apps
   virtualhosts
   exportAppKeys
-  extensions				#v1.2.3 or later
+  extensions			#v1.3.1 or later
+  reports				#v1.3.2 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -82,6 +83,8 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates API products
   - Creates Developers
   - Creates Developer Apps
+  - Creates Custom Reports
+  and many more
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
@@ -132,6 +135,7 @@ The apigee.config.dir option must be used to identify the top most directory con
           ├── developerApps.json
           ├── developers.json
           ├── kvms.json
+          ├── reports.json
           └── maskconfigs.json
 
 
@@ -155,6 +159,7 @@ The final level is the config entities.
      orgConfig.apiProducts[]
      orgConfig.developers[]
      orgConfig.developerApps[]
+     orgConfig.reports[]
      envConfig.test.caches[]
      envConfig.test.targetServers[]
      envConfig.test.virtualHosts[]

@@ -69,7 +69,7 @@
             <plugin>
                 <groupId>com.apigee.edge.config</groupId>
                 <artifactId>apigee-config-maven-plugin</artifactId>
-                <version>1.3.1</version>
+                <version>1.3.2</version>
                 <executions>
                     <execution>
                         <id>create-config-cache</id>
@@ -111,6 +111,13 @@
                         <phase>install</phase>                        
                         <goals>
                             <goal>apps</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-reports</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>reports</goal>
                         </goals>
                     </execution>
                 </executions>
