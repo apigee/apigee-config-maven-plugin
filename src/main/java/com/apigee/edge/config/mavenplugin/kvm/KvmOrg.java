@@ -8,7 +8,13 @@ import java.io.IOException;
 
 public class KvmOrg extends KvmOperations implements Kvm {
 
-    @Override
+	@Override
+    public HttpResponse getKvm(KvmValueObject kvmValueObject) throws IOException {
+        return RestUtil.getOrgConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps/"+kvmValueObject.getKvmName());
+    }
+	
+	@Override
     public HttpResponse getEntriesForKvm(KvmValueObject kvmValueObject, String kvmEntryName) throws IOException {
         return RestUtil.getOrgConfig(kvmValueObject.getProfile(),
                 "keyvaluemaps",

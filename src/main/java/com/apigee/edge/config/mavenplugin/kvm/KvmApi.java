@@ -8,7 +8,14 @@ import java.io.IOException;
 
 public class KvmApi extends KvmOperations implements Kvm {
 
-    @Override
+	@Override
+    public HttpResponse getKvm(KvmValueObject kvmValueObject) throws IOException {
+        return RestUtil.getAPIConfig(kvmValueObject.getProfile(),
+        		kvmValueObject.getApi(),
+        		"keyvaluemaps/"+kvmValueObject.getKvmName());
+    }
+	
+	@Override
     public HttpResponse getEntriesForKvm(KvmValueObject kvmValueObject, String kvmEntryName) throws IOException {
         return RestUtil.getAPIConfig(kvmValueObject.getProfile(),
                 kvmValueObject.getApi(),

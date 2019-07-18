@@ -53,6 +53,18 @@ public class ServerProfile {
 	private String bearerToken; //Mgmt API OAuth Token
 	private String refreshToken; //Mgmt API OAuth Refresh Token
 	private String authType; // Mgmt API Auth Type oauth|basic
+	private Boolean kvmOverride = true; //Override kvm only if true (used for update option)
+	
+	public Boolean getKvmOverride() {
+		return kvmOverride;
+	}
+
+	public void setKvmOverride(String kvmOverride) {
+		if(kvmOverride == null || kvmOverride.equals("true"))
+			this.kvmOverride = true;
+		else if (kvmOverride.equals("false"))
+			this.kvmOverride = false;
+	}
 	
 	public String getHostURL() {
 		return hostURL;

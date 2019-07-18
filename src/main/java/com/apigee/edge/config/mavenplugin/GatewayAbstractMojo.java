@@ -202,8 +202,22 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
  	 */
 	private String configFilePath;
 	
+	/**
+	 * kvm override
+	 * @parameter property="apigee.kvm.override" default-value="true"
+ 	 */
+	private String kvmOverride;
+	
 	// TODO set resources/edge as default value
 
+	public String getKvmOverride() {
+		return kvmOverride;
+	}
+
+	public void setKvmOverride(String kvmOverride) {
+		this.kvmOverride = kvmOverride;
+	}
+	
 	public String getExportDir() {
 		return exportDir;
 	}
@@ -245,6 +259,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile.setRefreshToken(this.refresh);
 		this.buildProfile.setClientId(this.clientid);
 		this.buildProfile.setClientSecret(this.clientsecret);
+		this.buildProfile.setKvmOverride(this.kvmOverride);
 		return buildProfile;
 	}
 
