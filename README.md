@@ -181,6 +181,12 @@ To enable OAuth add the following options to all profiles as required. Refer to 
 
     <apigee.tokenurl>${tokenurl}</apigee.tokenurl> <!-- optional: oauth -->
     <apigee.authtype>${authtype}</apigee.authtype> <!-- optional: oauth|basic(default) -->
+    
+You need to pass the OAuth ClientId and Secret to the plugin for it to generate the token and use that to invoke the Apigee Management APIs
+    
+    <apigee.clientid>${clientId}</apigee.clientid> <!-- optional: Oauth Client Id - Default is edgecli-->
+    <apigee.clientsecret>${clientSecret}</apigee.clientsecret> <!-- optional: Oauth Client Secret Default is edgeclisecret-->
+
 
 To invoke, add command line flags to enable OAuth.
 
