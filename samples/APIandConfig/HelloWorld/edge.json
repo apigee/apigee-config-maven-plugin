@@ -18,6 +18,13 @@
                 "port" : 80
               }
           ],
+          "references": [
+              {
+                "name" : "sampleReference",
+                "refers": "freetrial-2019-03-07",
+                "resourceType": "KeyStore"
+              }
+          ],
           "caches": [
               {
                 "name": "echocache",

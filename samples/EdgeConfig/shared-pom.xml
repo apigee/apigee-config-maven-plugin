@@ -26,13 +26,20 @@
             <plugin>
                 <groupId>com.apigee.edge.config</groupId>
                 <artifactId>apigee-config-maven-plugin</artifactId>
-                <version>1.3.3</version>
+                <version>1.3.4</version>
                 <executions>
                     <execution>
                         <id>create-config-cache</id>
                         <phase>install</phase>                        
                         <goals>
                             <goal>caches</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-references</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>references</goal>
                         </goals>
                     </execution>
                     <execution>
