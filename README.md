@@ -60,7 +60,8 @@ mvn install -Ptest -Dapigee.config.options=create
   virtualhosts
   exportAppKeys
   extensions			#v1.3.1 or later
-  reports				#v1.3.2 or later
+  reports			#v1.3.2 or later
+  references			#v1.3.4 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -84,6 +85,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates Developers
   - Creates Developer Apps
   - Creates Custom Reports
+  - Creates References
   and many more
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
@@ -130,6 +132,7 @@ The apigee.config.dir option must be used to identify the top most directory con
       │       ├── kvms.json
       │       ├── targetServers.json
       │       └── virtualHosts.json   
+      │       └── references.json   
       └── org
           ├── apiProducts.json
           ├── developerApps.json
@@ -163,6 +166,7 @@ The final level is the config entities.
      envConfig.test.caches[]
      envConfig.test.targetServers[]
      envConfig.test.virtualHosts[]
+     envConfig.test.references[]
    ```
 
 Each config entity is the payload of the corresponding management API. The example project may not show all the attributes of config entities, but any valid input of a management API would work.
