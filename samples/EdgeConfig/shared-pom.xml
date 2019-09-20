@@ -91,6 +91,13 @@
                             <goal>reports</goal>
                         </goals>
                     </execution>
+                    <execution> 
+                        <id>create-config-flowhooks</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>flowhooks</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>            
         </plugins>
