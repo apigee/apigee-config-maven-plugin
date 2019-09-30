@@ -389,7 +389,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                                             kvm);
         try {
 
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Create Success.");
@@ -410,7 +410,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                                             kvmEntry);
         try {
             
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Delete Success.");
@@ -462,7 +462,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                                     kvm);
         try {
 
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
             	logger.info("Create Success.");
@@ -484,7 +484,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                                     kvmEntry);
         try {
             
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Delete Success.");
@@ -539,7 +539,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                                             kvm);
         try {
 
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Create Success.");
@@ -563,7 +563,7 @@ public class KVMMojo extends GatewayAbstractMojo
                                                             kvmEntry);
         try {
             
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Delete Success.");
