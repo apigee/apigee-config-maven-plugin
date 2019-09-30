@@ -69,7 +69,7 @@ public abstract class KvmOperations {
 
             try {
 
-                logger.info("Response " + response.getContentType() + "\n" +
+                logger.debug("Response " + response.getContentType() + "\n" +
                         response.parseAsString());
 
                 if (response.isSuccessStatusCode())
@@ -88,7 +88,7 @@ public abstract class KvmOperations {
     		logger.info("Override is set to false");
     		HttpResponse response = getKvm(kvmValueObject);
     		String responseString = response.parseAsString();
-    		logger.info("Get KVM Response " + response.getContentType() + "\n" + responseString);
+    		logger.debug("Get KVM Response " + response.getContentType() + "\n" + responseString);
     		if(compareJSON(responseString, kvmValueObject.getKvm())) {
     			logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+". Skipping !");
     			return;
@@ -97,7 +97,7 @@ public abstract class KvmOperations {
         HttpResponse response = updateKvmEntriesForNonCpsOrg(kvmValueObject);
         try {
 
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                     response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Update Success.");
@@ -130,7 +130,7 @@ public abstract class KvmOperations {
                 return false;
             }
 
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                     response.parseAsString());
 
             if (response.isSuccessStatusCode()) {
