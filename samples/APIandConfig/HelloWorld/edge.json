@@ -17,13 +17,14 @@
                 "isEnabled" : true,
                 "port" : 80
               }
-          ],
-           "userroles": [
+          ], 
+          "references": [
             {
-                "name" : "tracer12"
-                
-               }
-           ],
+              "name" : "sampleReference",
+              "refers": "freetrial",
+              "resourceType": "KeyStore"
+            }
+        ], 
           "caches": [
               {
                 "name": "echocache",
@@ -97,7 +98,7 @@
         ],
         "userroles": [
               {
-                "name":"tracer10",
+                "name":"customRoles",
                 "resourcepermissions":[
                 {
                     "path" : "/applications/*",

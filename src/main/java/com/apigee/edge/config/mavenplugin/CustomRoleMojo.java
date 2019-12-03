@@ -39,9 +39,9 @@ import com.google.gson.JsonParseException;
 /**
  * Goal to create Custom Roles in Apigee EDGE. scope: org
  *
- * @author Abhishek Chouksey,
- * @author Pallavi Tanpure,
- * @author Soudnya Nalawade,
+ * @author Abhishek Chouksey
+ * @author Pallavi Tanpure
+ * @author Soudnya Nalawade
  * @author Himanshu Sachdev
  * @goal customroles
  * @phase install
@@ -266,7 +266,6 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 	 *
 	 * @param profile
 	 *
-	 * @param customRoleName user role name
 	 *
 	 * @param customRole
 	 */
