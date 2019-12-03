@@ -195,6 +195,7 @@ public class CacheMojo extends GatewayAbstractMojo
 		}
 
 		Logger logger = LoggerFactory.getLogger(CacheMojo.class);
+		
 
 		try {
 			
@@ -230,6 +231,8 @@ public class CacheMojo extends GatewayAbstractMojo
      **/
     public static String createCache(ServerProfile profile, String cache)
             throws IOException {
+    	
+    	logger.info("under execution.........");
 
         HttpResponse response = RestUtil.createEnvConfig(profile, "caches", cache);
         try {
