@@ -103,8 +103,8 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	protected String getUserRoleName(String payload) throws MojoFailureException {
 		Gson gson = new Gson();
 		try {
-			UserRole usermrole = gson.fromJson(payload, UserRole.class);
-			return usermrole.name;
+			UserRole userrole = gson.fromJson(payload, UserRole.class);
+			return userrole.name;
 
 		} catch (JsonParseException e) {
 			throw new MojoFailureException(e.getMessage());
