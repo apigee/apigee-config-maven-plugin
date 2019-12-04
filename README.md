@@ -62,7 +62,7 @@ mvn install -Ptest -Dapigee.config.options=create
   extensions			#v1.3.1 or later
   reports			#v1.3.2 or later
   references			#v1.3.4 or later
-  customroles  #v1.3.7 or later 
+  customroles  #v1.3.6 or later 
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.

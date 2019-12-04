@@ -43,13 +43,13 @@ import com.google.gson.JsonParseException;
  * @author Pallavi Tanpure
  * @author Soudnya Nalawade
  * @author Himanshu Sachdev
- * @goal customroles
+ * @goal userroles
  * @phase install
  */
 
-public class CustomRoleMojo extends GatewayAbstractMojo {
+public class UserRoleMojo extends GatewayAbstractMojo {
 	public static final String userRole = "userroles";
-	static Logger logger = LoggerFactory.getLogger(CustomRoleMojo.class);
+	static Logger logger = LoggerFactory.getLogger(UserRoleMojo.class);
 	public static final String ____ATTENTION_MARKER____ = "************************************************************************";
 
 	enum OPTIONS {
@@ -60,7 +60,7 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 
 	private ServerProfile serverProfile;
 
-	public static class CustomRole {
+	public static class UserRole {
 		@Key
 		public String name;
 		public List<ResourcePermission> resourcepermissions;
@@ -72,7 +72,7 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 		String[] permissions;
 	}
 
-	public CustomRoleMojo() {
+	public UserRoleMojo() {
 		super();
 
 	}
@@ -100,18 +100,18 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 
 	}
 
-	protected String getCustomRoleName(String payload) throws MojoFailureException {
+	protected String getUserRoleName(String payload) throws MojoFailureException {
 		Gson gson = new Gson();
 		try {
-			CustomRole customrole = gson.fromJson(payload, CustomRole.class);
-			return customrole.name;
+			UserRole usermrole = gson.fromJson(payload, UserRole.class);
+			return usermrole.name;
 
 		} catch (JsonParseException e) {
 			throw new MojoFailureException(e.getMessage());
 		}
 	}
 
-	protected void doUpdate(List<String> customRoles) throws MojoFailureException {
+	protected void doUpdate(List<String> userRoles) throws MojoFailureException {
 		try {
 			List existingcustomRoles = null;
 			if (buildOption != OPTIONS.update && buildOption != OPTIONS.create && buildOption != OPTIONS.delete
@@ -119,33 +119,33 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 				return;
 			}
 
-			logger.info("Retrieving existing environment Custom Roles - ");
+			logger.info("Retrieving existing environment User Roles - ");
 			existingcustomRoles = getCustomRoles(serverProfile);
 
-			for (String customRole : customRoles) {
-				String customRoleName = getCustomRoleName(customRole);
-				if (customRoleName == null) {
-					throw new IllegalArgumentException("Custom Role does not have a name.\n" + customRole + "\n");
+			for (String userRole : userRoles) {
+				String userRoleName = getUserRoleName(userRole);
+				if (userRoleName == null) {
+					throw new IllegalArgumentException("Custom Role does not have a name.\n" + userRole + "\n");
 				}
 
-				if (existingcustomRoles.contains(customRoleName)) {
+				if (existingcustomRoles.contains(userRoleName)) {
 					switch (buildOption) {
 					case update:
-						logger.info("Custom Role \"" + customRoleName + "\" exists. Updating.");
-						updateCustomRole(serverProfile, customRole);
+						logger.info("Custom Role \"" + userRoleName + "\" exists. Updating.");
+						updateCustomRole(serverProfile, userRole);
 						break;
 					case create:
-						logger.info("Custom Role \"" + customRoleName + "\" already exists. Skipping.");
+						logger.info("Custom Role \"" + userRoleName + "\" already exists. Skipping.");
 						break;
 					case delete:
-						logger.info("Custom Role \"" + customRoleName + "\" already exists. Deleting.");
-						deleteCustomRole(serverProfile, customRoleName);
+						logger.info("Custom Role \"" + userRoleName + "\" already exists. Deleting.");
+						deleteCustomRole(serverProfile, userRoleName);
 						break;
 					case sync:
-						logger.info("Custom Role \"" + customRoleName + "\" already exists. Deleting and recreating.");
-						deleteCustomRole(serverProfile, customRoleName);
-						logger.info("Creating Custom Role - " + customRoleName);
-						createCustomRole(serverProfile, customRole);
+						logger.info("Custom Role \"" + userRoleName + "\" already exists. Deleting and recreating.");
+						deleteCustomRole(serverProfile, userRoleName);
+						logger.info("Creating Custom Role - " + userRoleName);
+						createUserRole(serverProfile, userRole);
 						break;
 					}
 				} else {
@@ -153,11 +153,11 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 					case create:
 					case sync:
 					case update:
-						logger.info("Creating Custom Role - " + customRoleName);
-						createCustomRole(serverProfile, customRole);
+						logger.info("Creating Custom Role - " + userRoleName);
+						createUserRole(serverProfile, userRole);
 						break;
 					case delete:
-						logger.info("Custom Role \"" + customRoleName + "\" does not exist. Skipping.");
+						logger.info("Custom Role \"" + userRoleName + "\" does not exist. Skipping.");
 						break;
 					}
 				}
@@ -180,7 +180,7 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 			return;
 		}
 
-		Logger logger = LoggerFactory.getLogger(CustomRoleMojo.class);
+		Logger logger = LoggerFactory.getLogger(UserRoleMojo.class);
 
 		try {
 
@@ -194,13 +194,13 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 			if (serverProfile.getEnvironment() == null) {
 				throw new MojoExecutionException("Apigee environment not found in profile");
 			}
-			List customRoles = getOrgConfig(logger, userRole);
-			if (customRoles == null || customRoles.size() == 0) {
+			List userRoles = getOrgConfig(logger, userRole);
+			if (userRoles == null || userRoles.size() == 0) {
 				logger.info("No Custom Role config found.");
 				return;
 			}
 
-			doUpdate(customRoles);
+			doUpdate(userRoles);
 
 		} catch (MojoFailureException e) {
 			throw e;
@@ -212,11 +212,11 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 	/***************************************************************************
 	 * REST call wrappers
 	 **/
-	public static String createCustomRole(ServerProfile profile, String customRole) throws IOException {
+	public static String createUserRole(ServerProfile profile, String userRole) throws IOException {
 
 		Gson gson = new Gson();
-		CustomRole customRoleObject = gson.fromJson(customRole, CustomRole.class);
-		String namePayload = customRoleConversion(customRoleObject.name);
+		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
+		String namePayload = customRoleConversion(userRoleObject.name);
 
 		HttpResponse response = RestUtil.createOrgConfig(profile, userRole, namePayload);
 		try {
@@ -224,7 +224,7 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
 			if (response.isSuccessStatusCode()) {
 				logger.info("Create Success for role.");
-				addResourcePermissionsToRole(profile, customRoleObject);
+				addResourcePermissionsToRole(profile, userRoleObject);
 			}
 
 		} catch (HttpResponseException e) {
@@ -240,14 +240,14 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 	 * 
 	 * @param profile
 	 * 
-	 * @param customRoleObject user role Object
+	 * @param userRoleObject user role Object
 	 */
-	private static void addResourcePermissionsToRole(ServerProfile profile, CustomRole customRoleObject)
+	private static void addResourcePermissionsToRole(ServerProfile profile, UserRole userRoleObject)
 			throws IOException {
 
-		String permissionsPayload = customRolePermissionConversion(customRoleObject.resourcepermissions);
+		String permissionsPayload = customRolePermissionConversion(userRoleObject.resourcepermissions);
 		HttpResponse response = RestUtil.createOrgConfig(profile,
-				userRole + "/" + customRoleObject.name + "/resourcepermissions", permissionsPayload);
+				userRole + "/" + userRoleObject.name + "/resourcepermissions", permissionsPayload);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -256,7 +256,7 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 			}
 
 		} catch (HttpResponseException e) {
-			logger.error("Custom Role create error " + e.getMessage());
+			logger.error("User Role create error " + e.getMessage());
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -267,18 +267,18 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 	 * @param profile
 	 *
 	 *
-	 * @param customRole
+	 * @param userRole
 	 */
-	public static String updateCustomRole(ServerProfile profile, String customRole) throws IOException {
+	public static String updateCustomRole(ServerProfile profile, String userRole) throws IOException {
 		Gson gson = new Gson();
-		CustomRole customRoleObject = gson.fromJson(customRole, CustomRole.class);
-		addResourcePermissionsToRole(profile, customRoleObject);
+		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
+		addResourcePermissionsToRole(profile, userRoleObject);
 		return "";
 	}
 
-	public static String deleteCustomRole(ServerProfile profile, String customRoleName) throws IOException {
+	public static String deleteCustomRole(ServerProfile profile, String userRoleName) throws IOException {
 
-		HttpResponse response = RestUtil.deleteOrgConfig(profile, userRole, customRoleName);
+		HttpResponse response = RestUtil.deleteOrgConfig(profile, userRole, userRoleName);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -298,7 +298,7 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 		HttpResponse response = RestUtil.getOrgConfig(profile, userRole);
 		if (response == null)
 			return new ArrayList();
-		JSONArray customRoles = null;
+		JSONArray userRoles = null;
 		try {
 			logger.debug("output " + response.getContentType());
 			/**
@@ -311,21 +311,21 @@ public class CustomRoleMojo extends GatewayAbstractMojo {
 			 * Parsers fail to parse a string array. converting it to an JSON object as a
 			 * workaround
 			 */
-			String obj = "{ \"customRoles\": " + payload + "}";
+			String obj = "{ \"userRoles\": " + payload + "}";
 
 			JSONParser parser = new JSONParser();
 			JSONObject obj1 = (JSONObject) parser.parse(obj);
-			customRoles = (JSONArray) obj1.get("customRoles");
+			userRoles = (JSONArray) obj1.get("userRoles");
 
 		} catch (ParseException pe) {
-			logger.error("Get Custom Role parse error " + pe.getMessage());
+			logger.error("Get User Role parse error " + pe.getMessage());
 			throw new IOException(pe.getMessage());
 		} catch (HttpResponseException e) {
-			logger.error("Get Custom Role error " + e.getMessage());
+			logger.error("Get User Role error " + e.getMessage());
 			throw new IOException(e.getMessage());
 		}
 
-		return customRoles;
+		return userRoles;
 	}
 
 	/**
