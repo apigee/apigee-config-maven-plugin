@@ -17,14 +17,14 @@
                 "isEnabled" : true,
                 "port" : 80
               }
-          ],
+          ], 
           "references": [
-              {
-                "name" : "sampleReference",
-                "refers": "freetrial-2019-03-07",
-                "resourceType": "KeyStore"
-              }
-          ],
+            {
+              "name" : "sampleReference",
+              "refers": "freetrial",
+              "resourceType": "KeyStore"
+            }
+        ], 
           "caches": [
               {
                 "name": "echocache",
@@ -96,6 +96,27 @@
                 "scopes": []
             }        
         ],
+        "userroles": [
+              {
+                "name":"customRoles",
+                "resourcepermissions":[
+                {
+                    "path" : "/applications/*",
+                    "permissions" : [ "get","put"]
+                    },
+                    {
+                    "path" : "/environments/*/application/*/revisions/*/debugsessions",
+                    "permissions" : [ "get","put"]
+                    },
+                    {
+					"path" : "/keyvaluemaps/*",
+					"permissions" : [ "get","put"]
+					}
+                ]
+              }
+              
+              
+          ],
         "reports": [
         	{
         		  "displayName": "Policy errors",

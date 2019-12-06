@@ -1,6 +1,6 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions and Mask Config.
+Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions, Mask Config and Custom Roles.
 
 Help API teams follow API development best practices with Apigee.
   * Track Apigee Config (KVM, cache, target servers, etc.) in source control
@@ -62,6 +62,7 @@ mvn install -Ptest -Dapigee.config.options=create
   extensions			#v1.3.1 or later
   reports			#v1.3.2 or later
   references			#v1.3.4 or later
+  customroles  #v1.3.6 or later 
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -86,6 +87,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates Developer Apps
   - Creates Custom Reports
   - Creates References
+  - Create User Role and add permission to Role[GET,POST,DELETE]
   and many more
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
@@ -140,7 +142,7 @@ The apigee.config.dir option must be used to identify the top most directory con
           ├── kvms.json
           ├── reports.json
           └── maskconfigs.json
-
+          └── customroles.json
 
 ## Single file config structure - edge.json
 Projects with fewer config entities can use the single file edge.json format to capture all config of an API project. The edge.json file organizes config into 3 scopes corresponding to the scopes of config entities that can be created in Edge. The plugin looks for edge.json in the current directory by default.
@@ -253,11 +255,10 @@ Provide the token when invoking the plugin.
                          -Dauthtype=oauth -Dbearer=c912eu1201c -Drefresh=d023fv2312d -Dapigee.config.options=create
    
 *NOTE: If you are providing refresh token, you need to provide the bearer token and username as well*
-
+Apigee edge comes with several inbuilt role that provides several permission level 
 
 ## ROADMAP
   - Keystore, Truststore support
-  - Custom roles
   - User role association
 
 Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
