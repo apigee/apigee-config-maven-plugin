@@ -98,7 +98,7 @@
         ],
         "userroles": [
               {
-                "name":"userRole",
+                "name":"SampleRole",
                 "resourcepermissions":[
                   {
                     "path" : "/applications/*",
@@ -109,9 +109,13 @@
                     "permissions" : [ "get","put"]
                   },
                   {
-          					"path" : "/keyvaluemaps/*",
-          					"permissions" : [ "get",put]
-          				}
+                    "path" : "/keyvaluemaps/*",
+                    "permissions" : [ "get","put"]
+                  },
+                  {
+                    "path" : "/sharedflows/*",
+                    "permissions" : [ "get","delete"]
+                  }
                 ]
               }
           ],
