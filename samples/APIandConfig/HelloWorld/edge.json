@@ -98,7 +98,7 @@
         ],
         "userroles": [
               {
-                "name":"userRoles",
+                "name":"userRole",
                 "resourcepermissions":[
                   {
                     "path" : "/applications/*",
