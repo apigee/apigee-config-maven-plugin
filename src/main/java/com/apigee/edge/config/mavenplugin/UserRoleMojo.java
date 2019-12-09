@@ -37,7 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**
- * Goal to create Custom Roles in Apigee EDGE. scope: org
+ * Goal to create User Roles in Apigee EDGE. scope: org
  *
  * @author Abhishek Chouksey
  * @author Pallavi Tanpure
@@ -80,7 +80,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	public void init() throws MojoFailureException {
 		try {
 			logger.info(____ATTENTION_MARKER____);
-			logger.info("Apigee Custom Roles");
+			logger.info("Apigee User Roles");
 			logger.info(____ATTENTION_MARKER____);
 
 			String options = "";
@@ -113,38 +113,38 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 
 	protected void doUpdate(List<String> userRoles) throws MojoFailureException {
 		try {
-			List existingcustomRoles = null;
+			List existingUserRoles = null;
 			if (buildOption != OPTIONS.update && buildOption != OPTIONS.create && buildOption != OPTIONS.delete
 					&& buildOption != OPTIONS.sync) {
 				return;
 			}
 
 			logger.info("Retrieving existing environment User Roles - ");
-			existingcustomRoles = getCustomRoles(serverProfile);
+			existingUserRoles = getUserRoles(serverProfile);
 
 			for (String userRole : userRoles) {
 				String userRoleName = getUserRoleName(userRole);
 				if (userRoleName == null) {
-					throw new IllegalArgumentException("Custom Role does not have a name.\n" + userRole + "\n");
+					throw new IllegalArgumentException("User Role does not have a name.\n" + userRole + "\n");
 				}
 
-				if (existingcustomRoles.contains(userRoleName)) {
+				if (existingUserRoles.contains(userRoleName)) {
 					switch (buildOption) {
 					case update:
-						logger.info("Custom Role \"" + userRoleName + "\" exists. Updating.");
-						updateCustomRole(serverProfile, userRole);
+						logger.info("User Role \"" + userRoleName + "\" exists. Updating.");
+						updateUserRole(serverProfile, userRole);
 						break;
 					case create:
-						logger.info("Custom Role \"" + userRoleName + "\" already exists. Skipping.");
+						logger.info("User Role \"" + userRoleName + "\" already exists. Skipping.");
 						break;
 					case delete:
-						logger.info("Custom Role \"" + userRoleName + "\" already exists. Deleting.");
-						deleteCustomRole(serverProfile, userRoleName);
+						logger.info("User Role \"" + userRoleName + "\" already exists. Deleting.");
+						deleteUserRole(serverProfile, userRoleName);
 						break;
 					case sync:
-						logger.info("Custom Role \"" + userRoleName + "\" already exists. Deleting and recreating.");
-						deleteCustomRole(serverProfile, userRoleName);
-						logger.info("Creating Custom Role - " + userRoleName);
+						logger.info("User Role \"" + userRoleName + "\" already exists. Deleting and recreating.");
+						deleteUserRole(serverProfile, userRoleName);
+						logger.info("Creating User Role - " + userRoleName);
 						createUserRole(serverProfile, userRole);
 						break;
 					}
@@ -153,11 +153,11 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 					case create:
 					case sync:
 					case update:
-						logger.info("Creating Custom Role - " + userRoleName);
+						logger.info("Creating User Role - " + userRoleName);
 						createUserRole(serverProfile, userRole);
 						break;
 					case delete:
-						logger.info("Custom Role \"" + userRoleName + "\" does not exist. Skipping.");
+						logger.info("User Role \"" + userRoleName + "\" does not exist. Skipping.");
 						break;
 					}
 				}
@@ -187,7 +187,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 			init();
 
 			if (buildOption == OPTIONS.none) {
-				logger.info("Skipping Custom Roles (default action)");
+				logger.info("Skipping User Roles (default action)");
 				return;
 			}
 
@@ -196,7 +196,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 			}
 			List userRoles = getOrgConfig(logger, userRole);
 			if (userRoles == null || userRoles.size() == 0) {
-				logger.info("No Custom Role config found.");
+				logger.info("No User Role config found.");
 				return;
 			}
 
@@ -216,19 +216,19 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 
 		Gson gson = new Gson();
 		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
-		String namePayload = customRoleConversion(userRoleObject.name);
+		String namePayload = userRoleConversion(userRoleObject.name);
 
 		HttpResponse response = RestUtil.createOrgConfig(profile, userRole, namePayload);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
 			if (response.isSuccessStatusCode()) {
-				logger.info("Create Success for role.");
+				logger.info("Create Success for User Role.");
 				addResourcePermissionsToRole(profile, userRoleObject);
 			}
 
 		} catch (HttpResponseException e) {
-			logger.error("Custom Role create error " + e.getMessage());
+			logger.error("User Role create error " + e.getMessage());
 			throw new IOException(e.getMessage());
 		}
 
@@ -239,13 +239,13 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	 * This method Assign Multiple Resource Permissions to the user role .
 	 * 
 	 * @param profile
-	 * 
 	 * @param userRoleObject user role Object
+	 *
 	 */
 	private static void addResourcePermissionsToRole(ServerProfile profile, UserRole userRoleObject)
 			throws IOException {
 
-		String permissionsPayload = customRolePermissionConversion(userRoleObject.resourcepermissions);
+		String permissionsPayload = userRolePermissionConversion(userRoleObject.resourcepermissions);
 		HttpResponse response = RestUtil.createOrgConfig(profile,
 				userRole + "/" + userRoleObject.name + "/resourcepermissions", permissionsPayload);
 		try {
@@ -265,18 +265,17 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	 * This method is used to update the user role Permissions.
 	 *
 	 * @param profile
-	 *
-	 *
 	 * @param userRole
+	 *
 	 */
-	public static String updateCustomRole(ServerProfile profile, String userRole) throws IOException {
+	public static String updateUserRole(ServerProfile profile, String userRole) throws IOException {
 		Gson gson = new Gson();
 		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
 		addResourcePermissionsToRole(profile, userRoleObject);
 		return "";
 	}
 
-	public static String deleteCustomRole(ServerProfile profile, String userRoleName) throws IOException {
+	public static String deleteUserRole(ServerProfile profile, String userRoleName) throws IOException {
 
 		HttpResponse response = RestUtil.deleteOrgConfig(profile, userRole, userRoleName);
 		try {
@@ -286,14 +285,14 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 				logger.info("Delete Success.");
 
 		} catch (HttpResponseException e) {
-			logger.error("Custom Role delete error " + e.getMessage());
+			logger.error("User Role delete error " + e.getMessage());
 			throw new IOException(e.getMessage());
 		}
 
 		return "";
 	}
 
-	public static List getCustomRoles(ServerProfile profile) throws IOException {
+	public static List getUserRoles(ServerProfile profile) throws IOException {
 
 		HttpResponse response = RestUtil.getOrgConfig(profile, userRole);
 		if (response == null)
@@ -334,7 +333,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	 * 
 	 * @param roleName The name of the role in organization
 	 */
-	public static String customRoleConversion(String roleName) {
+	public static String userRoleConversion(String roleName) {
 		return " { \"role\" : [ {\"name\" :\"" + roleName + "\"}]} ";
 	}
 
@@ -344,7 +343,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	 * 
 	 * @param permissions The required permissions to be assigned to a role
 	 */
-	public static String customRolePermissionConversion(List<ResourcePermission> permissions) {
+	public static String userRolePermissionConversion(List<ResourcePermission> permissions) {
 		Gson gson = new Gson();
 		return "{\"resourcePermission\":" + gson.toJson(permissions) + "}";
 	}
