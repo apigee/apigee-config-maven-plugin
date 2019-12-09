@@ -98,7 +98,7 @@
         ],
         "userroles": [
               {
-                "name":"customRoles",
+                "name":"userRoles",
                 "resourcepermissions":[
                   {
                     "path" : "/applications/*",
@@ -110,7 +110,7 @@
                   },
                   {
           					"path" : "/keyvaluemaps/*",
-          					"permissions" : [ "get","put"]
+          					"permissions" : [ "get",put]
           				}
                 ]
               }

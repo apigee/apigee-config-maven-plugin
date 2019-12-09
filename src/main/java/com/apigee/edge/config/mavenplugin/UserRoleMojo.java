@@ -218,7 +218,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
 		String namePayload = userRoleConversion(userRoleObject.name);
 
-		HttpResponse response = RestUtil.createOrgConfig(profile, userRole, namePayload);
+		HttpResponse response = RestUtil.createOrgConfig(profile, UserRoleMojo.userRole, namePayload);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
