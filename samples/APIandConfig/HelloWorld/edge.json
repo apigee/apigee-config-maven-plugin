@@ -100,22 +100,20 @@
               {
                 "name":"customRoles",
                 "resourcepermissions":[
-                {
+                  {
                     "path" : "/applications/*",
                     "permissions" : [ "get","put"]
-                    },
-                    {
+                  },
+                  {
                     "path" : "/environments/*/application/*/revisions/*/debugsessions",
                     "permissions" : [ "get","put"]
-                    },
-                    {
-					"path" : "/keyvaluemaps/*",
-					"permissions" : [ "get","put"]
-					}
+                  },
+                  {
+          					"path" : "/keyvaluemaps/*",
+          					"permissions" : [ "get","put"]
+          				}
                 ]
               }
-              
-              
           ],
         "reports": [
         	{
