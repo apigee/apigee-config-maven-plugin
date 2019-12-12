@@ -1,6 +1,6 @@
 [ 
     {
-      "name":"tracer10",
+      "name":"SampleRole",
       "resourcepermissions":[
         {
           "path" : "/applications/*",
@@ -13,6 +13,10 @@
         {
           "path" : "/keyvaluemaps/*",
           "permissions" : [ "get","put"]
+        },
+        {
+          "path" : "/sharedflows/*",
+          "permissions" : [ "get","delete"]
         }
       ]
     }
