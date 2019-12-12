@@ -48,7 +48,6 @@ import com.google.gson.JsonParseException;
  */
 
 public class UserRoleMojo extends GatewayAbstractMojo {
-	public static final String userRole = "userroles";
 	static Logger logger = LoggerFactory.getLogger(UserRoleMojo.class);
 	public static final String ____ATTENTION_MARKER____ = "************************************************************************";
 
@@ -194,7 +193,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 			if (serverProfile.getEnvironment() == null) {
 				throw new MojoExecutionException("Apigee environment not found in profile");
 			}
-			List userRoles = getOrgConfig(logger, userRole);
+			List userRoles = getOrgConfig(logger, "userroles");
 			if (userRoles == null || userRoles.size() == 0) {
 				logger.info("No User Role config found.");
 				return;
@@ -218,7 +217,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
 		String namePayload = userRoleConversion(userRoleObject.name);
 
-		HttpResponse response = RestUtil.createOrgConfig(profile, UserRoleMojo.userRole, namePayload);
+		HttpResponse response = RestUtil.createOrgConfig(profile, "userroles", namePayload);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -247,7 +246,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 
 		String permissionsPayload = userRolePermissionConversion(userRoleObject.resourcepermissions);
 		HttpResponse response = RestUtil.createOrgConfig(profile,
-				userRole + "/" + userRoleObject.name + "/resourcepermissions", permissionsPayload);
+				"userroles" + "/" + userRoleObject.name + "/resourcepermissions", permissionsPayload);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -277,7 +276,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 
 	public static String deleteUserRole(ServerProfile profile, String userRoleName) throws IOException {
 
-		HttpResponse response = RestUtil.deleteOrgConfig(profile, userRole, userRoleName);
+		HttpResponse response = RestUtil.deleteOrgConfig(profile, "userroles", userRoleName);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -294,7 +293,7 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 
 	public static List getUserRoles(ServerProfile profile) throws IOException {
 
-		HttpResponse response = RestUtil.getOrgConfig(profile, userRole);
+		HttpResponse response = RestUtil.getOrgConfig(profile, "userroles");
 		if (response == null)
 			return new ArrayList();
 		JSONArray userRoles = null;
