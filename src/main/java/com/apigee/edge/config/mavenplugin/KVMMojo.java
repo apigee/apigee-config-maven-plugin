@@ -15,30 +15,27 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.mavenplugin.kvm.*;
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-
-import com.google.api.client.http.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create KVM in Apigee EDGE.
@@ -62,9 +59,6 @@ public class KVMMojo extends GatewayAbstractMojo
 	OPTIONS buildOption = OPTIONS.none;
 
 	private ServerProfile serverProfile;
-	private Kvm kvmOrg;
-	private Kvm kvmApi;
-	private Kvm kvmEnv;
 
     public static class KVM {
         @Key
@@ -85,9 +79,6 @@ public class KVMMojo extends GatewayAbstractMojo
 
 			String options="";
 			serverProfile = super.getProfile();
-            kvmOrg = new KvmOrg();
-            kvmApi = new KvmApi();
-            kvmEnv = new KvmEnv();
 	
 			options = super.getOptions();
 			if (options != null) {
@@ -135,8 +126,7 @@ public class KVMMojo extends GatewayAbstractMojo
                     switch (buildOption) {
                         case update:
                             logger.info("Org KVM \"" + kvmName + 
-                                                    "\" exists. Updating.");
-                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
+                                                    "\" exists. Skipping.");
                             break;
                         case create:
                             logger.info("Org KVM \"" + kvmName + 
@@ -201,8 +191,7 @@ public class KVMMojo extends GatewayAbstractMojo
                     switch (buildOption) {
                         case update:
                             logger.info("Env KVM \"" + kvmName + 
-                                                    "\" exists. Updating.");
-                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
+                                                    "\" exists. Skipping.");
                             break;
                         case create:
                             logger.info("Env KVM \"" + kvmName + 
@@ -267,8 +256,7 @@ public class KVMMojo extends GatewayAbstractMojo
                     switch (buildOption) {
                         case update:
                             logger.info("API KVM \"" + kvmName + 
-                                                    "\" exists. Updating.");
-                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
+                                                    "\" exists. Skipping.");
                             break;
                         case create:
                             logger.info("API KVM \"" + kvmName + 

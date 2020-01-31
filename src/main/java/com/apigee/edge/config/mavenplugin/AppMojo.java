@@ -15,38 +15,28 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
-
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-
-import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create Apps in Apigee EDGE
@@ -312,21 +302,19 @@ public class AppMojo extends GatewayAbstractMojo
                                         "developers/" + developerId + "/apps");
         if(response == null) return new ArrayList();
 
-        JSONArray apps = null;
+        JSONArray apps = new JSONArray();
         try {
             logger.debug("output " + response.getContentType());
             // response can be read only once
             String payload = response.parseAsString();
             logger.debug(payload);
-
-            /* Parsers fail to parse a string array.
-             * converting it to an JSON object as a workaround */
-            String obj = "{ \"apps\": " + payload + "}";
-
-            JSONParser parser = new JSONParser();                
-            JSONObject obj1     = (JSONObject)parser.parse(obj);
-            apps    = (JSONArray)obj1.get("apps");
-
+            JSONParser parser = new JSONParser();       
+            JSONObject obj     = (JSONObject)parser.parse(payload);
+            JSONArray appsArray    = (JSONArray)obj.get("app");
+            for (int i = 0; appsArray != null && i < appsArray.size(); i++) {
+             	 JSONObject a = (JSONObject) appsArray.get(i);
+             	 apps.add(a.get("appId"));
+           }
         } catch (ParseException pe){
             logger.error("Get App parse error " + pe.getMessage());
             throw new IOException(pe.getMessage());

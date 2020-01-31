@@ -5,12 +5,5 @@
         "firstName": "Hugh",
         "lastName": "Jack",
         "userName": "hughexample"
-    },
-    {
-        "attributes": [],
-        "email": "grant@enterprise.com",
-        "firstName": "Grant",
-        "lastName": "Smith",
-        "userName": "grantsmith"
     }
 ]

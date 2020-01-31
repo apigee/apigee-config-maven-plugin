@@ -61,7 +61,7 @@ public class FlowHookMojo extends GatewayAbstractMojo
 
     public static class FlowHook {
         @Key
-        public String name;
+        public String flowHookPoint;
     }
 	
 	public FlowHookMojo() {
@@ -96,7 +96,7 @@ public class FlowHookMojo extends GatewayAbstractMojo
 		Gson gson = new Gson();
 		try {
 			FlowHook flowHook = gson.fromJson(payload, FlowHook.class);
-			return flowHook.name;
+			return flowHook.flowHookPoint;
 		} catch (JsonParseException e) {
 		  throw new MojoFailureException(e.getMessage());
 		}
@@ -119,7 +119,7 @@ public class FlowHookMojo extends GatewayAbstractMojo
 	        	String flowhookName = getFlowhookName(flowhook);
 	        	if (flowhookName == null) {
 	        		throw new IllegalArgumentException(
-	        			"Flowhook does not have a name.\n" + flowhook + "\n");
+	        			"Flowhook does not have a flowHookPoint.\n" + flowhook + "\n");
 	        	}
                 switch (buildOption) {
                     case update:
@@ -132,11 +132,11 @@ public class FlowHookMojo extends GatewayAbstractMojo
                         break;
                     case delete:
                         logger.info("Detaching Flowhook " + flowhookName );
-                        deleteFlowhook(serverProfile, flowhookName, flowhook);
+                        deleteFlowhook(serverProfile, flowhookName, null);
                         break;
                     case sync:
                     	logger.info("Detaching Flowhook " + flowhookName );
-                        deleteFlowhook(serverProfile, flowhookName, flowhook);
+                        deleteFlowhook(serverProfile, flowhookName, null);
                         logger.info("Attaching Flowhook " + flowhookName );
                         createUpdateFlowhook(serverProfile, flowhookName, flowhook, "Create");
                         break;

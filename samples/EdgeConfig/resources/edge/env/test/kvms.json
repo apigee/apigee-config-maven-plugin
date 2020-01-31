@@ -1,15 +1,6 @@
 [
     {
-        "entry": [
-            {
-                "name": "COMPANY",
-                "value": "example.com"
-            },
-            {
-                "name": "PREFIX",
-                "value": "EXMPL"
-            }
-        ],
-        "name": "backend_account_config"
+        "name": "backend_account_config",
+        "encrypted": true
     }
 ]

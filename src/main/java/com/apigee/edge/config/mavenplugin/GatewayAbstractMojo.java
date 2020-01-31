@@ -15,22 +15,22 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import org.slf4j.Logger;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.apigee.edge.config.utils.ServerProfile;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.utils.ConsolidatedConfigReader;
-import org.apache.maven.plugin.AbstractMojo;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import com.apigee.edge.config.utils.ServerProfile;
 
 public abstract class GatewayAbstractMojo extends AbstractMojo {
+	static Logger logger = LoggerFactory.getLogger(GatewayAbstractMojo.class);
 
 	/**
 	 * Directory containing the build files.
@@ -208,6 +208,12 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
  	 */
 	private String kvmOverride;
 	
+	/**
+	 * service account file
+	 * @parameter property="apigee.serviceaccount.file"
+ 	 */
+	private String serviceAccountFilePath;
+	
 	// TODO set resources/edge as default value
 
 	public String getKvmOverride() {
@@ -238,7 +244,6 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 	public GatewayAbstractMojo(){
 		super();
-		
 	}
 
 	public ServerProfile getProfile() {
@@ -260,6 +265,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile.setClientId(this.clientid);
 		this.buildProfile.setClientSecret(this.clientsecret);
 		this.buildProfile.setKvmOverride(this.kvmOverride);
+		this.buildProfile.setServiceAccountJSONFile(this.serviceAccountFilePath);
 		return buildProfile;
 	}
 

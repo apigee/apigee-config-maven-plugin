@@ -15,36 +15,26 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
-
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
-import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create API Product in Apigee EDGE
@@ -299,21 +289,19 @@ public class APIProductMojo extends GatewayAbstractMojo
         HttpResponse response = RestUtil.getOrgConfig(profile, 
                                                     "apiproducts");
         if(response == null) return new ArrayList();
-        JSONArray products = null;
+        JSONArray products = new JSONArray();
         try {
             logger.debug("output " + response.getContentType());
             // response can be read only once
             String payload = response.parseAsString();
             logger.debug(payload);
-
-            /* Parsers fail to parse a string array.
-             * converting it to an JSON object as a workaround */
-            String obj = "{ \"products\": " + payload + "}";
-
-            JSONParser parser = new JSONParser();                
-            JSONObject obj1     = (JSONObject)parser.parse(obj);
-            products    = (JSONArray)obj1.get("products");
-
+            JSONParser parser = new JSONParser();       
+            JSONObject obj     = (JSONObject)parser.parse(payload);
+            JSONArray productsArray    = (JSONArray)obj.get("apiProduct");
+            for (int i = 0; productsArray != null && i < productsArray.size(); i++) {
+             	 JSONObject a = (JSONObject) productsArray.get(i);
+             	 products.add(a.get("name"));
+           }
         } catch (ParseException pe){
             logger.error("Get API Product parse error " + pe.getMessage());
             throw new IOException(pe.getMessage());

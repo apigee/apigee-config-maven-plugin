@@ -10,32 +10,12 @@
                 "port" : 80
               }
           ],
-          "virtualHosts": [
-              {
-                "name" : "example",
-                "hostAliases" : ["example.com"],
-                "isEnabled" : true,
-                "port" : 80
-              }
-          ],
           "references": [
               {
                 "name" : "sampleReference",
                 "refers": "freetrial-2019-03-07",
                 "resourceType": "KeyStore"
               }
-          ],
-          "caches": [
-              {
-                "name": "echocache",
-                "description": "echo cache",
-                "expirySettings": {
-                    "timeoutInSec": {
-                        "value": "300"
-                    },
-                    "valuesNull": false
-                }
-              }            
           ],
           "resourcefiles":[
               {
@@ -55,15 +35,7 @@
                   "continueOnError":"true",
                   "sharedFlow":"corspreflow"
                }
-            ],
-           "extensions":[
-        		{
-        		    "name": "test-extension",
-        		    "description": "Testing",
-        		    "packageName": "gcp-stackdriver-logging",
-        		    "version": "1.2.1"
-        		}
-           ]
+            ]
         }
     },
     "orgConfig": {

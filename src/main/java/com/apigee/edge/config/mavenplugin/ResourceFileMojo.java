@@ -18,7 +18,6 @@ package com.apigee.edge.config.mavenplugin;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -39,7 +38,7 @@ import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create Resource Files in Apigee EDGE.
- * scope: org, env, api
+ * scope: env
  *
  * @author saisaran.vaidyanathan
  * @goal resourcefiles
@@ -110,78 +109,10 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 		}
 	}
 
-    protected void doOrgUpdate(List<String> resourcefiles, String scope)
+    protected void doEnvUpdate(List<String> resourcefiles)
                                                  throws MojoFailureException {
         try {
-            List existingResourcefile = getExistingResourceFile(serverProfile, "org", null);
-            if (buildOption != OPTIONS.update && 
-                buildOption != OPTIONS.create && 
-                buildOption != OPTIONS.delete && 
-                buildOption != OPTIONS.sync) {
-                return;
-            }
-
-            for (String resourcefile : resourcefiles) {
-                String resourcefileName = getResourceFile(resourcefile).name;
-                String resourcefileType = getResourceFile(resourcefile).type;
-                String resourcefilePath = getResourceFile(resourcefile).file;
-                if (resourcefileName == null) {
-                    throw new IllegalArgumentException(
-                       "Resource File does not have a name.\n" + resourcefile + "\n");
-                }
-
-                if (existingResourcefile.contains(resourcefileName+"_"+resourcefileType)) {
-                    switch (buildOption) {
-                        case update:
-                            logger.info("Org Resource File \"" + resourcefileName + 
-                                                    "\" exists. Updating.");
-                            updateOrgResourceFile(serverProfile, resourcefileType, resourcefileName, resourcefilePath);
-                            break;
-                        case create:
-                            logger.info("Org Resource File \"" + resourcefileName + " of type "+ resourcefileType+
-                                                "\" already exists. Skipping.");
-                            break;
-                        case delete:
-                            logger.info("Org Resource File \"" + resourcefileName + " of type "+ resourcefileType+ 
-                                "\" already exists. Deleting.");
-                            deleteOrgResourceFile(serverProfile, resourcefileType, resourcefileName);
-                            break;
-                        case sync:
-                            logger.info("Org Resource File \"" + resourcefileName + " of type "+ resourcefileType+
-                                "\" already exists. Deleting and recreating.");
-                            deleteOrgResourceFile(serverProfile, resourcefileType, resourcefileName);
-                            logger.info("Creating Org Resource File - " + resourcefileName);
-                            createOrgResourceFile(serverProfile, resourcefileType, resourcefileName, resourcefilePath);
-                            break;
-                    }
-                } else {
-                    switch (buildOption) {
-                        case create:
-                        case sync:
-                        case update:
-                            logger.info("Creating Org Resource File - " + resourcefileName + " of type "+ resourcefileType);
-                            createOrgResourceFile(serverProfile, resourcefileType, resourcefileName, resourcefilePath);
-                            break;
-                        case delete:
-                            logger.info("Org Resource File \"" + resourcefileName + " of type "+ resourcefileType+ 
-                                        "\" does not exist. Skipping.");
-                            break;
-                    }
-                }
-            }
-        
-        } catch (IOException e) {
-            throw new MojoFailureException("Apigee network call error " +
-                                                         e.getMessage());
-        } catch (RuntimeException e) {
-            throw e;
-        }
-    }
-
-    protected void doEnvUpdate(List<String> resourcefiles, String scope)
-                                                 throws MojoFailureException {
-        try {
-            List existingResourcefile = getExistingResourceFile(serverProfile, "env", null);
+            List existingResourcefile = getExistingResourceFile(serverProfile);
             if (buildOption != OPTIONS.update && 
                 buildOption != OPTIONS.create && 
                 buildOption != OPTIONS.delete && 
@@ -246,77 +177,6 @@ public class ResourceFileMojo extends GatewayAbstractMojo
         }
     }
 
-	protected void doAPIUpdate(String api, List<String> resourcefiles)
-                                                 throws MojoFailureException {
-		try {
-			//List existingResourcefile = getExistingResourceFile(serverProfile, "api", api);
-			if (buildOption != OPTIONS.update && 
-				buildOption != OPTIONS.create && 
-                buildOption != OPTIONS.delete && 
-                buildOption != OPTIONS.sync) {
-				return;
-			}
-
-	        for (String resourcefile : resourcefiles) {
-	        	String resourcefileName = getResourceFile(resourcefile).name;
-                String resourcefileType = getResourceFile(resourcefile).type;
-                String resourcefilePath = getResourceFile(resourcefile).file;
-                String revision = getResourceFile(resourcefile).revision;
-                if (resourcefileName == null) {
-                    throw new IllegalArgumentException(
-                       "resourcefile does not have a name.\n" + resourcefile + "\n");
-                }
-
-				List existingResourcefile = getExistingResourceFile(serverProfile, "api", api+"/revisions/"+revision);
-
-                if (existingResourcefile.contains(resourcefileName+"_"+resourcefileType)) {
-                    switch (buildOption) {
-                        case update:
-                            logger.info("API Resource File \"" + resourcefileName + 
-                                                    "\" exists. Updating.");
-                            updateAPIResourceFile(serverProfile, api, revision, resourcefileType, resourcefileName, resourcefilePath);
-                            break;
-                        case create:
-                            logger.info("API Resource File \"" + resourcefileName + 
-                                                "\" already exists. Skipping.");
-                            break;
-                        case delete:
-                            logger.info("API Resource File \"" + resourcefileName + 
-                                            "\" already exists. Deleting.");
-                            deleteAPIResourceFile(serverProfile, api, revision, resourcefileType, resourcefileName);
-                            break;
-                        case sync:
-                            logger.info("API Resource File \"" + resourcefileName + 
-                                            "\" already exists. Deleting and recreating.");
-                            deleteAPIResourceFile(serverProfile, api, revision, resourcefileType, resourcefileName);
-                            logger.info("Creating API Resource File - " + resourcefileName);
-                            createAPIResourceFile(serverProfile, api, revision, resourcefileType, resourcefileName, resourcefilePath);
-                            break;
-                    }
-	        	} else {
-                    switch (buildOption) {
-                        case create:
-                        case sync:
-                        case update:
-                            logger.info("Creating API Resource File - " + resourcefileName);
-                            createAPIResourceFile(serverProfile, api, revision, resourcefileType, resourcefileName, resourcefilePath);
-                            break;
-                        case delete:
-                            logger.info("API Resource File \"" + resourcefileName + 
-                                        "\" does not exist. Skipping.");
-                            break;
-                    }
-	        	}
-			}
-		
-		} catch (IOException e) {
-			throw new MojoFailureException("Apigee network call error " +
-														 e.getMessage());
-		} catch (RuntimeException e) {
-			throw e;
-		}
-	}
-
 	/** 
 	 * Entry point for the mojo.
 	 */
@@ -343,38 +203,12 @@ public class ResourceFileMojo extends GatewayAbstractMojo
                             "Apigee environment not found in profile");
             }
 
-            /* org scoped Resource Files */
-            String scope = "orgConfig";
-			List resourcefiles = getOrgConfig(logger, "resourcefiles");
-			if (resourcefiles == null || resourcefiles.size() == 0) {
-				logger.info("No org scoped resourcefiles config found.");
-			} else {
-                doOrgUpdate(resourcefiles, scope);
-            }
-
             /* env scoped resourcefiles */
-			resourcefiles = getEnvConfig(logger, "resourcefiles");
+			List resourcefiles = getEnvConfig(logger, "resourcefiles");
             if (resourcefiles == null || resourcefiles.size() == 0) {
                 logger.info("No env scoped resourcefiles config found.");
             } else {
-                doEnvUpdate(resourcefiles, scope);
-            }
-
-            // /* API scoped resourcefiles */
-            Set<String> apis = getAPIList(logger);
-            if (apis == null || apis.size() == 0) {
-                logger.info("No API scoped Resource File config found.");
-                return;
-            }
-
-            for (String api : apis) {
-            	resourcefiles = getAPIConfig(logger, "resourcefiles", api);
-                if (resourcefiles == null || resourcefiles.size() == 0) {
-                    logger.info(
-                        "No API scoped resourcefiles config found for " + api);
-                } else {
-                    doAPIUpdate(api, resourcefiles);
-                }
+                doEnvUpdate(resourcefiles);
             }
 			
 		} catch (MojoFailureException e) {
@@ -387,75 +221,6 @@ public class ResourceFileMojo extends GatewayAbstractMojo
     /***************************************************************************
      * REST call wrappers
      **/
-    public static String createOrgResourceFile(ServerProfile profile, 
-    											String resourcefileType, 
-    											String resourcefileName, 
-    											String resourceFilePath)
-            throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfigUpload(profile, 
-                                                            "resourcefiles"+"?type="+resourcefileType+"&name="+resourcefileName, 
-                                                            resourceFilePath);
-        try {
-
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Create Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("resourcefile create error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
-    public static String updateOrgResourceFile(ServerProfile profile, 
-                                        String resourcefileType, 
-                                        String resourcefileName,
-                                        String resourcefilePath)
-            throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfigUpload(profile, 
-        													"resourcefiles",
-        													resourcefileType+"/"+resourcefileName, 
-        													resourcefilePath);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("resourceFile update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
-    public static String deleteOrgResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName)
-            throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgResourceFileConfig(profile, 
-        													"resourcefiles",
-        													resourcefileType+"/"+resourcefileName);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Delete Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("resourceFile delete error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
 
 	public static String createEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName,
 			String resourceFilePath) throws IOException {
@@ -514,17 +279,9 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 		return "";
 	}
 	
-	public static List getExistingResourceFile(ServerProfile profile, String scope, String api) throws IOException {
+	public static List getExistingResourceFile(ServerProfile profile) throws IOException {
 
-		HttpResponse response = null;
-		if(scope!=null && scope.equalsIgnoreCase("org")){
-			response = RestUtil.getOrgConfig(profile, "resourcefiles");
-		}else if(scope!=null && scope.equalsIgnoreCase("env")){
-			response = RestUtil.getEnvConfig(profile, "resourcefiles");
-		}
-		else if(scope!=null && scope.equalsIgnoreCase("api")){
-			response = RestUtil.getAPIConfig(profile, api, "resourcefiles");
-		}
+		HttpResponse response = RestUtil.getEnvConfig(profile, "resourcefiles");
 		if (response == null)
 			return new ArrayList();
 		JSONArray resourcefilesArr = null;
@@ -554,80 +311,6 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 		return resourcefiles;
 	}  
 	
-	public static String createAPIResourceFile(ServerProfile serverProfile, 
-												  String api, String revision, 
-												  String resourcefileType, String resourcefileName, 
-												  String resourcefilePath)
-            throws IOException {
-        HttpResponse response = RestUtil.createAPIConfigUpload(serverProfile, 
-                                                            api,
-                                                            "revisions/"+revision+"/resourcefiles"+ "?type=" + resourcefileType + "&name=" + resourcefileName, 
-                                                            resourcefilePath);
-        try {
-
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Create Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("Resource File create error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
-    public static String updateAPIResourceFile(ServerProfile profile, 
-                                        String api, String revision, 
-                                        String resourcefileType, String resourcefileName, 
-										String resourcefilePath)
-            throws IOException {
-
-        HttpResponse response = RestUtil.updateAPIConfigUpload(profile, 
-                                                            api,
-                                                            "revisions/"+revision+"/resourcefiles", 
-                                                            resourcefileType+"/"+resourcefileName,
-                                                            resourcefilePath);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("Resource File update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
-    public static String deleteAPIResourceFile(ServerProfile profile, 
-                                        String api, String revision,
-                                        String resourcefileType, String resourcefileName)
-            throws IOException {
-
-        HttpResponse response = RestUtil.deleteAPIResourceFileConfig(profile, 
-                                                            api,
-                                                            "revisions/"+revision+"/resourcefiles", 
-                                                            resourcefileType+"/"+resourcefileName);
-        try {
-            
-            logger.info("Response " + response.getContentType() + "\n" +
-                                        response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Delete Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("Resource File delete error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-
-        return "";
-    }
-
 }
 
 

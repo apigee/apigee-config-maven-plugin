@@ -26,6 +26,10 @@ import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -209,24 +213,27 @@ public class ExportKeysMojo extends GatewayAbstractMojo
      * REST call wrappers
      **/
 
-    public static List<String> getApp(ServerProfile profile, String developerId)
+    public static List getApp(ServerProfile profile, String developerId)
             throws IOException, MojoFailureException {
 
         HttpResponse response = RestUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
         if(response == null) return new ArrayList<String>();
-        List<String> appsList = null;
+       JSONArray appsList = new JSONArray();
         try {
             logger.debug("output " + response.getContentType());
             // response can be read only once
             String payload = response.parseAsString();
-            
-            Gson gson = new Gson();
-    		try {
-    			appsList = gson.fromJson(payload, List.class);
-    		} catch (JsonParseException e) {
-    		  throw new MojoFailureException(e.getMessage());
-    		}
+            JSONParser parser = new JSONParser();       
+            JSONObject obj     = (JSONObject)parser.parse(payload);
+            JSONArray appsArray    = (JSONArray)obj.get("app");
+            for (int i = 0; appsArray != null && i < appsArray.size(); i++) {
+             	 JSONObject a = (JSONObject) appsArray.get(i);
+             	appsList.add(a.get("appId"));
+           }
+        } catch (ParseException pe){
+            logger.error("Get App parse error " + pe.getMessage());
+            throw new IOException(pe.getMessage());
         } catch (HttpResponseException e) {
             logger.error("Get Apps error " + e.getMessage());
             throw new IOException(e.getMessage());

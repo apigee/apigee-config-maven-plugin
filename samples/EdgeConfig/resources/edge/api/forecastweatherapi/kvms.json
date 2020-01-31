@@ -1,11 +1,6 @@
 [
-    {
-        "entry": [
-            {
-                "name": "EXCHANGE",
-                "value": "0.5"
-            }
-        ],
-        "name": "exchange_config"
-    }
+	{
+        "name": "exchange_config",
+        "encrypted": false
+	 }
 ]

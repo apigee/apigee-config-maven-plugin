@@ -54,6 +54,7 @@ public class ServerProfile {
 	private String refreshToken; //Mgmt API OAuth Refresh Token
 	private String authType; // Mgmt API Auth Type oauth|basic
 	private Boolean kvmOverride = true; //Override kvm only if true (used for update option)
+	private String serviceAccountJSONFile;
 	
 	public Boolean getKvmOverride() {
 		return kvmOverride;
@@ -66,6 +67,14 @@ public class ServerProfile {
 			this.kvmOverride = false;
 	}
 	
+	public String getServiceAccountJSONFile() {
+		return serviceAccountJSONFile;
+	}
+
+	public void setServiceAccountJSONFile(String serviceAccountJSONFile) {
+		this.serviceAccountJSONFile = serviceAccountJSONFile;
+	}
+
 	public String getHostURL() {
 		return hostURL;
 	}
