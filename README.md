@@ -1,9 +1,9 @@
-# apigee-config-maven-plugin
+# apigee-config-maven-plugin (hybrid)
 
-Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions and Mask Config.
+Maven plugin to create, manage Apigee config like KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks and many more .
 
 Help API teams follow API development best practices with Apigee.
-  * Track Apigee Config (KVM, cache, target servers, etc.) in source control
+  * Track Apigee Config (KVM, target servers, etc.) in source control
   * Deploy config changes along with the API in a CI pipeline
   * Simplify, automate config management during API development
   * Track config changes in prod environment as releases
@@ -14,7 +14,7 @@ This plugin is available in public maven repo and can be used just by referring 
 
 ## Prerequisites
 You will need the following to run the samples:
-- Apigee Edge developer account. See [docs](http://docs.apigee.com/api-services/content/creating-apigee-edge-account) for more details on how to setup your account..
+- Apigee Edge developer account (in a Hybrid org)
 - [Java SDK >= 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Maven 3.x](https://maven.apache.org/)
 
@@ -48,20 +48,16 @@ mvn install -Ptest -Dapigee.config.options=create
   You can also work with an individual config type using the 
   corresponding goal directly. The goals available are,
  
-  caches
-  kvms                  # CPS support from v1.2.1
+  keyvaluemaps                  
   targetservers
   resourcefiles
   flowhooks
-  maskconfigs
   apiproducts
   developers
   apps
-  virtualhosts
-  exportAppKeys
-  extensions			#v1.3.1 or later
-  reports			#v1.3.2 or later
-  references			#v1.3.4 or later
+  exportAppKeys			
+  reports			
+  references
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -73,12 +69,10 @@ mvn install -Ptest -Dapigee.config.options=create
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
 ## Sample project
-Refer to an example project at [/samples/EdgeConfig](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/EdgeConfig)
+Refer to an example project at [/samples/EdgeConfig](./samples/EdgeConfig)
 
 This project demonstrates the creation and management of Apigee Edge Config and performs the following steps in sequence.
-  - Creates Caches
   - Creates Target servers
-  - Creates Virtual Hosts
   - Creates KVM
   - Creates Resource File
   - Creates API products
@@ -88,10 +82,11 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates References
   and many more
 
-To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
+To use, edit samples/EdgeConfig/shared-pom.xml, and update org, env to point to your Apigee org and env respectively and path of service account credentials elements in all profiles. You can add more profiles corresponding to each env in your org. 
 
       <apigee.org>myorg</apigee.org>
       <apigee.env>test</apigee.env>
+      <apigee.serviceaccount.file>/dir/sa.json</apigee.serviceaccount.file>
 
 To run the plugin and use edge.json jump to samples project `cd /samples/EdgeConfig` and run 
 
@@ -105,7 +100,7 @@ To run the plugin and use the multi-file config format jump to samples project `
 
 `mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create -Dapigee.config.dir=resources/edge`
 
-Refer to [samples/APIandConfig/HelloWorld](https://github.com/apigee/apigee-config-maven-plugin/tree/master/samples/APIandConfig/HelloWorld) for config management along with API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](https://github.com/apigee/apigee-config-maven-plugin/blob/master/samples/README.md)
+Refer to [samples/APIandConfig/HelloWorld](./samples/APIandConfig/HelloWorld) for config management along with API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](./samples/README.md)
 
 ## Multi-file config
 Projects with several config entities can utilize the multi-file structure to organize config while keeping individual file sizes within manageable limits. The plugin requires the use of specific file names and directories to organize config. 
@@ -115,23 +110,19 @@ The apigee.config.dir option must be used to identify the top most directory con
 
       ├── api
       │   ├── forecastweatherapi
-      │   │   ├── resourceFiles
-      │   │   │   ├── jsc
-      │   │   │   │    ├── test.js
       │   │   ├── kvms.json
-      │   │   └── resourcefiles.json
       │   └── oauth
       │       ├── kvms.json
-      │       └── maskconfigs.json
       ├── env
       │   ├── prod
-      │   │   ├── caches.json
-      │   │   └── flowhooks.json
-      │   └── test
-      │       ├── caches.json
-      │       ├── kvms.json
-      │       ├── targetServers.json
-      │       └── virtualHosts.json   
+      │   │   ├── kvms.json
+      │   │   ├── flowhooks.json
+      │   │   ├── targetServers.json
+      │   │   ├── references.json
+      │   ├── test
+      │   │   ├── kvms.json
+      │   │   ├── targetServers.json
+      │   │   ├── targetServers.json
       │       └── references.json   
       └── org
           ├── apiProducts.json
@@ -163,9 +154,7 @@ The final level is the config entities.
      orgConfig.developers[]
      orgConfig.developerApps[]
      orgConfig.reports[]
-     envConfig.test.caches[]
      envConfig.test.targetServers[]
-     envConfig.test.virtualHosts[]
      envConfig.test.references[]
    ```
 
@@ -173,96 +162,8 @@ Each config entity is the payload of the corresponding management API. The examp
 
 Config entities like "developerApps" are grouped under the developerId (email) they belong to.
 
-## OAuth (supported from v1.2 or higher)
-Apigee management APIs are secured using OAuth tokens as an alternative to the Basic Auth security. Additionally Two-Factor authentication (MFA) using TOTP can also be configured as an additional layer of security. This plugin has the capability to acquire OAuth tokens and invoke management API calls.
-
-Refer to [How to get OAuth2 tokens](http://docs.apigee.com/api-services/content/using-oauth2-security-apigee-edge-management-api#howtogetoauth2tokens) and [Two-Factor authentication](http://docs.apigee.com/api-services/content/enable-two-factor-auth-your-apigee-account)for details.
-
-### Using OAuth
-OAuth capability when enabled is seamless and the plugin acquires OAuth tokens and uses it subsequently to call management APIs. 
-
-To enable OAuth add the following options to all profiles as required. Refer to [shared-pom.xml](https://github.com/apigee/apigee-config-maven-plugin/blob/oauth/samples/EdgeConfig/shared-pom.xml) example.
-
-    <apigee.tokenurl>${tokenurl}</apigee.tokenurl> <!-- optional: oauth -->
-    <apigee.authtype>${authtype}</apigee.authtype> <!-- optional: oauth|basic(default) -->
-    
-You need to pass the OAuth ClientId and Secret to the plugin for it to generate the token and use that to invoke the Apigee Management APIs
-    
-    <apigee.clientid>${clientId}</apigee.clientid> <!-- optional: Oauth Client Id - Default is edgecli-->
-    <apigee.clientsecret>${clientSecret}</apigee.clientsecret> <!-- optional: Oauth Client Secret Default is edgeclisecret-->
-
-
-To invoke, add command line flags to enable OAuth.
-
-    mvn install -Ptest -Dusername=$ae_username -Dpassword=$ae_password \
-                        -Dorg=testmyapi -Dauthtype=oauth -Dapigee.config.options=create
-                        
-"tokenurl" is optional and defaults to the cloud version "https://login.apigee.com/oauth/token"
-
-### Two-Factor Authentication
-[Two-Factor authentication](http://docs.apigee.com/api-services/content/enable-two-factor-auth-your-apigee-account) is based on TOTP tokens. When the apigee account is enabled for Two-Factor Authentication it applies to management APIs as well.
-
-The plugin can accept TOTP tokens generated by an external utility and use it to acquire OAuth tokens.
-
-TOTP can be generated using command line tools for use in CI tools like Jenkins.
-
-### Using Two-Factor Authentication token
-**Note** OAuth needs to be enabled before Two-Factor Authentication can be used. 
-
-To enable Two-Factor Authentication, add the following options to all profiles as required. Refer to [shared-pom.xml](https://github.com/apigee/apigee-config-maven-plugin/blob/oauth/samples/EdgeConfig/shared-pom.xml) example.
-
-    <apigee.mfatoken>${mfatoken}</apigee.mfatoken> <!-- optional: mfa -->
-
-Provide the token when invoking the plugin.
-
-    mvn install -Ptest -Dusername=$ae_username -Dpassword=$ae_password \
-                        -Dorg=testmyapi -Dauthtype=oauth -Dmfatoken=123456 -Dapigee.config.options=create
-                        
-If the API takes a long time to package up then  it is likely that the token would have expired before it is used.  To mitigate against this, from version 1.1.5, an initmfa goal can be called during the validate phase:
-
-    <execution>
-        <id>initialise-mfa</id>
-        <phase>validate</phase>
-        <goals>
-            <goal>initmfa</goal>
-        </goals>
-    </execution>
-
-Depending on where the plugin is in the order, and how much validation is required, it is possible that this may still result in token timeout.
-
-### Passing the Bearer Token as a parameter
-If you would like to generate the bearer token outside of this plugin and provide it as a command line parameter, you can add the following: 
-
-    <apigee.bearer>${bearer}</apigee.bearer>
-
-Provide the token when invoking the plugin.
-
-    mvn install -Ptest -Dusername=$ae_username -Dorg=testmyapi \
-                         -Dauthtype=oauth -Dbearer=c912eu1201c -Dapigee.config.options=create
-                    
-*NOTE: when using bearer token - please provide the username as well, as it is used for token validation*
-                        
-### Passing the Refresh Token as a parameter
-If you would like to generate the refresh token outside of this plugin and provide it as a command line parameter, you can add the following: 
-
-    <apigee.refresh>${refresh}</apigee.refresh>
-
-Provide the token when invoking the plugin.
-
-    mvn install -Ptest -Dusername=$ae_username -Dorg=testmyapi \
-                         -Dauthtype=oauth -Dbearer=c912eu1201c -Drefresh=d023fv2312d -Dapigee.config.options=create
-   
-*NOTE: If you are providing refresh token, you need to provide the bearer token and username as well*
-
-
-## ROADMAP
-  - Keystore, Truststore support
-  - Custom roles
-  - User role association
-
-Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
 ## Support
 * Post a question in [Apigee community](https://community.apigee.com/index.html)
-* Create an [issue](https://github.com/apigee/apigee-config-maven-plugin/issues/new)
+* Create an [issue](https://github.com/apigee/apigee-config-maven-plugin/issues/new). Please specify if its for Apigee Hybrid
 
