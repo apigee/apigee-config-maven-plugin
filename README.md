@@ -1,5 +1,6 @@
 # apigee-config-maven-plugin (hybrid)
 
+
 Maven plugin to create, manage Apigee config like KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks and many more .
 
 Help API teams follow API development best practices with Apigee.
@@ -11,6 +12,25 @@ Help API teams follow API development best practices with Apigee.
 Small API projects can use the single file format in edge.json to manage their config. Large, complex projects with several config entities can use the multi-file format to organize config in source control. Checkout samples for examples.
 
 This plugin is available in public maven repo and can be used just by referring to it in pom.xml. This github repo is the plugin source code and unless you make changes to the code you do not have to build this repo to use the plugin. Read this document further for plugin usage instructions.
+
+## NOTE ##
+- If you want to use this plugin for Apigee SaaS, please refer to this [link](https://github.com/apigee/apigee-config-maven-plugin). You should be using the version 1.x
+```xml
+<dependency>
+  <groupId>com.apigee.edge.config</groupId>
+  <artifactId>apigee-config-maven-plugin</artifactId>
+  <version>1.x</version>
+</dependency>
+```
+- For Apigee Hybrid, the version of the plugin is 2.x
+```xml
+<dependency>
+  <groupId>com.apigee.edge.config</groupId>
+  <artifactId>apigee-config-maven-plugin</artifactId>
+  <version>2.x</version>
+</dependency>
+```
+
 
 ## Prerequisites
 You will need the following to run the samples:
