@@ -34,7 +34,7 @@ This plugin is available in public maven repo and can be used just by referring 
 
 ## Prerequisites
 You will need the following to run the samples:
-- Apigee Edge developer account (in a Hybrid org)
+- Apigee Edge developer account (in an Apigee hybrid org)
 - [Java SDK >= 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Maven 3.x](https://maven.apache.org/)
 
