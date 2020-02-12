@@ -15,7 +15,8 @@
  */
 package com.apigee.edge.config.rest;
 
-import java.io.File;
+import static java.lang.String.format;import java.io.File;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -1084,5 +1085,88 @@ public class RestUtil {
 		}
     	return isValid;
     }
+    
+    /*
+     *	API Spec 
+     */
+	public static HttpResponse getAllAPISpecs(ServerProfile profile) throws IOException {
+
+		GenericUrl url = new GenericUrl(format("%s/organizations/%s/specs/folder/home", 
+													profile.getHostUrl(),
+													profile.getOrg()));
+		HttpRequest restRequest = REQUEST_FACTORY.buildGetRequest(url);
+		restRequest.setReadTimeout(0);
+		HttpResponse response = null;
+		try {
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			if (e.getStatusCode() == 404)
+				return null;
+			logger.error(e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
+	
+	public static HttpResponse createAPISpec(ServerProfile profile, String payload) throws IOException {
+		ByteArrayContent content = new ByteArrayContent("application/json", payload.getBytes());
+		GenericUrl url = new GenericUrl(format("%s/organizations/%s/specs/doc", 
+													profile.getHostUrl(),
+													profile.getOrg()));
+		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(url, content);
+		restRequest.setReadTimeout(0);
+		HttpResponse response = null;
+		try {
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			if (e.getStatusCode() == 404)
+				return null;
+			logger.error(e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+		return response;
+	}
+	
+	public static HttpResponse uploadAPISpec(ServerProfile profile, String id, String filePath) throws IOException {
+		byte[] file = Files.readAllBytes(new File(filePath).toPath());
+		ByteArrayContent content = new ByteArrayContent("text/plain", file);
+		
+		GenericUrl url = new GenericUrl(format("%s/organizations/%s/specs/doc/%s/content", 
+													profile.getHostUrl(),
+													profile.getOrg(),
+													id));
+		HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(url, content);
+		restRequest.setReadTimeout(0);
+		HttpResponse response = null;
+		try {
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			if (e.getStatusCode() == 404)
+				return null;
+			logger.error(e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+		return response;
+	}
+	
+	public static HttpResponse deleteAPISpec(ServerProfile profile, String id)
+			throws IOException {
+
+		GenericUrl url = new GenericUrl(format("%s/organizations/%s/specs/doc/%s", 
+				profile.getHostUrl(),
+				profile.getOrg(),
+				id));
+		HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(url);
+		restRequest.setReadTimeout(0);
+		HttpResponse response;
+		try {
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+		return response;
+	}
     
 }

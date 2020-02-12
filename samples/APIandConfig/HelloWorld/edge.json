@@ -67,6 +67,12 @@
         }
     },
     "orgConfig": {
+    	"specs":[
+    		{
+    			"name":"Petstore-v2",
+      			"file":"./specs/petstore-v2.yaml"
+    		}
+    	],
         "apiProducts": [
             {
                 "name": "EchoProduct",

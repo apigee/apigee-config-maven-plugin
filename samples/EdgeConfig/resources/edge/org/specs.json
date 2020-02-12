@@ -1,0 +1,10 @@
+[
+   {
+      "name":"Petstore-v2",
+      "file":"./resources/specs/petstore-v2.yaml"
+   },
+   {
+      "name":"Petstore-v3",
+      "file":"./resources/specs/petstore-v3.yaml"
+   }
+]

@@ -1,6 +1,9 @@
 # apigee-config-maven-plugin
 
-Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions, Mask Config and Custom Roles.
+Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions, Mask Config, Custom Roles and API Spec.
+
+**NOTE**
+The `mvn apigee-config:specs` - API Spec goal in this plugin are preliminary and subject to change without notice. The API contract and design is expected to change. The specification management features are experimental and may break at any time and without warning. There are no guarantees of reliability, performance, stability, or support.
 
 Help API teams follow API development best practices with Apigee.
   * Track Apigee Config (KVM, cache, target servers, etc.) in source control
@@ -81,7 +84,8 @@ mvn install -Ptest -Dapigee.config.options=create
   extensions			#v1.3.1 or later
   reports			#v1.3.2 or later
   references			#v1.3.4 or later
-  userroles  #v1.3.6 or later 
+  userroles  			#v1.3.7 or later 
+  specs  			#v1.3.8 or later (experimental)
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -108,6 +112,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates References
   - Create User Roles and add permissions to Role [GET,POST,DELETE]
   and many more
+  - Create API Spec
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
@@ -278,7 +283,6 @@ Apigee edge comes with several inbuilt role that provides several permission lev
 
 ## ROADMAP
   - Keystore, Truststore support
-  - User role association
 
 Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
