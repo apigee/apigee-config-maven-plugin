@@ -3,7 +3,7 @@
 Maven plugin to create, manage Apigee config like Cache, KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks, Extensions, Mask Config, Custom Roles and API Spec.
 
 **NOTE**
-The `mvn apigee-config:specs` - API Spec goal in this plugin are preliminary and subject to change without notice. The API contract and design is expected to change. The specification management features are experimental and may break at any time and without warning. There are no guarantees of reliability, performance, stability, or support.
+The `mvn apigee-config:specs` - API Spec goal in this plugin are experimental and subject to change without notice. The API contract and design is expected to change. The specification management features are experimental and may break at any time and without warning. There are no guarantees of reliability, performance, stability, or support.
 
 Help API teams follow API development best practices with Apigee.
   * Track Apigee Config (KVM, cache, target servers, etc.) in source control
