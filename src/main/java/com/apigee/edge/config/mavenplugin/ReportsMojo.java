@@ -206,8 +206,8 @@ public class ReportsMojo extends GatewayAbstractMojo {
 	 * REST call wrappers
 	 **/
 	public static String createReport(ServerProfile profile, String report) throws IOException {
-
-		HttpResponse response = RestUtil.createOrgConfig(profile, "reports", report);
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.createOrgConfig(profile, "reports", report);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -223,8 +223,8 @@ public class ReportsMojo extends GatewayAbstractMojo {
 	}
 
 	public static String updateReport(ServerProfile profile, String reportName, String report) throws IOException {
-
-		HttpResponse response = RestUtil.updateOrgConfig(profile, "reports", reportName, report);
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.updateOrgConfig(profile, "reports", reportName, report);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -240,8 +240,8 @@ public class ReportsMojo extends GatewayAbstractMojo {
 	}
 
 	public static String deleteReport(ServerProfile profile, String reportName) throws IOException {
-
-		HttpResponse response = RestUtil.deleteOrgConfig(profile, "reports", reportName);
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.deleteOrgConfig(profile, "reports", reportName);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -257,8 +257,8 @@ public class ReportsMojo extends GatewayAbstractMojo {
 	}
 
 	public static Map<String, String> getReportMap(ServerProfile profile) throws IOException {
-
-		HttpResponse response = RestUtil.getOrgConfig(profile, "reports");
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.getOrgConfig(profile, "reports");
 		if (response == null)
 			return new HashMap<String, String>();
 		Map<String, String> reportNames = new HashMap<String, String>();

@@ -224,7 +224,8 @@ public class ExtensionsMojo extends GatewayAbstractMojo
      **/
     public static String createExtension(ServerProfile profile, String extension)
             throws IOException {
-        HttpResponse response = RestUtil.createEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile,
                 "extensions",
                 extension);
         try {
@@ -246,8 +247,8 @@ public class ExtensionsMojo extends GatewayAbstractMojo
                                      String extensionId,
                                      String extension)
             throws IOException {
-
-        HttpResponse response = RestUtil.patchEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.patchEnvConfig(profile,
                 "extensions",
                 extensionId,
                 extension);
@@ -269,8 +270,8 @@ public class ExtensionsMojo extends GatewayAbstractMojo
     public static String deleteExtension(ServerProfile profile,
                                      String extensionId)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile,
                 "extensions",
                 extensionId);
         try {
@@ -290,8 +291,8 @@ public class ExtensionsMojo extends GatewayAbstractMojo
 
     public static List<String> getExtension(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "extensions");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "extensions");
         if(response == null) return new ArrayList();
         List<String> extensionNames = new ArrayList<String>();
         try {
@@ -320,8 +321,8 @@ public class ExtensionsMojo extends GatewayAbstractMojo
     
     public static String getExtensionID(ServerProfile profile, String extensionName)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "extensions?name="+extensionName);
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "extensions?name="+extensionName);
         if(response == null) return null;
         String extensionId = null;
         try {

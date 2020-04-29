@@ -392,8 +392,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
     											String resourcefileName, 
     											String resourceFilePath)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfigUpload(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfigUpload(profile, 
                                                             "resourcefiles"+"?type="+resourcefileType+"&name="+resourcefileName, 
                                                             resourceFilePath);
         try {
@@ -416,8 +416,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
                                         String resourcefileName,
                                         String resourcefilePath)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfigUpload(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfigUpload(profile, 
         													"resourcefiles",
         													resourcefileType+"/"+resourcefileName, 
         													resourcefilePath);
@@ -438,8 +438,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
     public static String deleteOrgResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgResourceFileConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgResourceFileConfig(profile, 
         													"resourcefiles",
         													resourcefileType+"/"+resourcefileName);
         try {
@@ -459,8 +459,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
 	public static String createEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName,
 			String resourceFilePath) throws IOException {
-
-		HttpResponse response = RestUtil.createEnvConfigUpload(profile,
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.createEnvConfigUpload(profile,
 				"resourcefiles" + "?type=" + resourcefileType + "&name=" + resourcefileName, resourceFilePath);
 		try {
 
@@ -478,8 +478,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
 	public static String updateEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName,
 			String resourcefilePath) throws IOException {
-
-		HttpResponse response = RestUtil.updateEnvConfigUpload(profile, "resourcefiles",
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.updateEnvConfigUpload(profile, "resourcefiles",
 				resourcefileType + "/" + resourcefileName, resourcefilePath);
 		try {
 
@@ -497,8 +497,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
 	public static String deleteEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName)
 			throws IOException {
-
-		HttpResponse response = RestUtil.deleteEnvResourceFileConfig(profile, "resourcefiles",
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.deleteEnvResourceFileConfig(profile, "resourcefiles",
 				resourcefileType + "/" + resourcefileName);
 		try {
 
@@ -515,15 +515,15 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 	}
 	
 	public static List getExistingResourceFile(ServerProfile profile, String scope, String api) throws IOException {
-
+		RestUtil restUtil = new RestUtil(profile);
 		HttpResponse response = null;
 		if(scope!=null && scope.equalsIgnoreCase("org")){
-			response = RestUtil.getOrgConfig(profile, "resourcefiles");
+			response = restUtil.getOrgConfig(profile, "resourcefiles");
 		}else if(scope!=null && scope.equalsIgnoreCase("env")){
-			response = RestUtil.getEnvConfig(profile, "resourcefiles");
+			response = restUtil.getEnvConfig(profile, "resourcefiles");
 		}
 		else if(scope!=null && scope.equalsIgnoreCase("api")){
-			response = RestUtil.getAPIConfig(profile, api, "resourcefiles");
+			response = restUtil.getAPIConfig(profile, api, "resourcefiles");
 		}
 		if (response == null)
 			return new ArrayList();
@@ -559,7 +559,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 												  String resourcefileType, String resourcefileName, 
 												  String resourcefilePath)
             throws IOException {
-        HttpResponse response = RestUtil.createAPIConfigUpload(serverProfile, 
+		RestUtil restUtil = new RestUtil(serverProfile);
+        HttpResponse response = restUtil.createAPIConfigUpload(serverProfile, 
                                                             api,
                                                             "revisions/"+revision+"/resourcefiles"+ "?type=" + resourcefileType + "&name=" + resourcefileName, 
                                                             resourcefilePath);
@@ -583,8 +584,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
                                         String resourcefileType, String resourcefileName, 
 										String resourcefilePath)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateAPIConfigUpload(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateAPIConfigUpload(profile, 
                                                             api,
                                                             "revisions/"+revision+"/resourcefiles", 
                                                             resourcefileType+"/"+resourcefileName,
@@ -608,8 +609,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
                                         String api, String revision,
                                         String resourcefileType, String resourcefileName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteAPIResourceFileConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteAPIResourceFileConfig(profile, 
                                                             api,
                                                             "revisions/"+revision+"/resourcefiles", 
                                                             resourcefileType+"/"+resourcefileName);

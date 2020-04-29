@@ -15,38 +15,28 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
-
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-
-import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create Apps in Apigee EDGE
@@ -238,8 +228,8 @@ public class AppMojo extends GatewayAbstractMojo
                                     String developerId,
                                     String app)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile, 
                                         "developers/" + developerId + "/apps",
                                          app);
         try {
@@ -262,8 +252,8 @@ public class AppMojo extends GatewayAbstractMojo
                                     String appName, 
                                     String app)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfig(profile, 
                                         "developers/" + developerId + "/apps", 
                                         appName,
                                         app);
@@ -286,8 +276,8 @@ public class AppMojo extends GatewayAbstractMojo
                                     String developerId, 
                                     String appName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile, 
                                         "developers/" + developerId + "/apps", 
                                         appName);
         try {
@@ -307,8 +297,8 @@ public class AppMojo extends GatewayAbstractMojo
 
     public static List getApp(ServerProfile profile, String developerId)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
         if(response == null) return new ArrayList();
 

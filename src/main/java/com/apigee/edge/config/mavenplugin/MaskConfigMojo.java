@@ -307,8 +307,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
      **/
     public static String createOrgMaskConfig(ServerProfile profile, String mask)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile, 
                                                             "maskconfigs", 
                                                             mask);
         try {
@@ -330,8 +330,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
                                         String maskEntry, 
                                         String mask)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfig(profile, 
                                                             "maskconfigs", 
                                                             maskEntry,
                                                             mask);
@@ -352,8 +352,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
 
     public static String deleteOrgMaskConfig(ServerProfile profile, String maskEntry)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile, 
                                                             "maskconfigs", 
                                                             maskEntry);
         try {
@@ -373,8 +373,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
 
     public static List getOrgMaskConfig(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, "maskconfigs");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, "maskconfigs");
         if(response == null) return new ArrayList();
         JSONArray masks = null;
         try {
@@ -406,8 +406,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
                                         String api,
                                         String mask)
             throws IOException {
-
-        HttpResponse response = RestUtil.createAPIConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createAPIConfig(profile, 
                                                             api,
                                                             "maskconfigs", 
                                                             mask);
@@ -431,8 +431,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
                                         String maskEntry, 
                                         String mask)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateAPIConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateAPIConfig(profile, 
                                                             api,
                                                             "maskconfigs", 
                                                             maskEntry,
@@ -456,8 +456,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
                                         String api,
                                         String maskEntry)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteAPIConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteAPIConfig(profile, 
                                                             api,
                                                             "maskconfigs", 
                                                             maskEntry);
@@ -478,8 +478,8 @@ public class MaskConfigMojo extends GatewayAbstractMojo
 
     public static List getAPIMaskConfig(ServerProfile profile, String api)
             throws IOException {
-
-        HttpResponse response = RestUtil.getAPIConfig(profile, api, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getAPIConfig(profile, api, 
                                                         "maskconfigs");
         if(response == null) return new ArrayList();
         JSONArray masks = null;

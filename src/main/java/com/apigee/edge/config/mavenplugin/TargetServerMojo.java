@@ -228,8 +228,8 @@ public class TargetServerMojo extends GatewayAbstractMojo
      **/
     public static String createTarget(ServerProfile profile, String target)
             throws IOException {
-
-        HttpResponse response = RestUtil.createEnvConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile, 
                                                     "targetservers", 
                                                     target);
         try {
@@ -251,8 +251,8 @@ public class TargetServerMojo extends GatewayAbstractMojo
                                         String targetName, 
                                         String target)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateEnvConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateEnvConfig(profile, 
                                                     "targetservers", 
                                                     targetName,
                                                     target);
@@ -274,8 +274,8 @@ public class TargetServerMojo extends GatewayAbstractMojo
     public static String deleteTarget(ServerProfile profile, 
                                         String targetName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile, 
                                                         "targetservers", 
                                                         targetName);
         try {
@@ -295,8 +295,8 @@ public class TargetServerMojo extends GatewayAbstractMojo
 
     public static List getTarget(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "targetservers");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "targetservers");
         if(response == null) return new ArrayList();
         JSONArray targets = null;
         try {

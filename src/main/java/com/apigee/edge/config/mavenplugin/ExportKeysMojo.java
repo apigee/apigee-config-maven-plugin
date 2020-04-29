@@ -211,8 +211,8 @@ public class ExportKeysMojo extends GatewayAbstractMojo
 
     public static List<String> getApp(ServerProfile profile, String developerId)
             throws IOException, MojoFailureException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
         if(response == null) return new ArrayList<String>();
         List<String> appsList = null;
@@ -236,8 +236,8 @@ public class ExportKeysMojo extends GatewayAbstractMojo
     
     public static App getAppDetails(ServerProfile profile, String developerId, String app)
             throws IOException, MojoFailureException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps/"+app);
        App appObj = null;
         try {

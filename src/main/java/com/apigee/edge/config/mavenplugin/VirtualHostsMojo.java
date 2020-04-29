@@ -217,8 +217,8 @@ public class VirtualHostsMojo extends GatewayAbstractMojo
      **/
     public static String createVHost(ServerProfile profile, String vHost)
             throws IOException {
-
-        HttpResponse response = RestUtil.createEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile,
                 "virtualhosts",
                 vHost);
         try {
@@ -240,8 +240,8 @@ public class VirtualHostsMojo extends GatewayAbstractMojo
                                      String vHostName,
                                      String vHost)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateEnvConfig(profile,
                 "virtualhosts",
                 vHostName,
                 vHost);
@@ -263,8 +263,8 @@ public class VirtualHostsMojo extends GatewayAbstractMojo
     public static String deleteVHost(ServerProfile profile,
                                      String vHostName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile,
                 "virtualhosts",
                 vHostName);
         try {
@@ -284,8 +284,8 @@ public class VirtualHostsMojo extends GatewayAbstractMojo
 
     public static List getVHost(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "virtualhosts");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "virtualhosts");
         if(response == null) return new ArrayList();
         JSONArray vHosts = null;
         try {
