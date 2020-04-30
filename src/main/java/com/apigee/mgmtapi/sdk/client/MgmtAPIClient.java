@@ -5,9 +5,6 @@ import java.net.Proxy;
 import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,9 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.apigee.edge.config.utils.ServerProfile;
-import com.apigee.mgmtapi.sdk.core.AppConfig;
 import com.apigee.mgmtapi.sdk.model.AccessToken;
-import com.apigee.mgmtapi.sdk.service.FileService;
 import com.google.gson.Gson;
 
 public class MgmtAPIClient {
@@ -117,7 +112,7 @@ public class MgmtAPIClient {
 	 */
 	public AccessToken getAccessToken(String url, String clientId, String client_secret, String username,
 			String password) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		AccessToken token = new AccessToken();
 		ResponseEntity<String> result = null;
@@ -156,7 +151,7 @@ public class MgmtAPIClient {
 	 * @throws Exception
 	 */
 	public AccessToken getAccessTokenFromRefreshToken(String url, String clientId, String client_secret, String refreshToken) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		AccessToken token = new AccessToken();
 		ResponseEntity<String> result = null;
