@@ -15,36 +15,26 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
-import java.io.IOException;
-import java.io.File;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.io.FileUtils;
-
-import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create Developer in Apigee EDGE
@@ -229,8 +219,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
      **/
     public static String createDeveloper(ServerProfile profile, String developer)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile, 
                                                          "developers",
                                                          developer);
         try {
@@ -252,8 +242,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
                                         String developerId, 
                                         String developer)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfig(profile, 
                                                         "developers", 
                                                         developerId,
                                                         developer);
@@ -275,8 +265,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
     public static String deleteDeveloper(ServerProfile profile, 
                                         String developerId)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile, 
                                                         "developers", 
                                                         developerId);
         try {
@@ -296,8 +286,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
 
     public static List getDeveloper(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, "developers");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, "developers");
         if(response == null) return new ArrayList();
         JSONArray developers = null;
         try {

@@ -216,8 +216,8 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 		Gson gson = new Gson();
 		UserRole userRoleObject = gson.fromJson(userRole, UserRole.class);
 		String namePayload = userRoleConversion(userRoleObject.name);
-
-		HttpResponse response = RestUtil.createOrgConfig(profile, "userroles", namePayload);
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.createOrgConfig(profile, "userroles", namePayload);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -243,9 +243,9 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	 */
 	private static void addResourcePermissionsToRole(ServerProfile profile, UserRole userRoleObject)
 			throws IOException {
-
+		RestUtil restUtil = new RestUtil(profile);
 		String permissionsPayload = userRolePermissionConversion(userRoleObject.resourcepermissions);
-		HttpResponse response = RestUtil.createOrgConfig(profile,
+		HttpResponse response = restUtil.createOrgConfig(profile,
 				"userroles" + "/" + userRoleObject.name + "/resourcepermissions", permissionsPayload);
 		try {
 
@@ -275,8 +275,8 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	}
 
 	public static String deleteUserRole(ServerProfile profile, String userRoleName) throws IOException {
-
-		HttpResponse response = RestUtil.deleteOrgConfig(profile, "userroles", userRoleName);
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.deleteOrgConfig(profile, "userroles", userRoleName);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -292,8 +292,8 @@ public class UserRoleMojo extends GatewayAbstractMojo {
 	}
 
 	public static List getUserRoles(ServerProfile profile) throws IOException {
-
-		HttpResponse response = RestUtil.getOrgConfig(profile, "userroles");
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.getOrgConfig(profile, "userroles");
 		if (response == null)
 			return new ArrayList();
 		JSONArray userRoles = null;

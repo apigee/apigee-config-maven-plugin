@@ -15,36 +15,26 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
-import java.io.IOException;
-import java.io.File;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.io.FileUtils;
-
-import com.google.api.client.http.*;
-import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create cache in Apigee EDGE
@@ -230,8 +220,8 @@ public class CacheMojo extends GatewayAbstractMojo
      **/
     public static String createCache(ServerProfile profile, String cache)
             throws IOException {
-
-        HttpResponse response = RestUtil.createEnvConfig(profile, "caches", cache);
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile, "caches", cache);
         try {
 
             logger.info("Response " + response.getContentType() + "\n" +
@@ -251,8 +241,8 @@ public class CacheMojo extends GatewayAbstractMojo
                                         String cacheName, 
                                         String cache)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateEnvConfig(profile, "caches", 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateEnvConfig(profile, "caches", 
                                                     cacheName, cache);
         try {
             
@@ -272,8 +262,8 @@ public class CacheMojo extends GatewayAbstractMojo
     public static String deleteCache(ServerProfile profile, 
                                         String cacheName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile, "caches", 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile, "caches", 
                                                     cacheName);
         try {
             
@@ -292,8 +282,8 @@ public class CacheMojo extends GatewayAbstractMojo
 
     public static List getCache(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "caches");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "caches");
         if(response == null) return new ArrayList();
         JSONArray caches = null;
         try {

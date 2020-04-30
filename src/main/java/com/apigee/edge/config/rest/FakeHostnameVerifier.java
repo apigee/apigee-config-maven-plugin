@@ -18,11 +18,10 @@ package com.apigee.edge.config.rest;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
-
-import org.apache.axis2.transport.nhttp.HostnameVerifier;
 
 public class FakeHostnameVerifier implements HostnameVerifier {
 

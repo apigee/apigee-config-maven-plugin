@@ -383,8 +383,8 @@ public class KVMMojo extends GatewayAbstractMojo
      **/
     public static String createOrgKVM(ServerProfile profile, String kvm)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile,
                                                             "keyvaluemaps", 
                                                             kvm);
         try {
@@ -404,8 +404,8 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static String deleteOrgKVM(ServerProfile profile, String kvmEntry)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile,
                                                             "keyvaluemaps", 
                                                             kvmEntry);
         try {
@@ -425,8 +425,8 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static List getOrgKVM(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, "keyvaluemaps");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, "keyvaluemaps");
         if(response == null) return new ArrayList();
         JSONArray kvms = null;
         try {
@@ -456,8 +456,8 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static String createEnvKVM(ServerProfile profile, String kvm)
             throws IOException {
-
-        HttpResponse response = RestUtil.createEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile,
                                                     "keyvaluemaps", 
                                                     kvm);
         try {
@@ -478,8 +478,8 @@ public class KVMMojo extends GatewayAbstractMojo
     public static String deleteEnvKVM(ServerProfile profile, 
                                         String kvmEntry)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile,
                                                     "keyvaluemaps", 
                                                     kvmEntry);
         try {
@@ -499,8 +499,8 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static List getEnvKVM(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "keyvaluemaps");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "keyvaluemaps");
         if(response == null) return new ArrayList();
         JSONArray kvms = null;
         try {
@@ -532,8 +532,8 @@ public class KVMMojo extends GatewayAbstractMojo
                                         String api,
                                         String kvm)
             throws IOException {
-
-        HttpResponse response = RestUtil.createAPIConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createAPIConfig(profile,
                                                             api,
                                                             "keyvaluemaps", 
                                                             kvm);
@@ -556,8 +556,8 @@ public class KVMMojo extends GatewayAbstractMojo
                                         String api,
                                         String kvmEntry)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteAPIConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteAPIConfig(profile,
                                                             api,
                                                             "keyvaluemaps", 
                                                             kvmEntry);
@@ -578,8 +578,8 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static List getAPIKVM(ServerProfile profile, String api)
             throws IOException {
-
-        HttpResponse response = RestUtil.getAPIConfig(profile, api,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getAPIConfig(profile, api,
                                                         "keyvaluemaps");
         if(response == null) return new ArrayList();
         JSONArray kvms = null;

@@ -1,29 +1,41 @@
 package com.apigee.mgmtapi.sdk.client;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.apigee.mgmtapi.sdk.core.AppConfig;
+import com.apigee.edge.config.utils.ServerProfile;
 import com.apigee.mgmtapi.sdk.model.AccessToken;
-import com.apigee.mgmtapi.sdk.service.FileService;
 import com.google.gson.Gson;
 
 public class MgmtAPIClient {
 	
 	private static final Logger logger = Logger.getLogger(MgmtAPIClient.class);
 
+	private RestTemplate restTemplate;
+	
+	public MgmtAPIClient(ServerProfile profile) {
+		if(profile.getHasProxy()) {
+			SimpleClientHttpRequestFactory clientHttpReq = new SimpleClientHttpRequestFactory();
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(profile.getProxyServer(), profile.getProxyPort()));
+			clientHttpReq.setProxy(proxy);
+			restTemplate = new RestTemplate(clientHttpReq);
+		}
+		else {
+			restTemplate = new RestTemplate();
+		}
+	}
 
 	/**
 	 * To get the Access Token Management URL, client_id and client_secret needs
@@ -35,7 +47,7 @@ public class MgmtAPIClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public AccessToken getAccessToken(String username, String password) throws Exception {
+	/*public AccessToken getAccessToken(String username, String password) throws Exception {
 		Environment env = this.getConfigProperties();
 		if (env == null) {
 			logger.error("Config file missing");
@@ -43,7 +55,7 @@ public class MgmtAPIClient {
 		}
 		return getAccessToken(env.getProperty("mgmt.login.url"), env.getProperty("mgmt.login.client.id"),
 				env.getProperty("mgmt.login.client.secret"), username, password);
-	}
+	}*/
 	
 	/**
 	 * To get the Access Token Management URL, client_id and client_secret needs
@@ -56,7 +68,7 @@ public class MgmtAPIClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public AccessToken getAccessToken(String username, String password, String mfa) throws Exception {
+	/*public AccessToken getAccessToken(String username, String password, String mfa) throws Exception {
 		Environment env = this.getConfigProperties();
 		if (env == null) {
 			logger.error("Config file missing");
@@ -68,7 +80,7 @@ public class MgmtAPIClient {
 		}
 		return getAccessToken(env.getProperty("mgmt.login.mfa.url")+mfa, env.getProperty("mgmt.login.client.id"),
 				env.getProperty("mgmt.login.client.secret"), username, password);
-	}
+	}*/
 
 
 	/**
@@ -100,7 +112,7 @@ public class MgmtAPIClient {
 	 */
 	public AccessToken getAccessToken(String url, String clientId, String client_secret, String username,
 			String password) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		AccessToken token = new AccessToken();
 		ResponseEntity<String> result = null;
@@ -139,7 +151,7 @@ public class MgmtAPIClient {
 	 * @throws Exception
 	 */
 	public AccessToken getAccessTokenFromRefreshToken(String url, String clientId, String client_secret, String refreshToken) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		AccessToken token = new AccessToken();
 		ResponseEntity<String> result = null;
@@ -169,7 +181,7 @@ public class MgmtAPIClient {
 	 * Fetch the properties from the property file passed as system argument (-DconfigFile.path)
 	 * @return
 	 */
-	public Environment getConfigProperties() {
+	/*public Environment getConfigProperties() {
 		AbstractApplicationContext context;
 		FileService service = null;
 		try {
@@ -183,5 +195,5 @@ public class MgmtAPIClient {
 			logger.error(e.getMessage());
 		}
 		return service.getEnvironment();
-	}
+	}*/
 }

@@ -298,8 +298,9 @@ public class SpecsMojo extends GatewayAbstractMojo
         HttpResponse response = null;
         String id = null;
         String responsePayload = null;
+        RestUtil restUtil = new RestUtil(profile);
         try {
-        	response = RestUtil.createAPISpec(profile, payload);
+        	response = restUtil.createAPISpec(profile, payload);
         	responsePayload = response.parseAsString();
             logger.debug(responsePayload);
             logger.info("Response " + response.getContentType() + "\n" + responsePayload);
@@ -320,7 +321,7 @@ public class SpecsMojo extends GatewayAbstractMojo
         logger.info("Uploading API Spec - " + specName);
         
         try {
-        	response = RestUtil.uploadAPISpec(profile, id, specFilePath);
+        	response = restUtil.uploadAPISpec(profile, id, specFilePath);
         	responsePayload = response.parseAsString();
             logger.debug(responsePayload);
             logger.info("Response " + response.getContentType() + "\n" + responsePayload);
@@ -339,7 +340,8 @@ public class SpecsMojo extends GatewayAbstractMojo
                                         Spec spec,
                                         String specFilePath) throws IOException {
         try {
-        	HttpResponse response = RestUtil.uploadAPISpec(profile, spec.getId(), specFilePath);
+        	RestUtil restUtil = new RestUtil(profile);
+        	HttpResponse response = restUtil.uploadAPISpec(profile, spec.getId(), specFilePath);
         	String responsePayload = response.parseAsString();
             logger.debug(responsePayload);
             logger.info("Response " + response.getContentType() + "\n" + responsePayload);
@@ -355,7 +357,8 @@ public class SpecsMojo extends GatewayAbstractMojo
     public static String deleteAPISpec(ServerProfile profile,
                                             String specName, Spec spec)
             throws IOException {
-        HttpResponse response = RestUtil.deleteAPISpec(profile, spec.getId());
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteAPISpec(profile, spec.getId());
         try {
             
             logger.info("Response " + response.getContentType() + "\n" +
@@ -382,7 +385,8 @@ public class SpecsMojo extends GatewayAbstractMojo
     public static Specs getAPISpecs(ServerProfile profile)
             throws IOException {
     	Specs specs = new Specs();
-        HttpResponse response = RestUtil.getAllAPISpecs(profile);
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getAllAPISpecs(profile);
         List<String> specList = null;
         Map<String, Spec> specMap = null;
         try {

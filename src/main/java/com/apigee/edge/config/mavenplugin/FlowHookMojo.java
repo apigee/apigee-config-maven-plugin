@@ -198,8 +198,8 @@ public class FlowHookMojo extends GatewayAbstractMojo
 	
 	public static String createUpdateFlowhook(ServerProfile profile, String flowhookName, String flowhook, String operation)
 			throws IOException {
-
-		HttpResponse response = RestUtil.updateEnvConfig(profile, "flowhooks", flowhookName, flowhook);
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.updateEnvConfig(profile, "flowhooks", flowhookName, flowhook);
 		try {
 
 			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
@@ -218,9 +218,8 @@ public class FlowHookMojo extends GatewayAbstractMojo
                                         String flowhookName,
                                         String flowhook)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile, "flowhooks", 
-        		flowhookName, flowhook);
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile, "flowhooks", flowhookName);
         try {
             
             logger.info("Response " + response.getContentType() + "\n" +
@@ -238,8 +237,8 @@ public class FlowHookMojo extends GatewayAbstractMojo
 
     public static List getFlowhook(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "flowhooks");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "flowhooks");
         if(response == null) return new ArrayList();
         JSONArray flowhooks = null;
         try {
