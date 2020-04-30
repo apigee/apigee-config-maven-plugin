@@ -219,8 +219,7 @@ public class FlowHookMojo extends GatewayAbstractMojo
                                         String flowhook)
             throws IOException {
     	RestUtil restUtil = new RestUtil(profile);
-        HttpResponse response = restUtil.deleteEnvConfig(profile, "flowhooks", 
-        		flowhookName, flowhook);
+        HttpResponse response = restUtil.deleteEnvConfig(profile, "flowhooks", flowhookName);
         try {
             
             logger.info("Response " + response.getContentType() + "\n" +
