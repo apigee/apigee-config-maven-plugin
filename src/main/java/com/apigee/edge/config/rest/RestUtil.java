@@ -71,11 +71,14 @@ public class RestUtil {
 		this.profile = profile;
 
 		HttpTransport httpTransport;
+		ApacheHttpTransport apacheHttpTransport;
 
 		if (profile.getApacheHttpClient() != null) {
 			httpTransport = new ApacheHttpTransport(profile.getApacheHttpClient());
+			apacheHttpTransport = new ApacheHttpTransport(profile.getApacheHttpClient());
 		} else {
 			httpTransport = new NetHttpTransport();
+			apacheHttpTransport = new ApacheHttpTransport();
 		}
 
 		REQUEST_FACTORY = httpTransport.createRequestFactory(new HttpRequestInitializer() {
@@ -88,7 +91,7 @@ public class RestUtil {
 			}
 		});
 		
-		APACHE_REQUEST_FACTORY = httpTransport.createRequestFactory(new HttpRequestInitializer() {
+		APACHE_REQUEST_FACTORY = apacheHttpTransport.createRequestFactory(new HttpRequestInitializer() {
 			// @Override
 			public void initialize(HttpRequest request) {
 				request.setParser(JSON_FACTORY.createJsonObjectParser());
