@@ -1,0 +1,12 @@
+{
+    "grant@enterprise.com": [
+        {
+	        "apiProducts": [
+	            "weatherProduct"
+	        ],
+	        "name": "grantoneapp",
+	        "consumerKey": "abcd",
+	        "consumerSecret": "xyz123"
+        }
+    ]
+}

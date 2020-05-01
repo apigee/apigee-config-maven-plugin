@@ -85,6 +85,7 @@ mvn install -Ptest -Dapigee.config.options=create
   references			#v1.3.4 or later
   userroles  			#v1.3.7 or later 
   specs  			#v1.3.8 or later (experimental)
+  importKeys			#v1.4.1 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
