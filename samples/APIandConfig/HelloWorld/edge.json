@@ -1,209 +1,231 @@
 {
-  "version": "1.0",
-  "envConfig": {
-    "test": {
-      "targetServers": [
-        {
-          "name": "HTTPBin",
-          "host": "httpbin.org",
-          "isEnabled": true,
-          "port": 80
-        }
-      ],
-      "virtualHosts": [
-        {
-          "name": "example",
-          "hostAliases": [
-            "example.com"
-          ],
-          "isEnabled": true,
-          "port": 80
-        }
-      ],
-      "references": [
-        {
-          "name": "sampleReference",
-          "refers": "freetrial",
-          "resourceType": "KeyStore"
-        }
-      ],
-      "caches": [
-        {
-          "name": "echocache",
-          "description": "echo cache",
-          "expirySettings": {
-            "timeoutInSec": {
-              "value": "300"
+   "version":"1.0",
+   "envConfig":{
+      "test":{
+         "targetServers":[
+            {
+               "name":"HTTPBin",
+               "host":"httpbin.org",
+               "isEnabled":true,
+               "port":80
+            }
+         ],
+         "virtualHosts":[
+            {
+               "name":"example",
+               "hostAliases":[
+                  "example.com"
+               ],
+               "isEnabled":true,
+               "port":80
+            }
+         ],
+         "references":[
+            {
+               "name":"sampleReference",
+               "refers":"freetrial",
+               "resourceType":"KeyStore"
+            }
+         ],
+         "caches":[
+            {
+               "name":"echocache",
+               "description":"echo cache",
+               "expirySettings":{
+                  "timeoutInSec":{
+                     "value":"300"
+                  },
+                  "valuesNull":false
+               }
+            }
+         ],
+         "resourcefiles":[
+            {
+               "name":"test",
+               "type":"jsc",
+               "file":"./resourceFiles/jsc/test.js"
+            }
+         ],
+         "flowhooks":[
+            {
+               "name":"PreProxyFlowHook",
+               "continueOnError":"true",
+               "sharedFlow":"corspreflow"
             },
-            "valuesNull": false
-          }
-        }
+            {
+               "name":"PreTargetFlowHook",
+               "continueOnError":"true",
+               "sharedFlow":"corspreflow"
+            }
+         ],
+         "extensions":[
+            {
+               "name":"test-extension",
+               "description":"Testing",
+               "packageName":"gcp-stackdriver-logging",
+               "version":"1.2.1"
+            }
+         ]
+      }
+   },
+   "orgConfig":{
+      "specs":[
+         {
+            "name":"Petstore-v2",
+            "file":"./specs/petstore-v2.yaml"
+         }
       ],
-      "resourcefiles": [
-        {
-          "name": "test",
-          "type": "jsc",
-          "file": "./resourceFiles/jsc/test.js"
-        }
+      "apiProducts":[
+         {
+            "name":"EchoProduct",
+            "apiResources":[
+               "/",
+               "/**"
+            ],
+            "approvalType":"auto",
+            "attributes":[
+               {
+                  "name":"description",
+                  "value":"Echo Product"
+               }
+            ],
+            "description":"Echo Product",
+            "displayName":"Echo Product",
+            "environments":[
+               "test",
+               "prod"
+            ],
+            "proxies":[
+               "HelloWorld"
+            ],
+            "quota":"10000",
+            "quotaInterval":"1",
+            "quotaTimeUnit":"month",
+            "scopes":[
+
+            ]
+         }
       ],
-      "flowhooks": [
-        {
-          "name": "PreProxyFlowHook",
-          "continueOnError": "true",
-          "sharedFlow": "corspreflow"
-        },
-        {
-          "name": "PreTargetFlowHook",
-          "continueOnError": "true",
-          "sharedFlow": "corspreflow"
-        }
+      "userroles":[
+         {
+            "name":"SampleRole",
+            "resourcepermissions":[
+               {
+                  "path":"/applications/*",
+                  "permissions":[
+                     "get",
+                     "put"
+                  ]
+               },
+               {
+                  "path":"/environments/*/application/*/revisions/*/debugsessions",
+                  "permissions":[
+                     "get",
+                     "put"
+                  ]
+               },
+               {
+                  "path":"/keyvaluemaps/*",
+                  "permissions":[
+                     "get",
+                     "put"
+                  ]
+               },
+               {
+                  "path":"/sharedflows/*",
+                  "permissions":[
+                     "get",
+                     "delete"
+                  ]
+               }
+            ]
+         }
       ],
-      "extensions": [
-        {
-          "name": "test-extension",
-          "description": "Testing",
-          "packageName": "gcp-stackdriver-logging",
-          "version": "1.2.1"
-        }
-      ]
-    }
-  },
-  "orgConfig": {
-    "specs": [
-      {
-        "name": "Petstore-v2",
-        "file": "./specs/petstore-v2.yaml"
-      }
-    ],
-    "apiProducts": [
-      {
-        "name": "EchoProduct",
-        "apiResources": [
-          "/",
-          "/**"
-        ],
-        "approvalType": "auto",
-        "attributes": [
-          {
-            "name": "description",
-            "value": "Echo Product"
-          }
-        ],
-        "description": "Echo Product",
-        "displayName": "Echo Product",
-        "environments": [
-          "test",
-          "prod"
-        ],
-        "proxies": [
-          "HelloWorld"
-        ],
-        "quota": "10000",
-        "quotaInterval": "1",
-        "quotaTimeUnit": "month",
-        "scopes": []
-      }
-    ],
-    "userroles": [
-      {
-        "name": "SampleRole",
-        "resourcepermissions": [
-          {
-            "path": "/applications/*",
-            "permissions": [
-              "get",
-              "put"
+      "reports":[
+         {
+            "displayName":"Policy errors",
+            "chartType":"line",
+            "properties":[
+               {
+                  "property":"__ui__",
+                  "value":[
+                     {
+                        "name":"description",
+                        "value":"This report shows the total number policy errors for API proxies. Proxies with zero errors are not shown."
+                     }
+                  ]
+               }
+            ],
+            "metrics":[
+               {
+                  "function":"sum",
+                  "name":"policy_error"
+               }
+            ],
+            "dimensions":[
+               "apiproxy"
+            ],
+            "filter":"(policy_error gt 0)",
+            "timeUnit":"hour"
+         }
+      ],
+      "developers":[
+         {
+            "email":"john@example.com",
+            "firstName":"John",
+            "lastName":"Example",
+            "userName":"johnexample",
+            "attributes":[
+
             ]
-          },
-          {
-            "path": "/environments/*/application/*/revisions/*/debugsessions",
-            "permissions": [
-              "get",
-              "put"
+         },
+         {
+            "email":"bill@unesco.com",
+            "firstName":"Bill",
+            "lastName":"Buffalo",
+            "userName":"billunesco",
+            "attributes":[
+
             ]
-          },
-          {
-            "path": "/keyvaluemaps/*",
-            "permissions": [
-              "get",
-              "put"
-            ]
-          },
-          {
-            "path": "/sharedflows/*",
-            "permissions": [
-              "get",
-              "delete"
-            ]
-          }
-        ]
-      }
-    ],
-    "reports": [
-      {
-        "displayName": "Policy errors",
-        "chartType": "line",
-        "properties": [
-          {
-            "property": "__ui__",
-            "value": [
-              {
-                "name": "description",
-                "value": "This report shows the total number policy errors for API proxies. Proxies with zero errors are not shown."
-              }
-            ]
-          }
-        ],
-        "metrics": [
-          {
-            "function": "sum",
-            "name": "policy_error"
-          }
-        ],
-        "dimensions": [
-          "apiproxy"
-        ],
-        "filter": "(policy_error gt 0)",
-        "timeUnit": "hour"
-      }
-    ],
-    "developers": [
-      {
-        "email": "john@example.com",
-        "firstName": "John",
-        "lastName": "Example",
-        "userName": "johnexample",
-        "attributes": []
+         }
+      ],
+      "developerApps":{
+         "john@example.com":[
+            {
+               "name":"coolechoapp",
+               "apiProducts":[
+                  "EchoProduct"
+               ],
+               "callbackUrl":"http://weatherapp.com",
+               "scopes":[
+
+               ]
+            }
+         ],
+         "bill@unesco.com":[
+            {
+               "name":"oneechoapp",
+               "apiProducts":[
+                  "EchoProduct"
+               ],
+               "callbackUrl":"http://weatherapp.com",
+               "scopes":[
+
+               ]
+            }
+         ]
       },
-      {
-        "email": "bill@unesco.com",
-        "firstName": "Bill",
-        "lastName": "Buffalo",
-        "userName": "billunesco",
-        "attributes": []
+      "importKeys":{
+         "grant@enterprise.com":[
+            {
+               "apiProducts":[
+                  "weatherProduct"
+               ],
+               "name":"grantoneapp",
+               "consumerKey":"abcd",
+               "consumerSecret":"xyz123"
+            }
+         ]
       }
-    ],
-    "developerApps": {
-      "john@example.com": [
-        {
-          "name": "coolechoapp",
-          "apiProducts": [
-            "EchoProduct"
-          ],
-          "callbackUrl": "http://weatherapp.com",
-          "scopes": []
-        }
-      ],
-      "bill@unesco.com": [
-        {
-          "name": "oneechoapp",
-          "apiProducts": [
-            "EchoProduct"
-          ],
-          "callbackUrl": "http://weatherapp.com",
-          "scopes": []
-        }
-      ]
-    }
-  }
+   }
 }
