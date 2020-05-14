@@ -22,15 +22,15 @@ To use, edit samples/EdgeConfig/shared-pom.xml, and update org, env to point to 
 
 To run the plugin and use edge.json jump to samples project `cd /samples/EdgeConfig` and run 
 
-`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
+`mvn install -Ptest -Dfile=<file> -Dapigee.config.options=create`
 
 To run the plugin and use a config file similar to edge.json in any directory jump to samples project `cd /samples/EdgeConfig` and run 
 
-`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.file=<path-to-config-file> -Dapigee.config.options=create`
+`mvn install -Ptest -Dfile=<file> -Dapigee.config.file=<path-to-config-file> -Dapigee.config.options=create`
 
 To run the plugin and use the multi-file format jump to samples project `cd /samples/EdgeConfig` and run 
 
-`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create -Dapigee.config.dir=resources/edge`
+`mvn install -Ptest -Dfile=<file> -Dapigee.config.options=create -Dapigee.config.dir=resources/edge`
 
 ## APIandConfig
 
@@ -54,4 +54,14 @@ To use, edit samples/EdgeConfig/shared-pom.xml, and update org, env to point to 
 
 To run jump to samples project `cd /samples/APIandConfig/HelloWorld` and run 
 
-`mvn install -Ptest -Dusername=<your-apigee-username> -Dpassword=<your-apigee-password> -Dapigee.config.options=create`
+`mvn install -Ptest -Dfile=<file> -Dapigee.config.options=create`
+
+
+### Pass bearer tokens (v2.0.1 or later)
+
+The plugin also supports passing bearer tokens. You can run the following command (with gcloud sdk installed on your machine). 
+`mvn install -Ptest -Dbearer=$(gcloud auth print-access-token) -Dapigee.config.options=create`
+
+NOTE: If you pass both bearer and service account file, the bearer token will take precedence
+
+
