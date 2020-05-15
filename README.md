@@ -1,4 +1,4 @@
-# apigee-config-maven-plugin (hybrid) - *not released yet*
+# apigee-config-maven-plugin (hybrid)
 
 
 Maven plugin to create, manage Apigee config like KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks and many more .
