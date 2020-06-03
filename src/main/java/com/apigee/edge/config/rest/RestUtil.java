@@ -180,7 +180,7 @@ public class RestUtil {
                 + profile.getOrg() + "/environments/"
                 + profile.getEnvironment() + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource;
+                + "/" + URLEncoder.encode(subResource, "UTF-8");
 
         return executeAPIPost(profile, payload, importCmd);
     }
@@ -257,8 +257,8 @@ public class RestUtil {
                 + profile.getOrg() + "/environments/"
                 + profile.getEnvironment() + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource +"/"
-                + subResourceId;
+                + "/" + URLEncoder.encode(subResource, "UTF-8") +"/"
+                + URLEncoder.encode(subResourceId, "UTF-8");
 
         return executeAPIPost(profile, payload, importCmd);
     }
@@ -395,8 +395,8 @@ public class RestUtil {
                 + profile.getOrg() + "/environments/"
                 + profile.getEnvironment()  + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource + "/"
-                + subResourceId;
+                + "/" + URLEncoder.encode(subResource, "UTF-8") + "/"
+                + URLEncoder.encode(subResourceId, "UTF-8");
 
         return executeAPIGet(profile, importCmd);
     }
@@ -477,7 +477,7 @@ public class RestUtil {
                 + profile.getApi_version() + "/organizations/"
                 + profile.getOrg()+ "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource;
+                + "/" + URLEncoder.encode(subResource, "UTF-8");
 
         return executeAPIPost(profile, payload, importCmd);
     }
@@ -551,8 +551,8 @@ public class RestUtil {
                 + profile.getApi_version() + "/organizations/"
                 + profile.getOrg() + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource + "/"
-                + subResourceId;
+                + "/" + URLEncoder.encode(subResource, "UTF-8") + "/"
+                + URLEncoder.encode(subResourceId, "UTF-8");
 
         return executeAPIPost(profile, payload, importCmd);
     }
@@ -672,8 +672,8 @@ public class RestUtil {
                 + profile.getApi_version() + "/organizations/"
                 + profile.getOrg()  + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource + "/"
-                + subResourceId;
+                + "/" + URLEncoder.encode(subResource, "UTF-8") + "/"
+                + URLEncoder.encode(subResourceId, "UTF-8");
 
         return executeAPIGet(profile, importCmd);
     }
@@ -726,7 +726,7 @@ public class RestUtil {
                 + profile.getOrg() + "/apis/"
                 + api+ "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource;
+                + "/" + URLEncoder.encode(subResource, "UTF-8");
 
         return executeAPIPost(profile, payload, importCmd);
     }
@@ -805,8 +805,8 @@ public class RestUtil {
                 + profile.getOrg() + "/apis/"
                 + api + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource + "/"
-                + subResourceId;
+                + "/" + URLEncoder.encode(subResource, "UTF-8") + "/"
+                + URLEncoder.encode(subResourceId, "UTF-8");
 
         return executeAPIPost(profile, payload, importCmd);
     }
@@ -909,8 +909,8 @@ public class RestUtil {
                 + profile.getOrg() + "/apis/"
                 + api + "/" + resource + "/"
                 + URLEncoder.encode(resourceId, "UTF-8")
-                + "/" + subResource + "/"
-                + subResourceId;
+                + "/" + URLEncoder.encode(subResource, "UTF-8") + "/"
+                + URLEncoder.encode(subResourceId, "UTF-8");
 
         return executeAPIGet(profile, importCmd);
     }
