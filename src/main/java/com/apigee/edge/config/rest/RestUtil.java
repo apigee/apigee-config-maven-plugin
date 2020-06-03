@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.sql.Timestamp;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -36,6 +38,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -43,6 +46,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -58,6 +62,11 @@ public class RestUtil {
 	 * the factory method used by the google http client to setup JSON parsing
 	 */
 	private JsonFactory JSON_FACTORY = new GsonFactory();
+	
+	/*
+	 * Multipart boundary prefix
+	 */
+	private static String MULTIPART_BOUNDARY_PREFIX = "----ApigeeKeystoreBounndary";
 
 	/**
 	 * HTTP request factory used to construct the http requests
@@ -184,6 +193,7 @@ public class RestUtil {
 
         return executeAPIPost(profile, payload, importCmd);
     }
+    
 
     public HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String filePath)
 			throws IOException {
@@ -210,6 +220,182 @@ public class RestUtil {
 
 		return response;
 	}
+    
+    public HttpResponse createEnvConfig(ServerProfile profile,
+	                                           String resource,
+	                                           String resourceId,
+	                                           String subResource,
+	                              Map<String, String> multipartFiles,
+	                              Map<String, String> parameters)
+	         throws IOException {
+	
+	
+		MultipartContent payload = new MultipartContent().setMediaType(new HttpMediaType("multipart/form-data"));
+		payload.setBoundary(MULTIPART_BOUNDARY_PREFIX + new Timestamp(System.currentTimeMillis()));
+	
+	
+		if (multipartFiles.entrySet().size() > 0) {
+			for (Map.Entry<String, String> entry : multipartFiles.entrySet()) {
+				byte[] file = Files.readAllBytes(new File(entry.getValue()).toPath());
+				ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+	
+				HttpHeaders headers = new HttpHeaders().set("Content-Disposition",
+						"form-data; name=\"" + entry.getKey() + "\"");
+	
+				payload.addPart(new MultipartContent.Part(headers, content));
+			} 
+		}
+	
+		StringBuilder queryParams = new StringBuilder("");
+		if (parameters.entrySet().size() > 0) {
+			for (Map.Entry<String, String> entry : parameters.entrySet()) {
+				queryParams.append("&").append(entry.getKey()).append("=").append(entry.getValue());
+			}
+			queryParams = new StringBuilder("?").append(queryParams.substring(1));
+		}
+	
+		String importCmd = profile.getHostUrl() + "/"
+				+ profile.getApi_version() + "/organizations/"
+				+ profile.getOrg() + "/environments/"
+				+ profile.getEnvironment() + "/" + resource + "/"
+				+ URLEncoder.encode(resourceId, "UTF-8")
+				+ "/" + subResource
+				+ queryParams.toString();
+	
+		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(new GenericUrl(importCmd), payload);
+		restRequest.setReadTimeout(0);
+	
+		//logger.info(PrintUtil.formatRequest(restRequest));
+	
+		HttpResponse response;
+		try {
+			//response = restRequest.execute();
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+	
+		return response;
+	}
+
+    public HttpResponse updateEnvConfig(ServerProfile profile,
+    		String resource,
+    		String resourceId,
+    		String subResource,
+    		String subResourceId,
+    		Map<String, String> multipartFiles,
+    		Map<String, String> parameters)
+    				throws IOException {
+
+
+    	MultipartContent payload = new MultipartContent().setMediaType(new HttpMediaType("multipart/form-data"));
+    	payload.setBoundary(MULTIPART_BOUNDARY_PREFIX + new Timestamp(System.currentTimeMillis()));
+
+
+    	if (multipartFiles.entrySet().size() > 0) {
+    		for (Map.Entry<String, String> entry : multipartFiles.entrySet()) {
+    			byte[] file = Files.readAllBytes(new File(entry.getValue()).toPath());
+    			ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+    			HttpHeaders headers = new HttpHeaders().set("Content-Disposition",
+    					"form-data; name=\"" + entry.getKey() + "\"");
+
+    			payload.addPart(new MultipartContent.Part(headers, content));
+    		} 
+    	}
+
+    	StringBuilder queryParams = new StringBuilder("");
+    	if (parameters.entrySet().size() > 0) {
+    		for (Map.Entry<String, String> entry : parameters.entrySet()) {
+    			queryParams.append("&").append(entry.getKey()).append("=").append(entry.getValue());
+    		}
+    		queryParams = new StringBuilder("?").append(queryParams.substring(1));
+    	}
+
+    	String importCmd = profile.getHostUrl() + "/"
+    			+ profile.getApi_version() + "/organizations/"
+    			+ profile.getOrg() + "/environments/"
+    			+ profile.getEnvironment() + "/" + resource + "/"
+    			+ URLEncoder.encode(resourceId, "UTF-8")
+    			+ "/" + subResource + "/"
+    			+ URLEncoder.encode(subResourceId, "UTF-8")
+    			+ queryParams.toString();
+
+    	HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(new GenericUrl(importCmd), payload);
+    	restRequest.setReadTimeout(0);
+
+    	//logger.info(PrintUtil.formatRequest(restRequest));
+
+    	HttpResponse response;
+    	try {
+    		//response = restRequest.execute();
+    		response = executeAPI(profile, restRequest);
+    	} catch (HttpResponseException e) {
+    		logger.error("Apigee call failed " + e.getMessage());
+    		throw new IOException(e.getMessage());
+    	}
+
+    	return response;
+    }
+
+    /**
+     * Delete a sub ressource by resource id and subresource id
+     * @param resource : the ressource containing the sub ressource to delete.
+     * @param ressourceId : the resource id.
+     * @param subResource : the sub resource to delete.
+     * @param subResourceId : the sub resource id to delete.
+     */
+    public HttpResponse deleteEnvConfig(ServerProfile profile, 
+    		String resource,
+    		String resourceId,
+    		String subResource,
+            String subResourceId)
+    				throws IOException {
+    	
+    	HttpRequest restRequest;
+    	
+    	String importCmd = profile.getHostUrl() + "/"
+    			+ profile.getApi_version() + "/organizations/"
+    			+ profile.getOrg() + "/environments/"
+    			+ profile.getEnvironment() + "/" + resource + "/"
+		    	+ URLEncoder.encode(resourceId, "UTF-8")
+		        + "/" + subResource +"/"
+		    	+ URLEncoder.encode(subResourceId, "UTF-8");
+    	
+		restRequest = REQUEST_FACTORY.buildDeleteRequest(new GenericUrl(importCmd));
+    	restRequest.setReadTimeout(0);
+    	
+    	HttpResponse response;
+    	try {
+    		response = executeAPI(profile, restRequest);
+    	} catch (HttpResponseException e) {
+    		logger.error("Apigee call failed " + e.getMessage());
+    		throw new IOException(e.getMessage());
+    	}
+
+    	return response;
+    }
+
+    /*
+     * List sub resource item by resource id and subResouce type. 
+     */
+    public HttpResponse listEnvConfig(ServerProfile profile,
+    		String resource,
+    		String resourceId,
+    		String subResource)
+    				throws IOException {
+
+    	String importCmd = profile.getHostUrl() + "/"
+    			+ profile.getApi_version() + "/organizations/"
+    			+ profile.getOrg() + "/environments/"
+    			+ profile.getEnvironment()  + "/" + resource + "/"
+    			+ URLEncoder.encode(resourceId, "UTF-8")
+    			+ "/" + subResource;
+
+    	return executeAPIGet(profile, importCmd);
+    }
+
     
     public HttpResponse updateEnvConfig(ServerProfile profile, 
                                                 String resource,
@@ -1225,4 +1411,5 @@ public class RestUtil {
 	public ServerProfile getProfile() {
 		return profile;
 	}
+	
 }

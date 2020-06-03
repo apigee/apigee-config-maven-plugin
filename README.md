@@ -86,6 +86,8 @@ mvn install -Ptest -Dapigee.config.options=create
   userroles  			#v1.3.7 or later 
   specs  			#v1.3.8 or later (experimental)
   importKeys			#v1.4.1 or later
+  keystores			#v1.4.2 or later
+  aliases			#v1.4.2 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -165,6 +167,8 @@ The apigee.config.dir option must be used to identify the top most directory con
       │       ├── targetServers.json
       │       └── virtualHosts.json   
       │       └── references.json   
+      │       └── keystores.json   
+      │       └── aliases.json   
       └── org
           ├── apiProducts.json
           ├── developerApps.json

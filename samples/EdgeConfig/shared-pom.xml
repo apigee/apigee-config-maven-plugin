@@ -26,7 +26,7 @@
             <plugin>
                 <groupId>com.apigee.edge.config</groupId>
                 <artifactId>apigee-config-maven-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>1.4.2-SNAPSHOT</version>
                 <executions>
                 	<execution>
                         <id>create-config-specs</id>
@@ -40,6 +40,20 @@
                         <phase>install</phase>                        
                         <goals>
                             <goal>caches</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-keystores</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>keystores</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-aliases</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>aliases</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -119,8 +133,17 @@
                             <goal>importKeys</goal>
                         </goals>
                     </execution>
+                    <execution> 
+                        <id>create-config-virtualHosts</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>virtualhosts</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>            
+                     
+        
         </plugins>
     </build>
     <profiles>
