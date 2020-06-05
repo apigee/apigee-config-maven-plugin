@@ -67,7 +67,7 @@ public class PrintUtil {
                 prettyRequest = prettyRequest + "\n" + "content-type" + ": " + request.getContent().getType();
 
                 //https://github.com/apigee/apigee-config-maven-plugin/issues/63 Not print KVM Request as it could have sensitive data
-                if (request.getUrl().toString().contains("/keyvaluemaps")) {
+                if (request.getUrl().toString().contains("/keyvaluemaps") || request.getUrl().toString().contains("/aliases")) {
                     prettyRequest = prettyRequest + "\n [Request body may contain sensitive data, not shown] \n";
                 }
                 else if (!request.getContent().getType().contains("octet"))

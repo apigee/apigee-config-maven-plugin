@@ -1,0 +1,35 @@
+[
+      {
+         "alias":"testSelfSignedCert",
+         "keystorename": "testKeyStorename",
+         "format": "selfsignedcert",
+         "keySize":"2048",
+         "sigAlg":"SHA256withRSA",
+         "subject":{
+            "commonName":"testcommonName"
+         },
+         "certValidityInDays":"60"
+      },
+      {
+         "alias":"testAliasKeyCertFileAndKey",
+         "keystorename": "testKeyStorename",
+         "format": "keycertfile",
+         "certFilePath":"/tmp/certs/keystore.pem",
+         "keyFilePath":"/tmp/certs/keystore.key",
+         "password":"dummy"
+      },
+      {
+         "alias":"testAliasKeyCertJar",
+         "keystorename": "testKeyStorename",
+         "format": "keycertjar",
+         "filePath":"/tmp/certs/myKeystore.jar",
+         "password":"dummy"
+      },
+      {
+         "alias":"testAliasPKCS12",
+         "keystorename": "testKeyStorename",
+         "format": "pkcs12",
+         "filePath":"/tmp/certs/myKeystore.p12",
+         "password":"dummy"
+      }
+]

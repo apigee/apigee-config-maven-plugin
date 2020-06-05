@@ -81,11 +81,13 @@ mvn install -Ptest -Dapigee.config.options=create
   virtualhosts
   exportAppKeys
   extensions			#v1.3.1 or later
-  reports			#v1.3.2 or later
+  reports			    #v1.3.2 or later
   references			#v1.3.4 or later
   userroles  			#v1.3.7 or later 
-  specs  			#v1.3.8 or later (experimental)
+  specs  			    #v1.3.8 or later (experimental)
   importKeys			#v1.4.1 or later
+  keystores			    #v1.4.2 or later
+  aliases			    #v1.4.2 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -119,6 +121,8 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Create User Roles and add permissions to Role [GET,POST,DELETE]
   and many more
   - Create API Spec
+  - Create Keystores/Truststores
+  - Create Alias
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
@@ -164,7 +168,9 @@ The apigee.config.dir option must be used to identify the top most directory con
       │       ├── kvms.json
       │       ├── targetServers.json
       │       └── virtualHosts.json   
-      │       └── references.json   
+      │       └── references.json
+      │ 	  └── keystores.json
+      │ 	  └── aliases.json   
       └── org
           ├── apiProducts.json
           ├── developerApps.json
@@ -288,7 +294,7 @@ Provide the token when invoking the plugin.
 Apigee edge comes with several inbuilt role that provides several permission level 
 
 ## ROADMAP
-  - Keystore, Truststore support
+
 
 Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
