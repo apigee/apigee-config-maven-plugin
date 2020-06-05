@@ -294,7 +294,8 @@ Provide the token when invoking the plugin.
 Apigee edge comes with several inbuilt role that provides several permission level 
 
 ## ROADMAP
-
+- API Monitoring
+- Spec snapshot (experimental)
 
 Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
