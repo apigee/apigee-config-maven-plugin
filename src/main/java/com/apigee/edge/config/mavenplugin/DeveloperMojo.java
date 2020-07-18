@@ -16,6 +16,7 @@
 package com.apigee.edge.config.mavenplugin;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class DeveloperMojo extends GatewayAbstractMojo
 	protected void doUpdate(List<String> developers) 
             throws MojoFailureException {
 		try {
-			List existingDevelopers = null;
+			//List existingDevelopers = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create && 
                 buildOption != OPTIONS.delete && 
@@ -114,51 +115,52 @@ public class DeveloperMojo extends GatewayAbstractMojo
 				return;
 			}
 
-			logger.info("Retrieving existing Developers");
-			existingDevelopers = getDeveloper(serverProfile);
+			//Commenting due to https://github.com/apigee/apigee-config-maven-plugin/issues/92#issuecomment-660385344
+			//logger.info("Retrieving existing Developers");
+			//existingDevelopers = getDeveloper(serverProfile);
 
 	        for (String developer : developers) {
-	        	String developerId = getDeveloperName(developer);
-	        	if (developerId == null) {
+	        	String developerEmail = getDeveloperName(developer);
+	        	if (developerEmail == null) {
 	        		throw new IllegalArgumentException(
-	        			"Developer does not have an id.\n" + developer + "\n");
+	        			"Developer does not have an email.\n" + developer + "\n");
 	        	}
 
-        		if (existingDevelopers.contains(developerId)) {
+        		if (doesDeveloperExist(serverProfile, developerEmail)) {
                     switch (buildOption) {
                         case update:
-                            logger.info("Developer \"" + developerId + 
+                            logger.info("Developer \"" + developerEmail + 
                                                     "\" exists. Updating.");
                             updateDeveloper(serverProfile,
-                                                    developerId, developer);
+                            		developerEmail, developer);
                             break;
                         case create:
-                            logger.info("Developer \"" + developerId + 
+                            logger.info("Developer \"" + developerEmail + 
                                                 "\" already exists. Skipping.");
                             break;
                         case delete:
-                            logger.info("Developer \"" + developerId + 
+                            logger.info("Developer \"" + developerEmail + 
                                     "\" already exists. Deleting.");
-                            deleteDeveloper(serverProfile, developerId);
+                            deleteDeveloper(serverProfile, developerEmail);
                             break;
                         case sync:
-                            logger.info("Developer \"" + developerId + 
+                            logger.info("Developer \"" + developerEmail + 
                                     "\" already exists. Deleting and recreating.");
-                            deleteDeveloper(serverProfile, developerId);
-                            logger.info("Creating Developer - " + developerId);
+                            deleteDeveloper(serverProfile, developerEmail);
+                            logger.info("Creating Developer - " + developerEmail);
                             createDeveloper(serverProfile, developer);
-                                break;
+                            break;
                     }
 	        	} else {
                     switch (buildOption) {
                         case create:
                         case sync:
                         case update:
-                            logger.info("Creating Developer - " + developerId);
+                            logger.info("Creating Developer - " + developerEmail);
                             createDeveloper(serverProfile, developer);
                             break;
                         case delete:
-                            logger.info("Developer \"" + developerId + 
+                            logger.info("Developer \"" + developerEmail + 
                                         "\" does not exist. Skipping.");
                             break;
                     }
@@ -313,6 +315,21 @@ public class DeveloperMojo extends GatewayAbstractMojo
         }
 
         return developers;
+    }	
+    
+    public static boolean doesDeveloperExist(ServerProfile profile, String developerEmail)
+            throws IOException {
+        try {
+        	logger.info("Checking if developer - " +developerEmail + " exist");
+        	RestUtil restUtil = new RestUtil(profile);
+            HttpResponse response = restUtil.getOrgConfig(profile, "developers/"+URLEncoder.encode(developerEmail, "UTF-8"));
+            if(response == null) 
+            	return false;
+        } catch (HttpResponseException e) {
+            throw new IOException(e.getMessage());
+        }
+
+        return true;
     }	
 }
 
