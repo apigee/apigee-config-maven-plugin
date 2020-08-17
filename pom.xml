@@ -53,6 +53,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<maven.version>3.1.0</maven.version>
 		<maven.api.version>3.5</maven.api.version>
+		<apache.http.client>4.5.2</apache.http.client>
 		<google.http.client.version>1.22.0</google.http.client.version>
 	</properties>
 
@@ -80,6 +81,17 @@
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${apache.http.client}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
            	<artifactId>httpcore</artifactId> 
