@@ -263,7 +263,7 @@ public class AliasMojo extends GatewayAbstractMojo
     		Map<String, String> parameters = new HashMap<String, String>();
         	parameters.put("alias", alias.alias);
         	parameters.put("format", alias.format);
-        	parameters.put("ignoreNewlineValidation", (alias.privateKeyExportable)?String.valueOf(alias.privateKeyExportable): "true"); //default to true
+        	parameters.put("ignoreNewlineValidation", (alias.ignoreNewlineValidation)?String.valueOf(alias.ignoreNewlineValidation): "true"); //default to true
         	parameters.put("ignoreExpiryValidation", (alias.ignoreExpiryValidation)?String.valueOf(alias.ignoreExpiryValidation): "false"); //default to false
         	parameters.put("privateKeyExportable", (alias.privateKeyExportable)?String.valueOf(alias.privateKeyExportable): "false"); //default to false
         	if(alias.password!=null && !alias.password.equalsIgnoreCase(""))
