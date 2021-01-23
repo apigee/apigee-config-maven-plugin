@@ -986,7 +986,8 @@ public class RestUtil {
             logger.error(e.getMessage());
             throw new IOException(e.getMessage());
          }
-        
+    	//fix for Issue106
+    	headers.set("X-GOOG-API-FORMAT-VERSION", 2);
     	logger.info(PrintUtil.formatRequest(request));
         return request.execute();
     }
