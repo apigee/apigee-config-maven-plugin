@@ -1,4 +1,4 @@
-# apigee-config-maven-plugin (hybrid)
+# apigee-config-maven-plugin (Apigee X or Apigee hybrid)
 
 
 Maven plugin to create, manage Apigee config like KVM, Target Server, Resource Files, API Products, Developers, Developer Apps, Flow hooks and many more .
@@ -30,7 +30,7 @@ You will need the following to run the samples:
   <version>1.x</version>
 </dependency>
 ```
-- For Apigee Hybrid, the version of the plugin is 2.x
+- For Apigee X or Apigee Hybrid, the version of the plugin is 2.x
 ```xml
 <dependency>
   <groupId>com.apigee.edge.config</groupId>
