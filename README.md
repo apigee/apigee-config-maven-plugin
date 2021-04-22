@@ -300,6 +300,12 @@ Apigee edge comes with several inbuilt role that provides several permission lev
 Please send feature requests using [issues](https://github.com/apigee/apigee-config-maven-plugin/issues)
 
 ## Support
+Issues filed on Github are not subject to service level agreements (SLAs) and responses should be assumed to be on an ad-hoc volunteer basis. The
+[Apigee community board](https://community.apigee.com/) is recommended as for community support and is regularly checked by Apigee experts.
+Apigee customers should use [formal support channels](https://cloud.google.com/apigee/support) for Apigee product related concerns.
+
 * Post a question in [Apigee community](https://community.apigee.com/index.html)
 * Create an [issue](https://github.com/apigee/apigee-config-maven-plugin/issues/new)
 
+## Disclaimer
+This is not an officially supported Google product.
