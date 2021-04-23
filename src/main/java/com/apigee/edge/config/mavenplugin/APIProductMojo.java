@@ -16,6 +16,7 @@
 package com.apigee.edge.config.mavenplugin;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 	protected void doUpdate(List<String> products) 
             throws MojoFailureException {
 		try {
-			List existingAPIProducts = null;
+			//List existingAPIProducts = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create &&
                 buildOption != OPTIONS.delete &&
@@ -114,8 +115,9 @@ public class APIProductMojo extends GatewayAbstractMojo
 				return;
 			}
 
-			logger.info("Retrieving existing API Products");
-			existingAPIProducts = getAPIProduct(serverProfile);
+			//Commenting due to https://github.com/apigee/apigee-config-maven-plugin/issues/114
+			//logger.info("Retrieving existing API Products");
+			//existingAPIProducts = getAPIProduct(serverProfile);
 
 	        for (String product : products) {
 	        	String productName = getAPIProductName(product);
@@ -124,7 +126,7 @@ public class APIProductMojo extends GatewayAbstractMojo
 	        			"API Product does not have a name.\n" + product + "\n");
 	        	}
 
-        		if (existingAPIProducts.contains(productName)) {
+        		if (doesAPIProductExist(serverProfile, productName)) {
                     switch (buildOption) {
                         case update:
     						logger.info("API Product \"" + productName + 
@@ -313,7 +315,22 @@ public class APIProductMojo extends GatewayAbstractMojo
         }
 
         return products;
-    }	
+    }
+    
+    public static boolean doesAPIProductExist(ServerProfile profile, String apiProduct)
+            throws IOException {
+        try {
+        	logger.info("Checking if APIProduct - " +apiProduct + " exist");
+        	RestUtil restUtil = new RestUtil(profile);
+            HttpResponse response = restUtil.getOrgConfig(profile, "apiproducts/"+URLEncoder.encode(apiProduct, "UTF-8"));
+            if(response == null) 
+            	return false;
+        } catch (HttpResponseException e) {
+            throw new IOException(e.getMessage());
+        }
+
+        return true;
+    }
 }
 
 
