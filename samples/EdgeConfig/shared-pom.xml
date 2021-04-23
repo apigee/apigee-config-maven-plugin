@@ -26,7 +26,7 @@
             <plugin>
                 <groupId>com.apigee.edge.config</groupId>
                 <artifactId>apigee-config-maven-plugin</artifactId>
-                <version>1.4.3</version>
+                <version>1.4.5</version>
                 <executions>
                 	<execution>
                         <id>create-config-specs</id>
@@ -103,6 +103,20 @@
                         <phase>install</phase>                        
                         <goals>
                             <goal>apps</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-companies</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>companies</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-companyapp</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>companyapps</goal>
                         </goals>
                     </execution>
                     <execution>
