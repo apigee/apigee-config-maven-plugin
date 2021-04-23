@@ -36,7 +36,10 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.util.Key;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 /**                                                                                                                                     ¡¡
  * Goal to create CompanyApps in Apigee EDGE
@@ -256,7 +259,7 @@ public class CompanyAppMojo extends GatewayAbstractMojo
         HttpResponse response = restUtil.updateOrgConfig(profile, 
                                         "companies/" + company + "/apps", 
                                         companyAppName,
-                                        companyApp);
+                                        removeApiProductFromApp(profile,companyApp));
         try {
             
             logger.info("Response " + response.getContentType() + "\n" +
@@ -327,6 +330,20 @@ public class CompanyAppMojo extends GatewayAbstractMojo
 
         return companyApps;
     }	
+    
+  //Method to remove the apiProducts from App payload for config update option so that it does not create credentials everytime
+    //https://github.com/apigee/apigee-config-maven-plugin/issues/17
+    public static String removeApiProductFromApp(ServerProfile profile, String appPayload){
+		if(profile.getIgnoreProductsForApp()) {
+			logger.info("Ignoring the API Product config from App");
+			JsonParser parser = new JsonParser();
+			JsonElement jsonElement = parser.parse(appPayload);
+			JsonObject appJsonObj = jsonElement.getAsJsonObject();
+			appJsonObj.remove("apiProducts");
+			return appJsonObj.toString();
+		}else
+			return appPayload; 	
+	}
 }
 
 
