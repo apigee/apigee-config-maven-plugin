@@ -142,7 +142,7 @@
             "quotaInterval":"1",
             "quotaTimeUnit":"month",
             "scopes":[
-
+               
             ]
          }
       ],
@@ -216,7 +216,7 @@
             "lastName":"Example",
             "userName":"johnexample",
             "attributes":[
-
+               
             ]
          },
          {
@@ -225,7 +225,7 @@
             "lastName":"Buffalo",
             "userName":"billunesco",
             "attributes":[
-
+               
             ]
          }
       ],
@@ -238,7 +238,7 @@
                ],
                "callbackUrl":"http://weatherapp.com",
                "scopes":[
-
+                  
                ]
             }
          ],
@@ -250,7 +250,7 @@
                ],
                "callbackUrl":"http://weatherapp.com",
                "scopes":[
-
+                  
                ]
             }
          ]
@@ -264,6 +264,32 @@
                "name":"grantoneapp",
                "consumerKey":"abcd",
                "consumerSecret":"xyz123"
+            }
+         ]
+      },
+      "companies":[
+         {
+            "name":"altostrat",
+            "displayName":"Altostrat",
+            "attributes":[
+               {
+                  "name":"ADMIN_EMAIL",
+                  "value":"john@example.com"
+               }
+            ]
+         }
+      ],
+      "companyApps":{
+         "altostrat":[
+            {
+               "apiProducts":[
+                  "weatherProduct"
+               ],
+               "callbackUrl":"",
+               "name":"altostratCompanyApp",
+               "scopes":[
+                  
+               ]
             }
          ]
       }

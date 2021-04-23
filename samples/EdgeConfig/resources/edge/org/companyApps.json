@@ -1,0 +1,12 @@
+{
+    "altostrat": [
+        {
+            "apiProducts": [
+                "weatherProduct"
+            ],
+            "callbackUrl": "",
+            "name": "altostratCompanyApp",
+            "scopes": []
+        }
+    ]
+}

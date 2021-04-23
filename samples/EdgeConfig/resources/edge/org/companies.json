@@ -1,0 +1,12 @@
+[
+   {
+      "name":"altostrat",
+      "displayName":"Altostrat",
+      "attributes":[
+          {
+            "name": "ADMIN_EMAIL",
+            "value": "hugh@example.com"
+        }
+      ]
+   }
+]

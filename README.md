@@ -88,6 +88,8 @@ mvn install -Ptest -Dapigee.config.options=create
   importKeys			#v1.4.1 or later
   keystores			    #v1.4.2 or later
   aliases			    #v1.4.2 or later
+  companies			    #v1.4.5 or later
+  companyapps			    #v1.4.5 or later
   
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
@@ -123,6 +125,8 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Create API Spec
   - Create Keystores/Truststores
   - Create Alias
+  - Create Companies
+  - Create Company Apps
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
@@ -176,6 +180,8 @@ The apigee.config.dir option must be used to identify the top most directory con
           ├── developerApps.json
           ├── developers.json
           ├── kvms.json
+          ├── companies.json
+          ├── companyApps.json
           ├── reports.json
           └── maskconfigs.json
           └── userroles.json

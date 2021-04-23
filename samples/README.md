@@ -15,6 +15,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates API products
   - Creates Developers
   - Creates Developer Apps
+  - Creates Companies
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
@@ -48,6 +49,7 @@ This project demonstrates use of apigee-config-maven-plugin and [apigee-deploy-m
   - Creates API products
   - Creates Developers
   - Creates Developer Apps
+  - Creates Companies
 
 To use, edit samples/APIandConfig/shared-pom.xml, and update org and env elements in all profiles to point to your Apigee org, env. You can add more profiles corresponding to each env in your org.
 
