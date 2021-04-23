@@ -299,6 +299,10 @@ Provide the token when invoking the plugin.
 *NOTE: If you are providing refresh token, you need to provide the bearer token and username as well*
 Apigee edge comes with several inbuilt role that provides several permission level 
 
+### Update Developer App and Company App (from v1.4.5 onwards)
+
+When `apigee.config.options=update` is run on apps and companyapps and if the payload passed includes the apiProducts, the Management server created a new credentials. To avoid this you can pass `-Dapigee.app.ignoreAPIProducts=true`. Please note this is applicable only for `apigee.config.options=update`
+
 ## ROADMAP
 - API Monitoring
 - Spec snapshot (experimental)

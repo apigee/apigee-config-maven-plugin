@@ -271,24 +271,15 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
  	 */
 	private String kvmOverride;
 	
+	
+	/**
+	 * Parameter to set for DeveloperApp to ignore API Product so that new credentials are not generated for updates (https://github.com/apigee/apigee-config-maven-plugin/issues/17)
+	 * @parameter property="apigee.app.ignoreAPIProducts" default-value="false"
+ 	 */
+	private String ignoreProductsForApp;
+	
 	// TODO set resources/edge as default value
 
-	public String getKvmOverride() {
-		return kvmOverride;
-	}
-
-	public void setKvmOverride(String kvmOverride) {
-		this.kvmOverride = kvmOverride;
-	}
-	
-	public String getExportDir() {
-		return exportDir;
-	}
-
-	public void setExportDir(String exportDir) {
-		this.exportDir = exportDir;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -337,6 +328,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 		this.buildProfile.setClientId(this.clientid);
 		this.buildProfile.setClientSecret(this.clientsecret);
 		this.buildProfile.setKvmOverride(this.kvmOverride);
+		this.buildProfile.setIgnoreProductsForApp(this.ignoreProductsForApp);
 		
 		// process proxy for management api endpoint
 		Proxy mavenProxy = getProxy(settings, hostURL);
@@ -452,63 +444,6 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 			}
 		}
 		return false;
-	}
-
-	public void setProfile(ServerProfile profile) {
-		this.buildProfile = profile;
-	}
-
-	public void setBaseDirectory(File baseDirectory) {
-		this.baseDirectory = baseDirectory;
-	}
-
-	public String getBuildDirectory() {
-		return this.buildDirectory.getAbsolutePath(); 
-	}
-
-	public String getBaseDirectoryPath(){
-		return this.baseDirectory.getAbsolutePath();
-	}
-
-	public String getBuildOption() {
-		return buildOption;
-	}
-
-	public void setBuildOption(String buildOption) {
-		this.buildOption = buildOption;
-	}
-
-	public String getOptions() {
-		return options;
-	}
-
-	public void setOptions(String options) {
-		this.options = options;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-
-	public boolean isSkip() {
-		return skip;
-	}
-
-
-	public void setSkip(boolean skip) {
-		this.skip = skip;
 	}
 
 	private File findConsolidatedConfigFile()
@@ -730,5 +665,77 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 			throw new MojoExecutionException(e.getMessage());
 		}
 	}
+	
+	public void setProfile(ServerProfile profile) {
+		this.buildProfile = profile;
+	}
 
+	public void setBaseDirectory(File baseDirectory) {
+		this.baseDirectory = baseDirectory;
+	}
+
+	public String getBuildDirectory() {
+		return this.buildDirectory.getAbsolutePath(); 
+	}
+
+	public String getBaseDirectoryPath(){
+		return this.baseDirectory.getAbsolutePath();
+	}
+
+	public String getBuildOption() {
+		return buildOption;
+	}
+
+	public void setBuildOption(String buildOption) {
+		this.buildOption = buildOption;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
+	}
+
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public boolean isSkip() {
+		return skip;
+	}
+	
+	public void setSkip(boolean skip) {
+		this.skip = skip;
+	}
+	
+	public String getKvmOverride() {
+		return kvmOverride;
+	}
+
+	public void setKvmOverride(String kvmOverride) {
+		this.kvmOverride = kvmOverride;
+	}
+	
+	public String getExportDir() {
+		return exportDir;
+	}
+
+	public void setExportDir(String exportDir) {
+		this.exportDir = exportDir;
+	}
+	
+	public String getIgnoreProductsForApp() {
+		return ignoreProductsForApp;
+	}
+
+	public void setIgnoreProductsForApp(String ignoreProductsForApp) {
+		this.ignoreProductsForApp = ignoreProductsForApp;
+	}
+	
 }

@@ -56,6 +56,7 @@ public class ServerProfile {
 	private String refreshToken; //Mgmt API OAuth Refresh Token
 	private String authType; // Mgmt API Auth Type oauth|basic
 	private Boolean kvmOverride = true; //Override kvm only if true (used for update option)
+	private Boolean ignoreProductsForApp = true; //Ignore API Product for App creation/updates so new credentials are not created
 	
 	private HttpClient apacheHttpClient;
 	
@@ -76,6 +77,17 @@ public class ServerProfile {
 			this.kvmOverride = true;
 		else if (kvmOverride.equals("false"))
 			this.kvmOverride = false;
+	}
+	
+	public Boolean getIgnoreProductsForApp() {
+		return ignoreProductsForApp;
+	}
+
+	public void setIgnoreProductsForApp(String ignoreProductsForApp) {
+		if(ignoreProductsForApp != null && ignoreProductsForApp.equals("true"))
+			this.ignoreProductsForApp = true;
+		else 
+			this.ignoreProductsForApp = false;
 	}
 	
 	public String getHostURL() {
