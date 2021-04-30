@@ -93,6 +93,13 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>create-config-aliases</id>
+                        <phase>verify</phase>                        
+                        <goals>
+                            <goal>aliases</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>create-config-resourcefiles</id>
                         <phase>install</phase>                        
                         <goals>

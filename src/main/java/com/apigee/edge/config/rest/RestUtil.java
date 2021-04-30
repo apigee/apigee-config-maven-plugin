@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -30,7 +31,9 @@ import com.apigee.edge.config.utils.ServerProfile;
 import com.apigee.mgmtapi.sdk.client.MgmtAPIClient;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -38,6 +41,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -51,6 +55,8 @@ public class RestUtil {
     static String versionRevision;
     static Logger logger = LoggerFactory.getLogger(RestUtil.class);
     static String accessToken = null;
+    
+    private static String MULTIPART_BOUNDARY_PREFIX = "----ApigeeKeystoreBoundary";
     
     static HttpRequestFactory REQUEST_FACTORY = HTTP_TRANSPORT
             .createRequestFactory(new HttpRequestInitializer() {
@@ -128,6 +134,32 @@ public class RestUtil {
 
         return executeAPIPost(profile, payload, importCmd);
     }
+    
+    public static HttpResponse createEnvConfigWithParameters(ServerProfile profile, String resource, String resourceId, String subResource, Map<String, String> parameters,
+			String payload) throws IOException {
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+				+ "/environments/" + profile.getEnvironment() + "/" + resource + "/"
+				+ URLEncoder.encode(resourceId, "UTF-8") + "/" + URLEncoder.encode(subResource, "UTF-8");
+
+		ByteArrayContent content = new ByteArrayContent("application/json", payload.getBytes());
+		
+		GenericUrl url = new GenericUrl(importCmd);
+		url.putAll(parameters);
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(url, content);
+		restRequest.setReadTimeout(0);
+
+		HttpResponse response;
+		try {
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
 
     public static HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String filePath)
 			throws IOException {
@@ -154,6 +186,53 @@ public class RestUtil {
 
 		return response;
 	}
+    
+  //Mainly used for Creating alias (for keystore)
+  	public static HttpResponse createEnvConfigUpload(ServerProfile profile, String resource, String resourceId, String subResource, 
+  			Map<String, String> multipartFiles, Map<String, String> parameters) throws IOException {
+  		MultipartContent payload = new MultipartContent().setMediaType(new HttpMediaType("multipart/form-data"));
+  		payload.setBoundary(MULTIPART_BOUNDARY_PREFIX + System.currentTimeMillis());
+  		
+  		if (multipartFiles.entrySet().size() > 0) {
+      		for (Map.Entry<String, String> entry : multipartFiles.entrySet()) {
+      			byte[] file = Files.readAllBytes(new File(entry.getValue()).toPath());
+      			ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+      			HttpHeaders headers = new HttpHeaders().set("Content-Disposition",
+      					"form-data; name=\"" + entry.getKey() + "\"");
+
+      			payload.addPart(new MultipartContent.Part(headers, content));
+      		} 
+      	}
+  		
+  		if(parameters!=null && parameters.containsKey("password")) {
+  			HttpHeaders headers = new HttpHeaders().set("Content-Disposition",
+  					"form-data; name=\"password\"");
+  			HttpContent partContent = ByteArrayContent.fromString(null, parameters.get("password"));
+  			payload.addPart(new MultipartContent.Part(headers, partContent));
+  			parameters.remove("password");
+  		}
+  		
+  		String importCmd = profile.getHostUrl() + "/"
+      			+ profile.getApi_version() + "/organizations/"
+      			+ profile.getOrg() + "/environments/"
+      			+ profile.getEnvironment() + "/" + resource + "/"
+      			+ URLEncoder.encode(resourceId, "UTF-8")
+      			+ "/" + subResource;
+  		GenericUrl url = new GenericUrl(importCmd);
+  		url.putAll(parameters);
+  		HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(url, payload);
+      	restRequest.setReadTimeout(0);
+      	HttpResponse response;
+  		try {
+  			response = executeAPI(profile, restRequest);
+  		} catch (HttpResponseException e) {
+  			logger.error("Apigee call failed " + e.getMessage());
+  			throw new IOException(e.getMessage());
+  		}
+
+  		return response;
+  	}
     
     public static HttpResponse updateEnvConfig(ServerProfile profile, 
                                                 String resource,
