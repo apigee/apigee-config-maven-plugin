@@ -78,7 +78,7 @@ mvn install -Ptest -Dapigee.config.options=create
   exportAppKeys			
   reports			
   references
-  
+  keystores
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
@@ -100,6 +100,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates Developer Apps
   - Creates Custom Reports
   - Creates References
+  - Creates Keystores
   and many more
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org, env to point to your Apigee org and env respectively and path of service account credentials elements in all profiles. You can add more profiles corresponding to each env in your org. 
@@ -142,7 +143,7 @@ The apigee.config.dir option must be used to identify the top most directory con
       │   ├── test
       │   │   ├── kvms.json
       │   │   ├── targetServers.json
-      │   │   ├── targetServers.json
+      │   │   ├── keystores.json
       │       └── references.json   
       └── org
           ├── apiProducts.json
@@ -175,6 +176,7 @@ The final level is the config entities.
      orgConfig.developerApps[]
      orgConfig.reports[]
      envConfig.test.targetServers[]
+     envConfig.test.keystores[]
      envConfig.test.references[]
    ```
 
