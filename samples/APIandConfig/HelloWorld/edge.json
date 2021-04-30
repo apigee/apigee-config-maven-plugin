@@ -1,133 +1,153 @@
 {
-    "version": "1.0",
-    "envConfig": {
-        "test": {
-          "targetServers": [
-              {
-                "name" : "HTTPBin",
-                "host" : "httpbin.org",
-                "isEnabled" : true,
-                "port" : 80
-              }
-          ],
-          "references": [
-              {
-                "name" : "sampleReference",
-                "refers": "freetrial-2019-03-07",
-                "resourceType": "KeyStore"
-              }
-          ],
-          "resourcefiles":[
-              {
-                "name": "test",
-                "type": "jsc",
-                "file": "./resourceFiles/jsc/test.js"
-              }    
-          ],
-          "flowhooks":[
-               {
-                  "name":"PreProxyFlowHook",
-                  "continueOnError":"true",
-                  "sharedFlow":"corspreflow"
-               },
-               {
-                  "name":"PreTargetFlowHook",
-                  "continueOnError":"true",
-                  "sharedFlow":"corspreflow"
-               }
-            ]
-        }
-    },
-    "orgConfig": {
-        "apiProducts": [
+   "version":"1.0",
+   "envConfig":{
+      "test":{
+         "targetServers":[
             {
-                "name": "EchoProduct",
-                "apiResources": [
-                    "/",
-                    "/**"
-                ],
-                "approvalType": "auto",
-                "attributes": [
-                    {
-                        "name": "description",
-                        "value": "Echo Product"
-                    }
-                ],
-                "description": "Echo Product",
-                "displayName": "Echo Product",
-                "environments": [
-                    "test",
-                    "prod"
-                ],
-                "proxies": [
-                    "HelloWorld"
-                ],
-                "quota": "10000",
-                "quotaInterval": "1",
-                "quotaTimeUnit": "month",
-                "scopes": []
-            }        
-        ],
-        "reports": [
-        	{
-        		  "displayName": "Policy errors",
-        		  "chartType": "line",
-        		  "properties": [
-        		    {
-        		      "property": "__ui__",
-        		      "value": [
-        		        {
-        		          "name": "description",
-        		          "value": "This report shows the total number policy errors for API proxies. Proxies with zero errors are not shown."
-        		        } ]
-        		    }
-        		  ],
-        		  "metrics": [
-        		    {
-        		      "function": "sum",
-        		      "name": "policy_error"
-        		    }
-        		  ],
-        		  "dimensions": [
-        		    "apiproxy"
-        		  ],
-        		  "filter": "(policy_error gt 0)",
-        		  "timeUnit": "hour"
-        	}
-        ],
-        "developers": [
+               "name":"HTTPBin",
+               "host":"httpbin.org",
+               "isEnabled":true,
+               "port":80
+            }
+         ],
+         "references":[
             {
-                "email": "john@example.com",
-                "firstName": "John",
-                "lastName": "Example",
-                "userName": "johnexample",
-                "attributes": []
+               "name":"sampleReference",
+               "refers":"freetrial-2019-03-07",
+               "resourceType":"KeyStore"
+            }
+         ],
+         "resourcefiles":[
+            {
+               "name":"test",
+               "type":"jsc",
+               "file":"./resourceFiles/jsc/test.js"
+            }
+         ],
+         "keystores":[
+            {
+               "name":"testKeyStorename"
+            }
+         ],
+         "flowhooks":[
+            {
+               "name":"PreProxyFlowHook",
+               "continueOnError":"true",
+               "sharedFlow":"corspreflow"
             },
             {
-                "email": "bill@unesco.com",
-                "firstName": "Bill",
-                "lastName": "Buffalo",
-                "userName": "billunesco",
-                "attributes": []
+               "name":"PreTargetFlowHook",
+               "continueOnError":"true",
+               "sharedFlow":"corspreflow"
             }
-        ],
-        "developerApps": {
-            "john@example.com": [
-                {
-                    "name": "coolechoapp",
-                    "apiProducts": [ "EchoProduct" ],
-                    "callbackUrl": "http://weatherapp.com",
-                    "scopes": []
-                }
+         ]
+      }
+   },
+   "orgConfig":{
+      "apiProducts":[
+         {
+            "name":"EchoProduct",
+            "apiResources":[
+               "/",
+               "/**"
             ],
-            "bill@unesco.com": [
-                {
-                    "name": "oneechoapp",
-                    "apiProducts": [ "EchoProduct" ],
-                    "callbackUrl": "http://weatherapp.com",
-                    "scopes": []
-                }
+            "approvalType":"auto",
+            "attributes":[
+               {
+                  "name":"description",
+                  "value":"Echo Product"
+               }
+            ],
+            "description":"Echo Product",
+            "displayName":"Echo Product",
+            "environments":[
+               "test",
+               "prod"
+            ],
+            "proxies":[
+               "HelloWorld"
+            ],
+            "quota":"10000",
+            "quotaInterval":"1",
+            "quotaTimeUnit":"month",
+            "scopes":[
+               
             ]
-        }
-    }
+         }
+      ],
+      "reports":[
+         {
+            "displayName":"Policy errors",
+            "chartType":"line",
+            "properties":[
+               {
+                  "property":"__ui__",
+                  "value":[
+                     {
+                        "name":"description",
+                        "value":"This report shows the total number policy errors for API proxies. Proxies with zero errors are not shown."
+                     }
+                  ]
+               }
+            ],
+            "metrics":[
+               {
+                  "function":"sum",
+                  "name":"policy_error"
+               }
+            ],
+            "dimensions":[
+               "apiproxy"
+            ],
+            "filter":"(policy_error gt 0)",
+            "timeUnit":"hour"
+         }
+      ],
+      "developers":[
+         {
+            "email":"john@example.com",
+            "firstName":"John",
+            "lastName":"Example",
+            "userName":"johnexample",
+            "attributes":[
+               
+            ]
+         },
+         {
+            "email":"bill@unesco.com",
+            "firstName":"Bill",
+            "lastName":"Buffalo",
+            "userName":"billunesco",
+            "attributes":[
+               
+            ]
+         }
+      ],
+      "developerApps":{
+         "john@example.com":[
+            {
+               "name":"coolechoapp",
+               "apiProducts":[
+                  "EchoProduct"
+               ],
+               "callbackUrl":"http://weatherapp.com",
+               "scopes":[
+                  
+               ]
+            }
+         ],
+         "bill@unesco.com":[
+            {
+               "name":"oneechoapp",
+               "apiProducts":[
+                  "EchoProduct"
+               ],
+               "callbackUrl":"http://weatherapp.com",
+               "scopes":[
+                  
+               ]
+            }
+         ]
+      }
+   }
 }
