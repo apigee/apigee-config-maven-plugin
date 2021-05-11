@@ -350,7 +350,7 @@ public class AppMojo extends GatewayAbstractMojo
         try {
         	logger.info("Checking if developerApp - " +appName + " exist");
         	RestUtil restUtil = new RestUtil(profile);
-            HttpResponse response = restUtil.getOrgConfig(profile, "developers/"+developerEmail+"/apps/+"+appName);
+            HttpResponse response = restUtil.getOrgConfig(profile, "developers/"+developerEmail+"/apps/"+appName);
             if(response == null) 
             	return false;
         } catch (HttpResponseException e) {
