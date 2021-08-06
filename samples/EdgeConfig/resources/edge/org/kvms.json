@@ -1,10 +1,10 @@
 [
     {
         "name": "user_account_status",
-        "encrypted": false
+        "encrypted": true
     },
     {
         "name": "validation_rules",
-        "encrypted": false
+        "encrypted": true
     }
 ]

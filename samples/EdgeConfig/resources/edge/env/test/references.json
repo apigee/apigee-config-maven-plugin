@@ -1,7 +1,7 @@
 [
   {
     "name" : "sampleReference",
-    "refers": "freetrial-2019-03-07",
+    "refers": "testKeyStorename",
     "resourceType": "KeyStore"
   }
 ]

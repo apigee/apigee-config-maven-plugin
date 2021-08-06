@@ -7,6 +7,6 @@
 	{
 	    "name": "foobar",
 	    "type": "properties",
-	    "file": "./resourceFiles/properties/foorbar.properties"
+	    "file": "./resourceFiles/properties/foobar.properties"
 	}  
 ]

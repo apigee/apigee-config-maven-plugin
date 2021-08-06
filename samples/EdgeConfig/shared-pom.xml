@@ -29,13 +29,6 @@
                 <version>2.1.1</version>
                 <executions>
                     <execution>
-                        <id>create-config-references</id>
-                        <phase>install</phase>                        
-                        <goals>
-                            <goal>references</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>create-config-targetserver</id>
                         <phase>install</phase>                        
                         <goals>
@@ -61,6 +54,13 @@
                         <phase>install</phase>                        
                         <goals>
                             <goal>aliases</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-config-references</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>references</goal>
                         </goals>
                     </execution>
                     <execution>
