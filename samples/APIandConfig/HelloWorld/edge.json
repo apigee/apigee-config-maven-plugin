@@ -13,7 +13,7 @@
          "references":[
             {
                "name":"sampleReference",
-               "refers":"freetrial-2019-03-07",
+               "refers":"testKeyStorename",
                "resourceType":"KeyStore"
             }
          ],
@@ -40,21 +40,6 @@
                   "commonName":"testcommonName"
                },
                "certValidityInDays":"90"
-            },
-            {
-               "alias":"testAliasKeyCertFileAndKey",
-               "keystorename":"testKeyStorename",
-               "format":"keycertfile",
-               "certFilePath":"/tmp/certs/keystore.pem",
-               "keyFilePath":"/tmp/certs/keystore.key",
-               "password":"dummy"
-            },
-            {
-               "alias":"testAliasPKCS12",
-               "keystorename":"testKeyStorename",
-               "format":"pkcs12",
-               "filePath":"/tmp/certs/myKeystore.p12",
-               "password":"dummy"
             }
          ],
          "flowhooks":[

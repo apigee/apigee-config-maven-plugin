@@ -8,4 +8,7 @@
     </CacheKey>
     <CacheResource>echocache</CacheResource>
     <Scope>Exclusive</Scope>
+    <ExpirySettings>
+        <TimeoutInSeconds>600</TimeoutInSeconds>
+    </ExpirySettings>
 </ResponseCache>
