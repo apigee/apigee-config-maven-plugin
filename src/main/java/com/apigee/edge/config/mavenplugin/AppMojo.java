@@ -111,7 +111,7 @@ public class AppMojo extends GatewayAbstractMojo
 	protected void doUpdate(Map<String, List<String>> devApps) 
             throws MojoFailureException {
 		try {
-			List existingApps = null;
+			//List existingApps = null;
 			if (buildOption != OPTIONS.update && 
                 buildOption != OPTIONS.create &&
 				buildOption != OPTIONS.delete &&
@@ -121,9 +121,9 @@ public class AppMojo extends GatewayAbstractMojo
 
             for (Map.Entry<String, List<String>> entry : devApps.entrySet()) {
 
-            	logger.info("Retrieving Apps of " + entry.getKey());
+            	//logger.info("Retrieving Apps of " + entry.getKey());
                 String developerId = URLEncoder.encode(entry.getKey(), "UTF-8");
-                existingApps = getApp(serverProfile, developerId);
+                //existingApps = getApp(serverProfile, developerId);
 
     	        for (String app : entry.getValue()) {
     	        	String appName = getAppName(app);
@@ -132,7 +132,7 @@ public class AppMojo extends GatewayAbstractMojo
     	        			"App does not have a name.\n" + app + "\n");
     	        	}
 
-            		if (existingApps.contains(appName)) {
+    	        	if (doesDeveloperAppExist(serverProfile, developerId, appName)) {
                         switch (buildOption) {
                             case update:
                                 logger.info("App \"" + appName + 
@@ -342,6 +342,20 @@ public class AppMojo extends GatewayAbstractMojo
 		}else
 			return appPayload; 	
 	}
+    
+    public static boolean doesDeveloperAppExist(ServerProfile profile, String developerEmail, String appName)
+            throws IOException {
+        try {
+        	logger.info("Checking if developerApp - " +appName + " exist");
+            HttpResponse response = RestUtil.getOrgConfig(profile, "developers/"+developerEmail+"/apps/"+appName);
+            if(response == null) 
+            	return false;
+        } catch (HttpResponseException e) {
+            throw new IOException(e.getMessage());
+        }
+
+        return true;
+    }	
 }
 
 
