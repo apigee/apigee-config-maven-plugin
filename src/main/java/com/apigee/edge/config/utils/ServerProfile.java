@@ -55,6 +55,7 @@ public class ServerProfile {
 	private String authType; // Mgmt API Auth Type oauth|basic
 	private Boolean kvmOverride = true; //Override kvm only if true (used for update option)
 	private String serviceAccountJSONFile;
+	private Boolean ignoreProductsForApp = true; //Ignore API Product for App creation/updates so new credentials are not created
 	
 	public Boolean getKvmOverride() {
 		return kvmOverride;
@@ -65,6 +66,17 @@ public class ServerProfile {
 			this.kvmOverride = true;
 		else if (kvmOverride.equals("false"))
 			this.kvmOverride = false;
+	}
+	
+	public Boolean getIgnoreProductsForApp() {
+		return ignoreProductsForApp;
+	}
+
+	public void setIgnoreProductsForApp(String ignoreProductsForApp) {
+		if(ignoreProductsForApp != null && ignoreProductsForApp.equals("true"))
+			this.ignoreProductsForApp = true;
+		else 
+			this.ignoreProductsForApp = false;
 	}
 	
 	public String getServiceAccountJSONFile() {
