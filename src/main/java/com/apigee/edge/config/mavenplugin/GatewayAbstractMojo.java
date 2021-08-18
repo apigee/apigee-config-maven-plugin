@@ -214,6 +214,12 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
  	 */
 	private String serviceAccountFilePath;
 	
+	/**
+	 * Parameter to set for DeveloperApp to ignore API Product so that new credentials are not generated for updates (https://github.com/apigee/apigee-config-maven-plugin/issues/128)
+	 * @parameter property="apigee.app.ignoreAPIProducts" default-value="false"
+ 	 */
+	private String ignoreProductsForApp;
+	
 	// TODO set resources/edge as default value
 
 	public String getKvmOverride() {
@@ -266,6 +272,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 		this.buildProfile.setClientSecret(this.clientsecret);
 		this.buildProfile.setKvmOverride(this.kvmOverride);
 		this.buildProfile.setServiceAccountJSONFile(this.serviceAccountFilePath);
+		this.buildProfile.setIgnoreProductsForApp(this.ignoreProductsForApp);
 		return buildProfile;
 	}
 
@@ -324,6 +331,14 @@ public abstract class GatewayAbstractMojo extends AbstractMojo {
 
 	public void setSkip(boolean skip) {
 		this.skip = skip;
+	}
+	
+	public String getIgnoreProductsForApp() {
+		return ignoreProductsForApp;
+	}
+
+	public void setIgnoreProductsForApp(String ignoreProductsForApp) {
+		this.ignoreProductsForApp = ignoreProductsForApp;
 	}
 
 	private File findConsolidatedConfigFile()
