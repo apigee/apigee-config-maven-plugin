@@ -1,0 +1,12 @@
+{
+    "hugh@example.com": [
+        {
+	        "apiProducts": [
+	            "weatherProduct1"
+	        ],
+	        "name": "hughapp",
+	        "consumerKey": "abcd1",
+	        "consumerSecret": "xyz123"
+        }
+    ]
+}

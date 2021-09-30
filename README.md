@@ -80,6 +80,7 @@ mvn install -Ptest -Dapigee.config.options=create
   references
   keystores
   aliases
+  importKeys		#v2.1.3 or later
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
@@ -159,7 +160,7 @@ The apigee.config.dir option must be used to identify the top most directory con
           ├── developers.json
           ├── kvms.json
           ├── reports.json
-          └── maskconfigs.json
+          └── importKeys.json
 
 
 ## Single file config structure - edge.json
