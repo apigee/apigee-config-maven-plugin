@@ -301,19 +301,6 @@ public class ImportKeysMojo extends GatewayAbstractMojo
         return apps;
     }
 	 
-	 public static boolean doesAPIProductExist(ServerProfile profile, String apiProduct)
-            throws IOException {
-        try {
-        	logger.info("Checking if APIProduct - " +apiProduct + " exist");
-            HttpResponse response = RestUtil.getOrgConfig(profile, "apiproducts/"+URLEncoder.encode(apiProduct, "UTF-8"));
-            if(response == null) 
-            	return false;
-        } catch (HttpResponseException e) {
-            throw new IOException(e.getMessage());
-        }
-
-        return true;
-    }
 }
 
 
