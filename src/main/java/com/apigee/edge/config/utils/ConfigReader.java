@@ -15,25 +15,23 @@
  */
 package com.apigee.edge.config.utils;
 
-import java.io.File;
 import java.io.BufferedReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.Map.Entry;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
-import org.json.simple.JSONValue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 
 /**
  * Read config from resources/edge/.../*.json files
@@ -54,7 +52,7 @@ public class ConfigReader {
                                      File configFile)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList out = null;    
@@ -95,7 +93,7 @@ public class ConfigReader {
     public static List getOrgConfig(File configFile)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList out = null;    
@@ -133,7 +131,7 @@ public class ConfigReader {
     public static Map<String, List<String>> getOrgConfigWithId(File configFile)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         Map <String, List<String>> out = null;
@@ -177,7 +175,7 @@ public class ConfigReader {
     public static Set<String> getAPIList(String apiConfigDir)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
         Set<String> out = null;
         File[] files = new File(apiConfigDir).listFiles();
         if(files!=null && files.length>0){
@@ -198,7 +196,7 @@ public class ConfigReader {
     public static List getAPIConfig(File configFile)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList out = null;    

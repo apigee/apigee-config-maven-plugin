@@ -15,23 +15,24 @@
  */
 package com.apigee.edge.config.utils;
 
-import com.apigee.edge.config.rest.RestUtil;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
+import com.apigee.edge.config.rest.RestUtil;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 
 public class ServerProfile {
 
-	private static Logger logger = LoggerFactory.getLogger(ServerProfile.class);
+	private static final Logger logger = LogManager.getLogger(ServerProfile.class);
 
 	private String application; // application name
 	private String org;
