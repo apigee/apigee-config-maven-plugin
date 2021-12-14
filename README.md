@@ -14,7 +14,7 @@ Small API projects can use the single file format in edge.json to manage their c
 
 This plugin is available in public maven repo and can be used just by referring to it in pom.xml. This github repo is the plugin source code and unless you make changes to the code you do not have to build this repo to use the plugin. Read this document further for plugin usage instructions.
 
-> **NOTE** Log4J librarires are upgraded to v2.16.0
+**NOTE:** Log4J libraries are upgraded to v2.16.0
 
 ## Prerequisites
 You will need the following to run the samples:
