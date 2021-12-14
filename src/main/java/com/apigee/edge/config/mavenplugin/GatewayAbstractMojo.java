@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.utils.ConsolidatedConfigReader;
 import com.apigee.edge.config.utils.ServerProfile;
 
 public abstract class GatewayAbstractMojo extends AbstractMojo {
-	static Logger logger = LoggerFactory.getLogger(GatewayAbstractMojo.class);
+	static Logger logger = LogManager.getLogger(GatewayAbstractMojo.class);
 
 	/**
 	 * Directory containing the build files.

@@ -15,6 +15,19 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 import com.google.api.client.http.HttpResponse;
@@ -22,18 +35,6 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.util.Key;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**                                                                                                                                     ¡¡
  * Goal to create references in Apigee EDGE.
@@ -46,7 +47,7 @@ import java.util.List;
 
 public class ReferencesMojo extends GatewayAbstractMojo
 {
-    static Logger logger = LoggerFactory.getLogger(ReferencesMojo.class);
+    static Logger logger = LogManager.getLogger(ReferencesMojo.class);
     public static final String ____ATTENTION_MARKER____ =
             "************************************************************************";
 
@@ -180,7 +181,7 @@ public class ReferencesMojo extends GatewayAbstractMojo
             return;
         }
 
-        Logger logger = LoggerFactory.getLogger(ReferencesMojo.class);
+        Logger logger = LogManager.getLogger(ReferencesMojo.class);
 
         try {
 
