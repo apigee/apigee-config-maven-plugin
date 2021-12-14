@@ -1,27 +1,27 @@
 package com.apigee.edge.config.mavenplugin.kvm;
 
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
+import static net.javacrumbs.jsonunit.core.internal.Diff.create;
+
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.plugin.MojoFailureException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 
 import net.javacrumbs.jsonunit.core.Configuration;
 import net.javacrumbs.jsonunit.core.internal.Diff;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
-import static net.javacrumbs.jsonunit.core.internal.Diff.create;
-
-import java.io.IOException;
-
 public abstract class KvmOperations {
 
-    private static Logger logger = LoggerFactory.getLogger(KvmOperations.class);
+    private static Logger logger = LogManager.getLogger(KvmOperations.class);
 
     public abstract HttpResponse getKvm(KvmValueObject kvmValueObject) throws IOException; 
     

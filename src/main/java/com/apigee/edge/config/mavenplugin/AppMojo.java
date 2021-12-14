@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
@@ -52,7 +52,7 @@ import com.google.gson.JsonParser;
 
 public class AppMojo extends GatewayAbstractMojo
 {
-	static Logger logger = LoggerFactory.getLogger(AppMojo.class);
+	static Logger logger = LogManager.getLogger(AppMojo.class);
 	public static final String ____ATTENTION_MARKER____ =
 	"************************************************************************";
 
@@ -192,7 +192,7 @@ public class AppMojo extends GatewayAbstractMojo
 			return;
 		}
 
-		Logger logger = LoggerFactory.getLogger(AppMojo.class);
+		Logger logger = LogManager.getLogger(AppMojo.class);
 
 		try {
 			

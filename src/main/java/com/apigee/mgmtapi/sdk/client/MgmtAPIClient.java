@@ -9,7 +9,8 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import com.google.gson.Gson;
 
 public class MgmtAPIClient {
 	
-	private static final Logger logger = Logger.getLogger(MgmtAPIClient.class);
+	private static final Logger logger = LogManager.getLogger(MgmtAPIClient.class);
 
 	private RestTemplate restTemplate;
 	

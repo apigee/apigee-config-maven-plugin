@@ -25,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Read config from edge.json or config file
@@ -53,7 +53,7 @@ public class ConsolidatedConfigReader {
                                      String resource)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList out = null;    
@@ -102,7 +102,7 @@ public class ConsolidatedConfigReader {
                                  String resource)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList out = null;    
@@ -148,7 +148,7 @@ public class ConsolidatedConfigReader {
                                                              String resource)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         Map <String, List<String>> out = null;
@@ -200,7 +200,7 @@ public class ConsolidatedConfigReader {
     public static Set<String> getAPIList(File configFile)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList<String> out = null;    
@@ -240,7 +240,7 @@ public class ConsolidatedConfigReader {
                                      String resource)
             throws ParseException, IOException {
 
-        Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+        Logger logger = LogManager.getLogger(ConfigReader.class);
 
         JSONParser parser = new JSONParser();
         ArrayList out = null;    

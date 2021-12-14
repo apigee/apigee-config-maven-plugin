@@ -15,30 +15,32 @@
  */
 package com.apigee.edge.config.mavenplugin;
 
-import com.apigee.edge.config.mavenplugin.kvm.*;
-import com.apigee.edge.config.rest.RestUtil;
-import com.apigee.edge.config.utils.ServerProfile;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-import com.google.api.client.http.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.apigee.edge.config.mavenplugin.kvm.Kvm;
+import com.apigee.edge.config.mavenplugin.kvm.KvmApi;
+import com.apigee.edge.config.mavenplugin.kvm.KvmEnv;
+import com.apigee.edge.config.mavenplugin.kvm.KvmOrg;
+import com.apigee.edge.config.mavenplugin.kvm.KvmValueObject;
+import com.apigee.edge.config.rest.RestUtil;
+import com.apigee.edge.config.utils.ServerProfile;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.util.Key;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
  * Goal to create KVM in Apigee EDGE.
@@ -51,7 +53,7 @@ import org.json.simple.parser.ParseException;
 
 public class KVMMojo extends GatewayAbstractMojo
 {
-	static Logger logger = LoggerFactory.getLogger(KVMMojo.class);
+	static Logger logger = LogManager.getLogger(KVMMojo.class);
 	public static final String ____ATTENTION_MARKER____ =
 	"************************************************************************";
 
@@ -321,7 +323,7 @@ public class KVMMojo extends GatewayAbstractMojo
 			return;
 		}
 
-		Logger logger = LoggerFactory.getLogger(KVMMojo.class);
+		Logger logger = LogManager.getLogger(KVMMojo.class);
 
 		try {
 			
