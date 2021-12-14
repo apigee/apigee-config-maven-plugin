@@ -25,8 +25,8 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.apigee.edge.config.utils.PrintUtil;
 import com.apigee.edge.config.utils.ServerProfile;
@@ -55,7 +55,7 @@ import com.google.api.client.json.gson.GsonFactory;
 public class RestUtil {
 
 	static String versionRevision;
-	static Logger logger = LoggerFactory.getLogger(RestUtil.class);
+	static Logger logger = LogManager.getLogger(RestUtil.class);
 	static String accessToken = null;
 	
 	/**

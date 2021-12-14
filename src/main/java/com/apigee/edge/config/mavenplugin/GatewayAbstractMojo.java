@@ -31,6 +31,8 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultProxyAuthenticationHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -46,8 +48,6 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.apigee.edge.config.utils.ConfigReader;
 import com.apigee.edge.config.utils.ConsolidatedConfigReader;
@@ -55,7 +55,7 @@ import com.apigee.edge.config.utils.ServerProfile;
 
 public abstract class GatewayAbstractMojo extends AbstractMojo implements Contextualizable {
 	
-	static Logger logger = LoggerFactory.getLogger(GatewayAbstractMojo.class);
+	static Logger logger = LogManager.getLogger(GatewayAbstractMojo.class);
 	protected static final Pattern URL_PARSE_REGEX = Pattern.compile("^(http[s]?)://([^:/?#]*).*$");
 
 	/**
