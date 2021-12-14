@@ -174,7 +174,7 @@ public class ExportKeysMojo extends GatewayAbstractMojo
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
 		if (super.isSkip()) {
-			getLog().info("Skipping");
+			logger.info("Skipping");
 			return;
 		}
 
