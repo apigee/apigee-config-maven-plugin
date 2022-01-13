@@ -92,6 +92,11 @@ mvn install -Ptest -Dapigee.config.options=create
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
+## To configure a proxy 
+Supported from v2.3.0
+
+Please refer to this [doc](http://maven.apache.org/guides/mini/guide-proxies.html) that explains how to setup proxy settings in your settings.xml usually in your $HOME/.m2 directory. Only `https` protocol is supported
+
 ## Sample project
 Refer to an example project at [/samples/EdgeConfig](./samples/EdgeConfig)
 

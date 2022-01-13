@@ -218,8 +218,8 @@ public class ReferencesMojo extends GatewayAbstractMojo
      **/
     public static String createReference(ServerProfile profile, String reference)
             throws IOException {
-
-        HttpResponse response = RestUtil.createEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile,
                 "references",
                 reference);
         try {
@@ -241,8 +241,8 @@ public class ReferencesMojo extends GatewayAbstractMojo
                                      String refName,
                                      String reference)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateEnvConfig(profile,
                 "references",
                 refName,
                 reference);
@@ -264,8 +264,8 @@ public class ReferencesMojo extends GatewayAbstractMojo
     public static String deleteReference(ServerProfile profile,
                                      String refName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile,
                 "references",
                 refName);
         try {
@@ -285,8 +285,8 @@ public class ReferencesMojo extends GatewayAbstractMojo
 
     public static List getReferences(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getEnvConfig(profile, "references");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "references");
         if(response == null) return new ArrayList();
         JSONArray references = null;
         try {

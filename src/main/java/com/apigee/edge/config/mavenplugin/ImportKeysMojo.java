@@ -229,7 +229,8 @@ public class ImportKeysMojo extends GatewayAbstractMojo
 	 public static String createConsumerKeyAndSecret(ServerProfile profile, String developerId, String appName, String app)
             		 throws IOException {
 		 String creds = getAppCreds(app);
-		 HttpResponse response = RestUtil.createOrgConfig(profile, 
+		 RestUtil restUtil = new RestUtil(profile);
+		 HttpResponse response = restUtil.createOrgConfig(profile, 
                  "developers/" + developerId + "/apps/"+appName+"/keys/create",
                  creds);
 		try {
@@ -252,7 +253,8 @@ public class ImportKeysMojo extends GatewayAbstractMojo
 	    		 throws IOException {
 		 String apiProducts = getApiProducts(app);
 		 String appKey = getAppKey(app);
-		 HttpResponse response = RestUtil.createOrgConfig(profile, 
+		 RestUtil restUtil = new RestUtil(profile);
+		 HttpResponse response = restUtil.createOrgConfig(profile, 
                  "developers/" + developerId + "/apps/"+appName+"/keys/"+appKey,
                  apiProducts);
 		try {
@@ -272,8 +274,8 @@ public class ImportKeysMojo extends GatewayAbstractMojo
 
 	 public static List getApp(ServerProfile profile, String developerId)
 	            throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
+		RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
         if(response == null) return new ArrayList();
 

@@ -18,6 +18,7 @@ package com.apigee.edge.config.utils;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.apache.http.client.HttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
@@ -57,6 +58,17 @@ public class ServerProfile {
 	private Boolean kvmOverride = true; //Override kvm only if true (used for update option)
 	private String serviceAccountJSONFile;
 	private Boolean ignoreProductsForApp = true; //Ignore API Product for App creation/updates so new credentials are not created
+	
+	
+	//For Proxy
+	private boolean hasProxy;
+	private String proxyProtocol;
+	private String proxyServer;
+	private int proxyPort;
+	private String proxyUsername;
+	private String proxyPassword;
+	
+	private HttpClient apacheHttpClient;
 	
 	public Boolean getKvmOverride() {
 		return kvmOverride;
@@ -241,6 +253,98 @@ public class ServerProfile {
 	public void setOptions(String options) {
 		this.options = options;
 	}
+	
+	/**
+	 * @return the proxyProtocol
+	 */
+	public String getProxyProtocol() {
+		return proxyProtocol;
+	}
+
+	/**
+	 * @param proxyProtocol the proxyProtocol to set
+	 */
+	public void setProxyProtocol(String proxyProtocol) {
+		this.proxyProtocol = proxyProtocol;
+	}
+
+	/**
+	 * @return the proxyServer
+	 */
+	public String getProxyServer() {
+		return proxyServer;
+	}
+
+	/**
+	 * @param proxyServer the proxyServer to set
+	 */
+	public void setProxyServer(String proxyServer) {
+		this.proxyServer = proxyServer;
+	}
+
+	/**
+	 * @return the proxyPort
+	 */
+	public int getProxyPort() {
+		return proxyPort;
+	}
+
+	/**
+	 * @param proxyPort the proxyPort to set
+	 */
+	public void setProxyPort(int proxyPort) {
+		this.proxyPort = proxyPort;
+	}
+
+	/**
+	 * @return the hasProxy
+	 */
+	public boolean getHasProxy() {
+		return hasProxy;
+	}
+
+	/**
+	 * @param hasProxy the hasProxy to set
+	 */
+	public void setHasProxy(boolean hasProxy) {
+		this.hasProxy = hasProxy;
+	}
+
+	/**
+	 * @return the proxyUsername
+	 */
+	public String getProxyUsername() {
+		return proxyUsername;
+	}
+
+	/**
+	 * @param proxyUsername the proxyUsername to set
+	 */
+	public void setProxyUsername(String proxyUsername) {
+		this.proxyUsername = proxyUsername;
+	}
+	
+	/**
+	 * @return the proxyPassword
+	 */
+	public String getProxyPassword() {
+		return proxyPassword;
+	}
+
+	/**
+	 * @param proxyPassword the proxyPassword to set
+	 */
+	public void setProxyPassword(String proxyPassword) {
+		this.proxyPassword = proxyPassword;
+	}
+	
+	public HttpClient getApacheHttpClient() {
+		return apacheHttpClient;
+	}
+
+	public void setApacheHttpClient(HttpClient apacheHttpClient) {
+		this.apacheHttpClient = apacheHttpClient;
+	}
 
 	/**
 	 * @return cpsEnabled is CPS org
@@ -267,8 +371,8 @@ public class ServerProfile {
 
 	private HashMap<String,String> queryOrgFeatures(ServerProfile profile)
 			throws IOException {
-
-		HttpResponse response = RestUtil.getOrgConfig(profile, "");
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.getOrgConfig(profile, "");
 		try {
             assert response != null;
             logger.debug("response Get Organization: " + response.getContentType());
