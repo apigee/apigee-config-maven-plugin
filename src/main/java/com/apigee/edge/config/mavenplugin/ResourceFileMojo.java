@@ -224,8 +224,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
 	public static String createEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName,
 			String resourceFilePath) throws IOException {
-
-		HttpResponse response = RestUtil.createEnvConfigUpload(profile,
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.createEnvConfigUpload(profile,
 				"resourcefiles" + "?type=" + resourcefileType + "&name=" + resourcefileName, resourceFilePath);
 		try {
 
@@ -243,8 +243,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
 	public static String updateEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName,
 			String resourcefilePath) throws IOException {
-
-		HttpResponse response = RestUtil.updateEnvConfigUpload(profile, "resourcefiles",
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.updateEnvConfigUpload(profile, "resourcefiles",
 				resourcefileType + "/" + resourcefileName, resourcefilePath);
 		try {
 
@@ -262,8 +262,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 
 	public static String deleteEnvResourceFile(ServerProfile profile, String resourcefileType, String resourcefileName)
 			throws IOException {
-
-		HttpResponse response = RestUtil.deleteEnvResourceFileConfig(profile, "resourcefiles",
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.deleteEnvResourceFileConfig(profile, "resourcefiles",
 				resourcefileType + "/" + resourcefileName);
 		try {
 
@@ -280,8 +280,8 @@ public class ResourceFileMojo extends GatewayAbstractMojo
 	}
 	
 	public static List getExistingResourceFile(ServerProfile profile) throws IOException {
-
-		HttpResponse response = RestUtil.getEnvConfig(profile, "resourcefiles");
+		RestUtil restUtil = new RestUtil(profile);
+		HttpResponse response = restUtil.getEnvConfig(profile, "resourcefiles");
 		if (response == null)
 			return new ArrayList();
 		JSONArray resourcefilesArr = null;

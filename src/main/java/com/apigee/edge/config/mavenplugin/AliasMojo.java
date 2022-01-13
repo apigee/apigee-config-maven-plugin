@@ -252,12 +252,13 @@ public class AliasMojo extends GatewayAbstractMojo
     	validateAlias(alias);
     	    	
     	// Call rest helper
+    	RestUtil restUtil = new RestUtil(profile);
     	HttpResponse response = null;
     	//For selfsignedcert, pass the JSON payload
     	if(alias.format!=null && alias.format.equalsIgnoreCase("selfsignedcert")) {
     		Map<String, String> params = new HashMap<String, String>();
     		params.put("format", "selfsignedcert");
-    		response = RestUtil.createEnvConfigWithParameters(profile, 
+    		response = restUtil.createEnvConfigWithParameters(profile, 
     				"keystores", URLEncoder.encode(alias.keystorename, "UTF-8"), "aliases", params, removeFormatFromAlias(aliasPayload));
     	}
     	else {
@@ -282,7 +283,7 @@ public class AliasMojo extends GatewayAbstractMojo
         	if(alias.filePath!=null && !alias.filePath.equalsIgnoreCase(""))
     			multipartFiles.put("file", alias.filePath);
 
-    		response = RestUtil.createEnvConfigUpload(profile, 
+    		response = restUtil.createEnvConfigUpload(profile, 
             		"keystores", alias.keystorename, "aliases", multipartFiles, parameters);
     	}
         try {
@@ -304,7 +305,8 @@ public class AliasMojo extends GatewayAbstractMojo
                                         String aliasPayload)
             throws IOException, MojoFailureException {
     	Alias alias = getAliasObj(aliasPayload);
-        HttpResponse response = RestUtil.deleteEnvConfig(profile, "keystores/"+URLEncoder.encode(alias.keystorename, "UTF-8")+"/aliases", alias.alias);
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile, "keystores/"+URLEncoder.encode(alias.keystorename, "UTF-8")+"/aliases", alias.alias);
         try {
             
             logger.info("Response " + response.getContentType() + "\n" +
@@ -322,7 +324,8 @@ public class AliasMojo extends GatewayAbstractMojo
 
     public static List getAlias(ServerProfile profile, String keystore)
             throws IOException {
-        HttpResponse response = RestUtil.getEnvConfig(profile, "keystores/"+URLEncoder.encode(keystore, "UTF-8")+"/aliases");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "keystores/"+URLEncoder.encode(keystore, "UTF-8")+"/aliases");
         if(response == null) return new ArrayList();
         JSONArray aliases = null;
         try {

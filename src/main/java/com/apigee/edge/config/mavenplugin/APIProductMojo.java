@@ -220,8 +220,8 @@ public class APIProductMojo extends GatewayAbstractMojo
      **/
     public static String createAPIProduct(ServerProfile profile, String product)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile, 
                                                          "apiproducts",
                                                          product);
         try {
@@ -243,8 +243,8 @@ public class APIProductMojo extends GatewayAbstractMojo
                                         String productName, 
                                         String product)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfig(profile, 
                                                         "apiproducts", 
                                                         productName,
                                                         product);
@@ -266,8 +266,8 @@ public class APIProductMojo extends GatewayAbstractMojo
     public static String deleteAPIProduct(ServerProfile profile,
                                             String productName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile, 
                                                         "apiproducts", 
                                                         productName);
         try {
@@ -287,8 +287,8 @@ public class APIProductMojo extends GatewayAbstractMojo
 
     public static List getAPIProduct(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, 
                                                     "apiproducts");
         if(response == null) return new ArrayList();
         JSONArray products = new JSONArray();
@@ -318,8 +318,9 @@ public class APIProductMojo extends GatewayAbstractMojo
     public static boolean doesAPIProductExist(ServerProfile profile, String apiProduct)
             throws IOException {
         try {
+        	RestUtil restUtil = new RestUtil(profile);
         	logger.info("Checking if APIProduct - " +apiProduct + " exist");
-            HttpResponse response = RestUtil.getOrgConfig(profile, "apiproducts/"+URLEncoder.encode(apiProduct, "UTF-8"));
+            HttpResponse response = restUtil.getOrgConfig(profile, "apiproducts/"+URLEncoder.encode(apiProduct, "UTF-8"));
             if(response == null) 
             	return false;
         } catch (HttpResponseException e) {

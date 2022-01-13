@@ -43,9 +43,9 @@ public class InitMfaMojo extends GatewayAbstractMojo
 	 * Entry point for the mojo.
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
-
+		RestUtil restUtil = new RestUtil(this.getProfile());
 		try {
-			RestUtil.initMfa(this.getProfile());
+			restUtil.initMfa(this.getProfile());
 		} catch (RuntimeException e) {
 			throw new MojoExecutionException("", e);
 		} catch (Exception e) {

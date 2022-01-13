@@ -13,7 +13,7 @@ Small API projects can use the single file format in edge.json to manage their c
 
 This plugin is available in public maven repo and can be used just by referring to it in pom.xml. This github repo is the plugin source code and unless you make changes to the code you do not have to build this repo to use the plugin. Read this document further for plugin usage instructions.
 
-**NOTE:** Log4J libraries are upgraded to v2.17.0 in v2.2.1
+**NOTE:** Log4J libraries are upgraded to v2.17.1 in v2.2.2
 
 ## Prerequisites
 You will need the following to run the samples:
@@ -91,6 +91,11 @@ mvn install -Ptest -Dapigee.config.options=create
   mvn apigee-config:exportAppKeys -Ptest -Dapigee.config.exportDir=./target  
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
+
+## To configure a proxy 
+Supported from v2.3.0
+
+Please refer to this [doc](http://maven.apache.org/guides/mini/guide-proxies.html) that explains how to setup proxy settings in your settings.xml usually in your $HOME/.m2 directory. Only `https` protocol is supported
 
 ## Sample project
 Refer to an example project at [/samples/EdgeConfig](./samples/EdgeConfig)

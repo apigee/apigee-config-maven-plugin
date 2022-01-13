@@ -231,8 +231,8 @@ public class AppMojo extends GatewayAbstractMojo
                                     String developerId,
                                     String app)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile, 
                                         "developers/" + developerId + "/apps",
                                          app);
         try {
@@ -255,8 +255,8 @@ public class AppMojo extends GatewayAbstractMojo
                                     String appName, 
                                     String app)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfig(profile, 
                                         "developers/" + developerId + "/apps", 
                                         appName,
                                         removeApiProductFromApp(profile, app));
@@ -279,8 +279,8 @@ public class AppMojo extends GatewayAbstractMojo
                                     String developerId, 
                                     String appName)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile, 
                                         "developers/" + developerId + "/apps", 
                                         appName);
         try {
@@ -300,8 +300,8 @@ public class AppMojo extends GatewayAbstractMojo
 
     public static List getApp(ServerProfile profile, String developerId)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, 
                                         "developers/" + developerId + "/apps");
         if(response == null) return new ArrayList();
 
@@ -346,8 +346,9 @@ public class AppMojo extends GatewayAbstractMojo
     public static boolean doesDeveloperAppExist(ServerProfile profile, String developerEmail, String appName)
             throws IOException {
         try {
+        	RestUtil restUtil = new RestUtil(profile);
         	logger.info("Checking if developerApp - " +appName + " exist");
-            HttpResponse response = RestUtil.getOrgConfig(profile, "developers/"+developerEmail+"/apps/"+appName);
+            HttpResponse response = restUtil.getOrgConfig(profile, "developers/"+developerEmail+"/apps/"+appName);
             if(response == null) 
             	return false;
         } catch (HttpResponseException e) {

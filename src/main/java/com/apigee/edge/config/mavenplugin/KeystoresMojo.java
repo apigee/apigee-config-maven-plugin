@@ -216,7 +216,8 @@ public class KeystoresMojo extends GatewayAbstractMojo
      **/
     public static String createKeystore(ServerProfile profile, String keystore)
             throws IOException {
-        HttpResponse response = RestUtil.createEnvConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createEnvConfig(profile, 
         		"keystores",
                 keystore);
         try {
@@ -237,7 +238,8 @@ public class KeystoresMojo extends GatewayAbstractMojo
     public static String deleteKeystore(ServerProfile profile,
                                      String keystoreName)
             throws IOException {
-        HttpResponse response = RestUtil.deleteEnvConfig(profile,
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteEnvConfig(profile,
                 "keystores",
                 keystoreName);
         try {
@@ -257,7 +259,8 @@ public class KeystoresMojo extends GatewayAbstractMojo
 
     public static List getKeystores(ServerProfile profile)
             throws IOException {
-        HttpResponse response = RestUtil.getEnvConfig(profile, "keystores");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getEnvConfig(profile, "keystores");
         if(response == null) return new ArrayList();
         JSONArray keystores = null;
         try {

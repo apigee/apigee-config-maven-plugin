@@ -221,8 +221,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
      **/
     public static String createDeveloper(ServerProfile profile, String developer)
             throws IOException {
-
-        HttpResponse response = RestUtil.createOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.createOrgConfig(profile, 
                                                          "developers",
                                                          developer);
         try {
@@ -244,8 +244,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
                                         String developerId, 
                                         String developer)
             throws IOException {
-
-        HttpResponse response = RestUtil.updateOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.updateOrgConfig(profile, 
                                                         "developers", 
                                                         developerId,
                                                         developer);
@@ -267,8 +267,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
     public static String deleteDeveloper(ServerProfile profile, 
                                         String developerId)
             throws IOException {
-
-        HttpResponse response = RestUtil.deleteOrgConfig(profile, 
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.deleteOrgConfig(profile, 
                                                         "developers", 
                                                         developerId);
         try {
@@ -288,8 +288,8 @@ public class DeveloperMojo extends GatewayAbstractMojo
 
     public static List getDeveloper(ServerProfile profile)
             throws IOException {
-
-        HttpResponse response = RestUtil.getOrgConfig(profile, "developers");
+    	RestUtil restUtil = new RestUtil(profile);
+        HttpResponse response = restUtil.getOrgConfig(profile, "developers");
         if(response == null) return new ArrayList();
         JSONArray developers = new JSONArray();
         try {
@@ -318,8 +318,9 @@ public class DeveloperMojo extends GatewayAbstractMojo
     public static boolean doesDeveloperExist(ServerProfile profile, String developerEmail)
             throws IOException {
         try {
+        	RestUtil restUtil = new RestUtil(profile);
         	logger.info("Checking if developer - " +developerEmail + " exist");
-            HttpResponse response = RestUtil.getOrgConfig(profile, "developers/"+URLEncoder.encode(developerEmail, "UTF-8"));
+            HttpResponse response = restUtil.getOrgConfig(profile, "developers/"+URLEncoder.encode(developerEmail, "UTF-8"));
             if(response == null) 
             	return false;
         } catch (HttpResponseException e) {
