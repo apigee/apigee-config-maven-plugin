@@ -187,6 +187,22 @@ The apigee.config.dir option must be used to identify the top most directory con
           ├── reports.json
           └── maskconfigs.json
           └── userroles.json
+          
+### From v1.5.3, the plugin supports multi-file config with prefixes
+
+You can split files into multiple files with a prefix. For example see below
+
+
+      └── env
+         ├── prod
+         │   ├── caches.json
+         │   └── flowhooks.json
+         └── test
+             ├── caches.json
+             ├── caches-default.json
+             ├── kvms.json
+             ├── kvms-security.json
+             └── kvms-target.json
 
 ## Single file config structure - edge.json
 Projects with fewer config entities can use the single file edge.json format to capture all config of an API project. The edge.json file organizes config into 3 scopes corresponding to the scopes of config entities that can be created in Edge. The plugin looks for edge.json in the current directory by default.
