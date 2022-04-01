@@ -19,6 +19,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -460,7 +462,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 		return null;
 	}
 
-	private File findConfigFile(String scope, String config)
+	/*private File findConfigFile(String scope, String config)
 			throws MojoExecutionException {
 		File configFile = new File(configDir + File.separator +
 									scope + File.separator +
@@ -469,27 +471,52 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 			return configFile;
 		}
 		return null;
+	}*/
+	
+	/**
+	 * finds all the files for a given operation. For example kvms.json, kvms*.json
+	 * @param scope
+	 * @param config
+	 * @return
+	 * @throws MojoExecutionException
+	 */
+	private List<File> findConfigFiles(String scope, String config)
+			throws MojoExecutionException {
+		List<File> configFiles = new ArrayList<File>();
+		File[] listOfFiles = new File(configDir + File.separator + scope).listFiles();
+		if(listOfFiles!=null && listOfFiles.length>0) {
+			for (File file : listOfFiles) {
+			    if (file.isFile() && file.getName().startsWith(config)) {
+			    	configFiles.add(file);
+			    }
+			}
+		}
+		return configFiles;
 	}
 
 	protected List getAPIConfig(Logger logger, String config, String api)
 			throws MojoExecutionException {
 		File configFile;
+		List<File> configFiles;
 		String scope = "api" + File.separator + api;
-
+		ArrayList apiConfig = new ArrayList();
+		
 		/* configDir takes precedence over edge.json */
 		if (configDir != null && configDir.length() > 0) {
-			configFile = findConfigFile(scope, config);
-			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
-				return null;
+			configFiles = findConfigFiles(scope, config);
+			for (File cfgFile : configFiles) {
+				if (cfgFile == null) {
+					logger.info("Config file " + scope + File.separator + cfgFile.getName() + " not found.");
+					return null;
+				}
+				logger.info("Retrieving config from " + scope + File.separator + cfgFile.getName());
+				try {
+					apiConfig.addAll(ConfigReader.getAPIConfig(cfgFile));
+				} catch (Exception e) {
+					throw new MojoExecutionException(e.getMessage());
+				}
 			}
-
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
-			try {
-				return ConfigReader.getAPIConfig(configFile);
-			} catch (Exception e) {
-				throw new MojoExecutionException(e.getMessage());
-			}
+			return apiConfig;
 		}
 
 		/* consolidated edge.json in CWD as fallback */
@@ -548,23 +575,26 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 	protected List getEnvConfig(Logger logger, String config)
 			throws MojoExecutionException {
 		File configFile;
+		List<File> configFiles;
 		String scope = "env" + File.separator + this.buildProfile.getEnvironment();
+		ArrayList envConfig = new ArrayList();
 
 		/* configDir takes precedence over edge.json */
-		if (configDir != null && configDir.length() > 0) {
-			configFile = findConfigFile(scope, config);
-			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
-				return null;
+		if (configDir != null && configDir.length() > 0) {			
+			configFiles = findConfigFiles(scope, config);
+			for (File cfgFile : configFiles) {
+				if (cfgFile == null) {
+					logger.info("Config file " + scope + File.separator + cfgFile.getName() + " not found.");
+					return null;
+				}
+				logger.info("Retrieving config from " + scope + File.separator + cfgFile.getName());
+				try {
+					envConfig.addAll(ConfigReader.getEnvConfig(this.buildProfile.getEnvironment(), cfgFile));
+				} catch (Exception e) {
+					throw new MojoExecutionException(e.getMessage());
+				}
 			}
-
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
-			try {
-				return ConfigReader.getEnvConfig(this.buildProfile.getEnvironment(),
-													configFile);
-			} catch (Exception e) {
-				throw new MojoExecutionException(e.getMessage());
-			}
+			return envConfig;
 		}
 
 		/* consolidated edge.json in CWD as fallback */
@@ -591,22 +621,26 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 	protected List getOrgConfig(Logger logger, String config)
 			throws MojoExecutionException {
 		File configFile;
+		List<File> configFiles;
 		String scope = "org";
+		ArrayList orgConfig = new ArrayList();
 
 		/* configDir takes precedence over edge.json */
 		if (configDir != null && configDir.length() > 0) {
-			configFile = findConfigFile(scope, config);
-			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
-				return null;
+			configFiles = findConfigFiles(scope, config);
+			for (File cfgFile : configFiles) {
+				if (cfgFile == null) {
+					logger.info("Config file " + scope + File.separator + cfgFile.getName() + " not found.");
+					return null;
+				}
+				logger.info("Retrieving config from " + scope + File.separator + cfgFile.getName());
+				try {
+					orgConfig.addAll(ConfigReader.getOrgConfig(cfgFile));
+				} catch (Exception e) {
+					throw new MojoExecutionException(e.getMessage());
+				}
 			}
-
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
-			try {
-				return ConfigReader.getOrgConfig(configFile);
-			} catch (Exception e) {
-				throw new MojoExecutionException(e.getMessage());
-			}
+			return orgConfig;
 		}
 
 		/* consolidated edge.json in CWD as fallback */
@@ -630,22 +664,26 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 	protected Map getOrgConfigWithId(Logger logger, String config)
 			throws MojoExecutionException {
 		File configFile;
+		List<File> configFiles;
 		String scope = "org";
+		Map<String, List<String>> orgConfig = new HashMap<String, List<String>> ();
 
 		/* configDir takes precedence over edge.json */
-		if (configDir != null && configDir.length() > 0) {
-			configFile = findConfigFile(scope, config);
-			if (configFile == null) {
-				logger.info("Config file " + scope + File.separator + config + ".json not found.");
-				return null;
+		if (configDir != null && configDir.length() > 0) {			
+			configFiles = findConfigFiles(scope, config);
+			for (File cfgFile : configFiles) {
+				if (cfgFile == null) {
+					logger.info("Config file " + scope + File.separator + cfgFile.getName() + " not found.");
+					return null;
+				}
+				logger.info("Retrieving config from " + scope + File.separator + cfgFile.getName());
+				try {
+					orgConfig.putAll(ConfigReader.getOrgConfigWithId(cfgFile));
+				} catch (Exception e) {
+					throw new MojoExecutionException(e.getMessage());
+				}
 			}
-
-			logger.info("Retrieving config from " + scope + File.separator + config + ".json");
-			try {
-				return ConfigReader.getOrgConfigWithId(configFile);
-			} catch (Exception e) {
-				throw new MojoExecutionException(e.getMessage());
-			}
+			return orgConfig;
 		}
 
 		/* consolidated edge.json in CWD as fallback */
