@@ -70,7 +70,7 @@ mvn install -Ptest -Dapigee.config.options=create
   You can also work with an individual config type using the 
   corresponding goal directly. The goals available are,
  
-  keyvaluemaps                  
+  keyvaluemaps   #v2.4.0 supports entries    
   targetservers
   resourcefiles
   flowhooks

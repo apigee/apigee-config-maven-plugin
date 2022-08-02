@@ -1,6 +1,11 @@
 [
     {
-        "name": "exchange_config",
-        "encrypted": true
+        "entry": [
+            {
+                "name": "token_prefix",
+                "value": "apigee_"
+            }
+        ],
+        "name": "token_config"
     }
 ]

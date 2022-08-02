@@ -1,6 +1,15 @@
 [
-	{
-        "name": "exchange_config",
-        "encrypted": true
-	 }
-]
+        {
+            "entry": [
+                {
+                    "name": "CELSIUS",
+                    "value": "0.5"
+                },
+                {
+                    "name": "FAHRENHEIT",
+                    "value": "1.5"
+                }
+            ],
+            "name": "temp_config"
+        }
+    ]
