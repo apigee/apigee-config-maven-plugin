@@ -46,7 +46,6 @@ public class ServerProfile {
 	private String bundle_zip_full_path;
 	private String profileId; //Profile id as in parent pom
 	private String options;
-	private Boolean cpsEnabled;
 	
 	private String tokenURL; // Mgmt API OAuth token endpoint
 	private String mfaToken; // Mgmt API OAuth MFA - TOTP
@@ -344,68 +343,6 @@ public class ServerProfile {
 
 	public void setApacheHttpClient(HttpClient apacheHttpClient) {
 		this.apacheHttpClient = apacheHttpClient;
-	}
-
-	/**
-	 * @return cpsEnabled is CPS org
-	 */
-	public Boolean getCpsEnabled() throws MojoFailureException {
-		if (this.cpsEnabled == null) {
-			try {
-				HashMap<String,String> features = queryOrgFeatures(this);
-				if (features != null &&
-						features.get("features.isCpsEnabled") != null &&
-						features.get("features.isCpsEnabled").equals("true")) {
-					this.cpsEnabled = new Boolean(true);
-				} else {
-					this.cpsEnabled = new Boolean(false);
-				}
-			} catch (Exception e) {
-				throw new MojoFailureException(
-						"Error finding org features. Check if user can access /organizations");
-			}
-		}
-
-		return this.cpsEnabled;
-	}
-
-	private HashMap<String,String> queryOrgFeatures(ServerProfile profile)
-			throws IOException {
-		RestUtil restUtil = new RestUtil(profile);
-		HttpResponse response = restUtil.getOrgConfig(profile, "");
-		try {
-            assert response != null;
-            logger.debug("response Get Organization: " + response.getContentType());
-			// response can be read only once
-			String jsonRespnse = response.parseAsString();
-			logger.debug(jsonRespnse);
-
-			JSONParser parser = new JSONParser();
-			JSONObject jsonPayload = (JSONObject)parser.parse(jsonRespnse);
-			JSONObject properties = (JSONObject)jsonPayload.get("properties");
-			if (properties == null) return null;
-
-			JSONArray property  = (JSONArray)properties.get("property");
-			if (property == null) return null;
-
-			HashMap<String,String> organizationProfileMap = new HashMap<String,String>();
-			for (Object obj: property) {
-				JSONObject feature = (JSONObject)obj;
-				String name = (String)feature.get("name");
-				String value = (String)feature.get("value");
-				if (name != null) {
-					organizationProfileMap.put(name, value);
-				}
-			}
-			return organizationProfileMap;
-
-		} catch (ParseException pe){
-			logger.error("Org properties check error " + pe.getMessage());
-			throw new IOException(pe.getMessage());
-		} catch (HttpResponseException e) {
-			logger.error("Org properties check error " + e.getMessage());
-			throw new IOException(e.getMessage());
-		}
 	}
 
 }

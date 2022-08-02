@@ -1,8 +1,5 @@
 package com.apigee.edge.config.mavenplugin.kvm;
 
-import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
-import static net.javacrumbs.jsonunit.core.internal.Diff.create;
-
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,9 +13,6 @@ import org.json.simple.parser.ParseException;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 
-import net.javacrumbs.jsonunit.core.Configuration;
-import net.javacrumbs.jsonunit.core.internal.Diff;
-
 public abstract class KvmOperations {
 
     private static Logger logger = LogManager.getLogger(KvmOperations.class);
@@ -29,28 +23,12 @@ public abstract class KvmOperations {
 
     public abstract HttpResponse updateKvmEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue) throws IOException;
 
-    public abstract HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException;
-
     public abstract HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException;
 
 
     public void update(KvmValueObject kvmValueObject)
             throws IOException, MojoFailureException {
-
-        if(isOrgCpsEnabled(kvmValueObject)){
-            updateKvmForCpsOrg(kvmValueObject);
-        }else {
-            updateKvmForNonCpsOrg(kvmValueObject);
-        }
-
-    }
-
-    private Boolean isOrgCpsEnabled(KvmValueObject kvmValueObject) throws MojoFailureException {
-        return kvmValueObject.getProfile().getCpsEnabled();
-    }
-
-    private void updateKvmForCpsOrg(KvmValueObject kvmValueObject) throws MojoFailureException, IOException {
-        JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
+    	JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
         HttpResponse response;
 
         for (Object entry: entries){
@@ -82,32 +60,6 @@ public abstract class KvmOperations {
         }
     }
 
-    private void updateKvmForNonCpsOrg(KvmValueObject kvmValueObject)
-            throws IOException {
-    	if(!kvmValueObject.getProfile().getKvmOverride()) {
-    		logger.info("Override is set to false");
-    		HttpResponse response = getKvm(kvmValueObject);
-    		String responseString = response.parseAsString();
-    		logger.debug("Get KVM Response " + response.getContentType() + "\n" + responseString);
-    		if(compareJSON(responseString, kvmValueObject.getKvm())) {
-    			logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+". Skipping !");
-    			return;
-    		}
-    	}
-        HttpResponse response = updateKvmEntriesForNonCpsOrg(kvmValueObject);
-        try {
-
-            logger.debug("Response " + response.getContentType() + "\n" +
-                    response.parseAsString());
-            if (response.isSuccessStatusCode())
-                logger.info("Update Success.");
-
-        } catch (HttpResponseException e) {
-            logger.error("KVM update error " + e.getMessage());
-            throw new IOException(e.getMessage());
-        }
-    }
-
     private static JSONArray getEntriesConfig(String kvm) throws MojoFailureException {
         JSONParser parser = new JSONParser();
         JSONObject entry;
@@ -123,24 +75,18 @@ public abstract class KvmOperations {
 
     private boolean doesEntryAlreadyExistForOrg(KvmValueObject kvmValueObject, String kvmEntryName)  {
         try {
-
             HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
-
             if (response == null) {
                 return false;
             }
-
             logger.debug("Response " + response.getContentType() + "\n" +
                     response.parseAsString());
-
             if (response.isSuccessStatusCode()) {
                 return true;
             }
-
         } catch (IOException e) {
             logger.error("Get KVM Entry error " + e.getMessage());
         }
-
         return false;
     }
     
@@ -193,7 +139,7 @@ public abstract class KvmOperations {
      * @param jsonString2
      * @return
      */
-    private static boolean compareJSON (String jsonString1, String jsonString2) {	
+    /*private static boolean compareJSON (String jsonString1, String jsonString2) {	
 		Configuration configuration = Configuration.empty();
 		Diff diff = create(jsonString1, jsonString2, "fullJson", "", configuration.withOptions(IGNORING_ARRAY_ORDER));
 		if(diff.similar()) {
@@ -202,5 +148,5 @@ public abstract class KvmOperations {
 			System.out.println(diff.differences());
 			return false;
 		}
-	}
+	}*/
 }

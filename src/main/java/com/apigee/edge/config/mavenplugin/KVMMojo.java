@@ -29,6 +29,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.apigee.edge.config.mavenplugin.kvm.Kvm;
+import com.apigee.edge.config.mavenplugin.kvm.KvmApi;
+import com.apigee.edge.config.mavenplugin.kvm.KvmEnv;
+import com.apigee.edge.config.mavenplugin.kvm.KvmOrg;
+import com.apigee.edge.config.mavenplugin.kvm.KvmValueObject;
 import com.apigee.edge.config.rest.RestUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 import com.google.api.client.http.HttpResponse;
@@ -59,6 +64,9 @@ public class KVMMojo extends GatewayAbstractMojo
 	OPTIONS buildOption = OPTIONS.none;
 
 	private ServerProfile serverProfile;
+	private Kvm kvmOrg;
+	private Kvm kvmApi;
+	private Kvm kvmEnv;
 
     public static class KVM {
         @Key
@@ -79,6 +87,9 @@ public class KVMMojo extends GatewayAbstractMojo
 
 			String options="";
 			serverProfile = super.getProfile();
+            kvmOrg = new KvmOrg();
+            kvmApi = new KvmApi();
+            kvmEnv = new KvmEnv();
 	
 			options = super.getOptions();
 			if (options != null) {
@@ -124,10 +135,6 @@ public class KVMMojo extends GatewayAbstractMojo
 
                 if (existingKVM.contains(kvmName)) {
                     switch (buildOption) {
-                        case update:
-                            logger.info("Org KVM \"" + kvmName + 
-                                                    "\" exists. Skipping.");
-                            break;
                         case create:
                             logger.info("Org KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
@@ -137,12 +144,21 @@ public class KVMMojo extends GatewayAbstractMojo
                                 "\" already exists. Deleting.");
                             deleteOrgKVM(serverProfile, kvmName);
                             break;
+                        case update:
+                            logger.info("Org KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            //deleting the KVM and re-creating the KVM and entries
+                            deleteOrgKVM(serverProfile, kvmName);
+                            createOrgKVM(serverProfile, kvmName);
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
+                            break;
                         case sync:
                             logger.info("Org KVM \"" + kvmName + 
                                 "\" already exists. Deleting and recreating.");
                             deleteOrgKVM(serverProfile, kvmName);
                             logger.info("Creating Org KVM - " + kvmName);
-                            createOrgKVM(serverProfile, kvm);
+                            createOrgKVM(serverProfile, kvmName);
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                     }
                 } else {
@@ -151,7 +167,8 @@ public class KVMMojo extends GatewayAbstractMojo
                         case sync:
                         case update:
                             logger.info("Creating Org KVM - " + kvmName);
-                            createOrgKVM(serverProfile, kvm);
+                            createOrgKVM(serverProfile, kvmName);
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case delete:
                             logger.info("Org KVM \"" + kvmName + 
@@ -189,10 +206,6 @@ public class KVMMojo extends GatewayAbstractMojo
 
                 if (existingKVM.contains(kvmName)) {
                     switch (buildOption) {
-                        case update:
-                            logger.info("Env KVM \"" + kvmName + 
-                                                    "\" exists. Skipping.");
-                            break;
                         case create:
                             logger.info("Env KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
@@ -202,12 +215,21 @@ public class KVMMojo extends GatewayAbstractMojo
                                 "\" already exists. Deleting.");
                             deleteEnvKVM(serverProfile, kvmName);
                             break;
+                        case update:
+                            logger.info("Env KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            //deleting the KVM and re-creating the KVM and entries
+                            deleteEnvKVM(serverProfile, kvmName);
+                            createEnvKVM(serverProfile, kvmName);
+                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
+                            break;
                         case sync:
                             logger.info("Env KVM \"" + kvmName + 
                                 "\" already exists. Deleting and recreating.");
                             deleteEnvKVM(serverProfile, kvmName);
                             logger.info("Creating Env KVM - " + kvmName);
-                            createEnvKVM(serverProfile, kvm);
+                            createEnvKVM(serverProfile, kvmName);
+                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                     }
                 } else {
@@ -216,7 +238,8 @@ public class KVMMojo extends GatewayAbstractMojo
                         case sync:
                         case update:
                             logger.info("Creating Env KVM - " + kvmName);
-                            createEnvKVM(serverProfile, kvm);
+                            createEnvKVM(serverProfile, kvmName);
+                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case delete:
                             logger.info("Env KVM \"" + kvmName + 
@@ -254,10 +277,6 @@ public class KVMMojo extends GatewayAbstractMojo
 
         		if (existingKVM.contains(kvmName)) {
                     switch (buildOption) {
-                        case update:
-                            logger.info("API KVM \"" + kvmName + 
-                                                    "\" exists. Skipping.");
-                            break;
                         case create:
                             logger.info("API KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
@@ -267,12 +286,22 @@ public class KVMMojo extends GatewayAbstractMojo
                                             "\" already exists. Deleting.");
                             deleteAPIKVM(serverProfile, api, kvmName);
                             break;
+                        case update:
+                            logger.info("API KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            //deleting the KVM and re-creating the KVM and entries
+                            deleteAPIKVM(serverProfile, api, kvmName);
+                            createAPIKVM(serverProfile, api, kvmName);
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
+                            
+                            break;
                         case sync:
                             logger.info("API KVM \"" + kvmName + 
                                             "\" already exists. Deleting and recreating.");
                             deleteAPIKVM(serverProfile, api, kvmName);
                             logger.info("Creating API KVM - " + kvmName);
-                            createAPIKVM(serverProfile, api, kvm);
+                            createAPIKVM(serverProfile, api, kvmName);
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
                             break;
                     }
 	        	} else {
@@ -281,7 +310,8 @@ public class KVMMojo extends GatewayAbstractMojo
                         case sync:
                         case update:
                             logger.info("Creating API KVM - " + kvmName);
-                            createAPIKVM(serverProfile, api, kvm);
+                            createAPIKVM(serverProfile, api, kvmName);
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
                             break;
                         case delete:
                             logger.info("API KVM \"" + kvmName + 
@@ -369,12 +399,13 @@ public class KVMMojo extends GatewayAbstractMojo
     /***************************************************************************
      * REST call wrappers
      **/
-    public static String createOrgKVM(ServerProfile profile, String kvm)
+    public static String createOrgKVM(ServerProfile profile, String kvmName)
             throws IOException {
+    	String payload = "{\"name\": \""+kvmName+"\", \"encrypted\": true}";
     	RestUtil restUtil = new RestUtil(profile);
         HttpResponse response = restUtil.createOrgConfig(profile,
                                                             "keyvaluemaps", 
-                                                            kvm);
+                                                            payload);
         try {
 
             logger.debug("Response " + response.getContentType() + "\n" +
@@ -442,12 +473,13 @@ public class KVMMojo extends GatewayAbstractMojo
         return kvms;
     }   
 
-    public static String createEnvKVM(ServerProfile profile, String kvm)
+    public static String createEnvKVM(ServerProfile profile, String kvmName)
             throws IOException {
+    	String payload = "{\"name\": \""+kvmName+"\", \"encrypted\": true}";
     	RestUtil restUtil = new RestUtil(profile);
         HttpResponse response = restUtil.createEnvConfig(profile,
                                                     "keyvaluemaps", 
-                                                    kvm);
+                                                    payload);
         try {
 
             logger.debug("Response " + response.getContentType() + "\n" +
@@ -518,13 +550,14 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static String createAPIKVM(ServerProfile profile, 
                                         String api,
-                                        String kvm)
+                                        String kvmName)
             throws IOException {
+    	String payload = "{\"name\": \""+kvmName+"\", \"encrypted\": true}";
     	RestUtil restUtil = new RestUtil(profile);
         HttpResponse response = restUtil.createAPIConfig(profile,
                                                             api,
                                                             "keyvaluemaps", 
-                                                            kvm);
+                                                            payload);
         try {
 
             logger.debug("Response " + response.getContentType() + "\n" +
@@ -597,7 +630,6 @@ public class KVMMojo extends GatewayAbstractMojo
     }   
 
 }
-
 
 
 

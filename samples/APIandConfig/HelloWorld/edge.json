@@ -10,6 +10,21 @@
                "port":80
             }
          ],
+         "kvms":[
+            {
+               "entry":[
+                  {
+                     "name":"COMPANY",
+                     "value":"example.com"
+                  },
+                  {
+                     "name":"PREFIX",
+                     "value":"EXMPL"
+                  }
+               ],
+               "name":"backend_account_config"
+            }
+         ],
          "references":[
             {
                "name":"sampleReference",
@@ -85,6 +100,34 @@
             "quotaTimeUnit":"month",
             "scopes":[
                
+            ]
+         }
+      ],
+      "kvms":[
+         {
+            "name":"user_account_status",
+            "entry":[
+               {
+                  "name":"ACTIVE",
+                  "value":"001"
+               },
+               {
+                  "name":"DISABLED",
+                  "value":"002"
+               }
+            ]
+         },
+         {
+            "name":"validation_rules",
+            "entry":[
+               {
+                  "name":"name_max_length",
+                  "value":"15"
+               },
+               {
+                  "name":"max_start_date",
+                  "value":"1460896299"
+               }
             ]
          }
       ],
