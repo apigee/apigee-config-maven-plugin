@@ -75,6 +75,52 @@
       "apiProducts":[
          {
             "name":"EchoProduct",
+            "displayName":"Echo Product",
+            "approvalType":"auto",
+            "description":"Echo Product",
+            "attributes":[
+               {
+                  "name": "access",
+                  "value": "public"
+               }
+            ],
+            "environments":[
+               "test",
+               "prod"
+            ],
+            "quota":"10000",
+            "quotaInterval":"1",
+            "quotaTimeUnit":"month",
+            "operationGroup": {
+               "operationConfigs": [
+                   {
+                     "apiSource": "HelloWorld",
+                     "operations": [
+                       {
+                         "resource": "/",
+                         "methods": [
+                           "GET"
+                         ]
+                       }
+                     ],
+                     "quota": {
+                       "limit": "1000",
+                       "interval": "1",
+                       "timeUnit": "month"
+                     },
+                     "attributes": [
+                       {
+                         "name": "foo",
+                         "value": "bar"
+                       }
+                     ]
+                   }
+               ]
+           },
+            "scopes":[]
+         },
+         {
+            "name":"EchoProduct-legacy",
             "apiResources":[
                "/",
                "/**"
@@ -83,11 +129,15 @@
             "attributes":[
                {
                   "name":"description",
-                  "value":"Echo Product"
+                  "value":"Echo Product Legacy"
+               },
+               {
+                  "name": "access",
+                  "value": "public"
                }
             ],
-            "description":"Echo Product",
-            "displayName":"Echo Product",
+            "description":"Echo Product Legacy",
+            "displayName":"Echo Product Legacy",
             "environments":[
                "test",
                "prod"
@@ -98,9 +148,7 @@
             "quota":"10000",
             "quotaInterval":"1",
             "quotaTimeUnit":"month",
-            "scopes":[
-               
-            ]
+            "scopes":[]
          }
       ],
       "kvms":[

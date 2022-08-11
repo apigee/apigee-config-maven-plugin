@@ -1,40 +1,88 @@
 [
     {
-        "name": "weatherProduct",
-        "displayName": "weatherProduct",
-        "description": "weatherProduct",
-        "apiResources": [
-            "/**",
-            "/"
-        ],
-        "approvalType": "auto",
-        "attributes": [
-            {
-                "name": "description",
-                "value": "json Product"
-            },
-            {
-                "name": "developer.quota.limit",
-                "value": "10000"
-            },
-            {
-                "name": "developer.quota.interval",
-                "value": "1"
-            },
-            {
-                "name": "developer.quota.timeunit",
-                "value": "month"
-            }
-        ],
-        "environments": [
-            "test"
-        ],
-        "proxies": [
-            "forecastweatherapi"
-        ],
-        "quota": "10000",
-        "quotaInterval": "1",
-        "quotaTimeUnit": "month",
-        "scopes": []
+       "name":"weatherProduct",
+       "displayName":"weatherProduct",
+       "description":"weatherProduct",
+       "approvalType":"auto",
+       "environments":[
+          "test"
+       ],
+       "attributes": [
+        {
+            "name": "access",
+            "value": "public"
+        }
+       ],
+       "quota":"10000",
+       "quotaInterval":"1",
+       "quotaTimeUnit":"month",
+       "operationGroup":{
+          "operationConfigs":[
+             {
+                "apiSource":"forecastweatherapi",
+                "operations":[
+                   {
+                      "resource":"/",
+                      "methods":[
+                         "GET"
+                      ]
+                   }
+                ],
+                "quota":{
+                   "limit":"1000",
+                   "interval":"1",
+                   "timeUnit":"month"
+                },
+                "attributes":[
+                   {
+                      "name":"foo",
+                      "value":"bar"
+                   }
+                ]
+             }
+          ]
+       }
+    },
+    {
+       "name":"weatherProduct-legacy",
+       "displayName":"weatherProduct-legacy",
+       "description":"weatherProduct-legacy",
+       "apiResources":[
+          "/**",
+          "/"
+       ],
+       "approvalType":"auto",
+       "attributes":[
+          {
+             "name":"description",
+             "value":"weatherProduct-legacy"
+          },
+          {
+            "name": "access",
+            "value": "public"
+          },
+          {
+             "name":"developer.quota.limit",
+             "value":"10000"
+          },
+          {
+             "name":"developer.quota.interval",
+             "value":"1"
+          },
+          {
+             "name":"developer.quota.timeunit",
+             "value":"month"
+          }
+       ],
+       "environments":[
+        "test"
+       ],
+       "proxies":[
+          "forecastweatherapi"
+       ],
+       "quota":"10000",
+       "quotaInterval":"1",
+       "quotaTimeUnit":"month",
+       "scopes":[]
     }
-]
+ ]
