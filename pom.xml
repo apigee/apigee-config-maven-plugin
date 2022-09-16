@@ -9,7 +9,7 @@
 
 	<groupId>com.apigee.edge.config</groupId>
 	<artifactId>apigee-config-maven-plugin</artifactId>
-	<version>2.4.2-SNAPSHOT</version>
+	<version>2.4.2</version>
 	<packaging>maven-plugin</packaging>
 	<name>apigee-config-maven-plugin</name>
 	<description>Plugin to manage configuration in Apigee</description>
@@ -118,6 +118,10 @@
 					<groupId>commons-fileupload</groupId>
 					<artifactId>commons-fileupload</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>wstx-asl</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -134,6 +138,10 @@
 				<exclusion>
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>wstx-asl</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
