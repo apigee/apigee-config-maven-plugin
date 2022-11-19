@@ -1098,7 +1098,7 @@ public class RestUtil {
     		else if(profile.getServiceAccountJSONFile()!=null && !profile.getServiceAccountJSONFile().equalsIgnoreCase("")) {
     			logger.info("Using the service account file to generate a token");
     			File serviceAccountJSON = new File(profile.getServiceAccountJSONFile());
-    			accessToken = client.getGoogleAccessToken(serviceAccountJSON);
+    			accessToken = client.getGoogleAccessToken(serviceAccountJSON, profile);
     		}
     		else {
     			logger.error("Service Account file or bearer token is missing");
