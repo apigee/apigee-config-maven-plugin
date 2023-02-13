@@ -47,7 +47,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>
-		<spring.version>6.0.0</spring.version>
+		<spring.version>5.3.19</spring.version>
 		<spring.security.version>4.2.9.RELEASE</spring.security.version>
 		<jackson.version>2.11.0.rc1</jackson.version>
 		<log4j.version>2.17.1</log4j.version>
@@ -82,16 +82,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${apache.http.client}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${apache.http.client}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
            	<artifactId>httpcore</artifactId> 
