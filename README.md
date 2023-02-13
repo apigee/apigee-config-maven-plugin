@@ -25,7 +25,7 @@ You will need the following to run the samples:
 ## Plugin Usage
 
 ### NOTE ###
-- If you want to use this plugin for Apigee X or Apigee Hybrid, please refer to this [link](https://github.com/apigee/apigee-config-maven-plugin/tree/hybrid). You should be using the version 2.x
+- If you want to use this plugin for Apigee X or Apigee Hybrid, please refer to this [link](https://github.com/apigee/apigee-config-maven-plugin). You should be using the version 2.x
 ```xml
 <dependency>
   <groupId>com.apigee.edge.config</groupId>
