@@ -24,7 +24,7 @@ You will need the following to run the samples:
 ## Plugin Usage
 
 ### NOTE ###
-- If you want to use this plugin for Apigee SaaS, please refer to this [link](https://github.com/apigee/apigee-config-maven-plugin). You should be using the version 1.x
+- If you want to use this plugin for Apigee Edge SaaS or Private Cloud OPDK, please refer to this [link](https://github.com/apigee/apigee-config-maven-plugin/tree/1.x). You should be using the version 1.x
 ```xml
 <dependency>
   <groupId>com.apigee.edge.config</groupId>
