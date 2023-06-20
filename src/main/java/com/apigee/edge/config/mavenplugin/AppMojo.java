@@ -237,7 +237,7 @@ public class AppMojo extends GatewayAbstractMojo
                                          app);
         try {
 
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
             	logger.info("Create Success.");
@@ -262,7 +262,7 @@ public class AppMojo extends GatewayAbstractMojo
                                         removeApiProductFromApp(profile, app));
         try {
             
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
             	logger.info("Update Success.");
@@ -285,7 +285,7 @@ public class AppMojo extends GatewayAbstractMojo
                                         appName);
         try {
             
-            logger.info("Response " + response.getContentType() + "\n" +
+            logger.debug("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
                 logger.info("Delete Success.");
