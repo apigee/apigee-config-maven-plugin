@@ -278,6 +278,53 @@ public class RestUtil {
 
   		return response;
   	}
+  	
+    //Mainly used for updating alias (for keystore)
+  	public HttpResponse updateEnvConfigUpload(ServerProfile profile, String resource, String resourceId, String subResource, 
+  			Map<String, String> multipartFiles, Map<String, String> parameters) throws IOException {
+  		MultipartContent payload = new MultipartContent().setMediaType(new HttpMediaType("multipart/form-data"));
+  		payload.setBoundary(MULTIPART_BOUNDARY_PREFIX + System.currentTimeMillis());
+  		
+  		if (multipartFiles.entrySet().size() > 0) {
+      		for (Map.Entry<String, String> entry : multipartFiles.entrySet()) {
+      			byte[] file = Files.readAllBytes(new File(entry.getValue()).toPath());
+      			ByteArrayContent content = new ByteArrayContent("application/octet-stream", file);
+
+      			HttpHeaders headers = new HttpHeaders().set("Content-Disposition",
+      					"form-data; name=\"" + entry.getKey() + "\"");
+
+      			payload.addPart(new MultipartContent.Part(headers, content));
+      		} 
+      	}
+  		
+  		if(parameters!=null && parameters.containsKey("password")) {
+  			HttpHeaders headers = new HttpHeaders().set("Content-Disposition",
+  					"form-data; name=\"password\"");
+  			HttpContent partContent = ByteArrayContent.fromString(null, parameters.get("password"));
+  			payload.addPart(new MultipartContent.Part(headers, partContent));
+  			parameters.remove("password");
+  		}
+  		
+  		String importCmd = profile.getHostUrl() + "/"
+      			+ profile.getApi_version() + "/organizations/"
+      			+ profile.getOrg() + "/environments/"
+      			+ profile.getEnvironment() + "/" + resource + "/"
+      			+ URLEncoder.encode(resourceId, "UTF-8")
+      			+ "/" + subResource;
+  		GenericUrl url = new GenericUrl(importCmd);
+  		url.putAll(parameters);
+  		HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(url, payload);
+      	restRequest.setReadTimeout(0);
+      	HttpResponse response;
+  		try {
+  			response = executeAPI(profile, restRequest);
+  		} catch (HttpResponseException e) {
+  			logger.error("Apigee call failed " + e.getMessage());
+  			throw new IOException(e.getMessage());
+  		}
+
+  		return response;
+  	}
     
     public HttpResponse updateEnvConfig(ServerProfile profile, 
                                                 String resource,
@@ -357,6 +404,33 @@ public class RestUtil {
 
 		return response;
 	}
+	
+	public HttpResponse updateEnvConfigWithParameters(ServerProfile profile, String resource, String resourceId, String subResource, Map<String, String> parameters,
+			String payload) throws IOException {
+
+		String importCmd = profile.getHostUrl() + "/" + profile.getApi_version() + "/organizations/" + profile.getOrg()
+				+ "/environments/" + profile.getEnvironment() + "/" + resource + "/"
+				+ URLEncoder.encode(resourceId, "UTF-8") + "/" + URLEncoder.encode(subResource, "UTF-8");
+
+		ByteArrayContent content = new ByteArrayContent("application/json", payload.getBytes());
+		
+		GenericUrl url = new GenericUrl(importCmd);
+		url.putAll(parameters);
+
+		HttpRequest restRequest = REQUEST_FACTORY.buildPutRequest(url, content);
+		restRequest.setReadTimeout(0);
+
+		HttpResponse response;
+		try {
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+		return response;
+	}
+
 	
 	public HttpResponse deleteEnvResourceFileConfig(ServerProfile profile, String resource, String resourceId)
 			throws IOException {
@@ -1098,7 +1172,7 @@ public class RestUtil {
     		else if(profile.getServiceAccountJSONFile()!=null && !profile.getServiceAccountJSONFile().equalsIgnoreCase("")) {
     			logger.info("Using the service account file to generate a token");
     			File serviceAccountJSON = new File(profile.getServiceAccountJSONFile());
-    			accessToken = client.getGoogleAccessToken(serviceAccountJSON);
+    			accessToken = client.getGoogleAccessToken(serviceAccountJSON, profile);
     		}
     		else {
     			logger.error("Service Account file or bearer token is missing");
