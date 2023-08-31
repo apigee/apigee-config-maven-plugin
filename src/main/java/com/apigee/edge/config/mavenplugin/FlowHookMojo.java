@@ -62,6 +62,8 @@ public class FlowHookMojo extends GatewayAbstractMojo
     public static class FlowHook {
         @Key
         public String flowHookPoint;
+        @Key
+        public String sharedFlow;
     }
 	
 	public FlowHookMojo() {
@@ -92,11 +94,11 @@ public class FlowHookMojo extends GatewayAbstractMojo
 
 	}
 
-	protected String getFlowhookName(String payload) throws MojoFailureException {
+	protected FlowHook getFlowhookName(String payload) throws MojoFailureException {
 		Gson gson = new Gson();
 		try {
 			FlowHook flowHook = gson.fromJson(payload, FlowHook.class);
-			return flowHook.flowHookPoint;
+			return flowHook;
 		} catch (JsonParseException e) {
 		  throw new MojoFailureException(e.getMessage());
 		}
@@ -116,7 +118,9 @@ public class FlowHookMojo extends GatewayAbstractMojo
 			}
 
 	        for (String flowhook : flowhooks) {
-	        	String flowhookName = getFlowhookName(flowhook);
+	        	FlowHook fk = getFlowhookName(flowhook);
+	        	String flowhookName = fk.flowHookPoint;
+	        	String sharedFlow = fk.sharedFlow;
 	        	if (flowhookName == null) {
 	        		throw new IllegalArgumentException(
 	        			"Flowhook does not have a flowHookPoint.\n" + flowhook + "\n");
@@ -124,11 +128,11 @@ public class FlowHookMojo extends GatewayAbstractMojo
                 switch (buildOption) {
                     case update:
                         logger.info("Updating Flowhook " + flowhookName);
-                        createUpdateFlowhook(serverProfile, flowhookName, flowhook, "Update");
+                        createUpdateFlowhook(serverProfile, flowhookName, flowhook, sharedFlow, "Update");
                         break;
                     case create:
                         logger.info("Attaching Flowhook " + flowhookName);
-                        createUpdateFlowhook(serverProfile, flowhookName, flowhook, "Create");
+                        createUpdateFlowhook(serverProfile, flowhookName, flowhook, sharedFlow, "Create");
                         break;
                     case delete:
                         logger.info("Detaching Flowhook " + flowhookName );
@@ -138,7 +142,7 @@ public class FlowHookMojo extends GatewayAbstractMojo
                     	logger.info("Detaching Flowhook " + flowhookName );
                         deleteFlowhook(serverProfile, flowhookName, null);
                         logger.info("Attaching Flowhook " + flowhookName );
-                        createUpdateFlowhook(serverProfile, flowhookName, flowhook, "Create");
+                        createUpdateFlowhook(serverProfile, flowhookName, flowhook, sharedFlow, "Create");
                         break;
                 }
 			}
@@ -196,21 +200,29 @@ public class FlowHookMojo extends GatewayAbstractMojo
      * REST call wrappers
      **/
 	
-	public static String createUpdateFlowhook(ServerProfile profile, String flowhookName, String flowhook, String operation)
+	public static String createUpdateFlowhook(ServerProfile profile, String flowhookName, String flowhook, String sharedFlow, String operation)
 			throws IOException {
 		RestUtil restUtil = new RestUtil(profile);
-		HttpResponse response = restUtil.updateEnvConfig(profile, "flowhooks", flowhookName, flowhook);
 		try {
-
-			logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
-			if (response.isSuccessStatusCode())
-				logger.info(operation+ " Success.");
-
-		} catch (HttpResponseException e) {
+			if(operation.equals("Create") && (sharedFlow == null || sharedFlow.equals(""))) {
+				logger.info("Skipping the creation as sharedFlow is empty");
+				return "";
+			}
+			else if(operation.equals("Update") && (sharedFlow == null || sharedFlow.equals(""))) {
+				deleteFlowhook(profile, flowhookName, null);
+			}
+			else {
+				HttpResponse response = restUtil.updateEnvConfig(profile, "flowhooks", flowhookName, flowhook);
+				logger.info("Response " + response.getContentType() + "\n" + response.parseAsString());
+				if (response.isSuccessStatusCode())
+					logger.info(operation+ " Success.");
+				return "";
+			}
+		}
+		catch (HttpResponseException e) {
 			logger.error("flowhook "+operation+" error " + e.getMessage());
 			throw new IOException(e.getMessage());
 		}
-
 		return "";
 	}   
 
