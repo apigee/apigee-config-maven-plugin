@@ -152,18 +152,18 @@ public class ImportKeysMojo extends GatewayAbstractMojo
 	protected void doImport(Map<String, List<String>> devApps) 
             throws MojoFailureException {
 		try {
-			List existingApps = null;
+			//List existingApps = null;
             for (Map.Entry<String, List<String>> entry : devApps.entrySet()) {
-            	logger.info("Retrieving Apps of " + entry.getKey());
+            	//logger.info("Retrieving Apps of " + entry.getKey());
                 String developerId = URLEncoder.encode(entry.getKey(), "UTF-8");
-                existingApps = getApp(serverProfile, developerId);
+                //existingApps = getApp(serverProfile, developerId);
     	        for (String app : entry.getValue()) {
     	        	String appName = getAppName(app);
     	        	if (appName == null) {
     	        		throw new IllegalArgumentException(
     	        			"App does not have a name.\n" + app + "\n");
     	        	}
-            		if (existingApps.contains(appName)) {
+    	        	if (doesDeveloperAppExist(serverProfile, developerId, appName)) {
             			logger.info("Create the consumer key and secret");
             			createConsumerKeyAndSecret(serverProfile, developerId, appName, app);
             			
@@ -301,6 +301,21 @@ public class ImportKeysMojo extends GatewayAbstractMojo
         }
 
         return apps;
+    }
+	 
+	 public static boolean doesDeveloperAppExist(ServerProfile profile, String developerEmail, String appName)
+            throws IOException {
+        try {
+        	RestUtil restUtil = new RestUtil(profile);
+        	logger.info("Checking if developerApp - " +appName + " exist");
+            HttpResponse response = restUtil.getOrgConfig(profile, "developers/"+developerEmail+"/apps/"+appName);
+            if(response == null) 
+            	return false;
+        } catch (HttpResponseException e) {
+            throw new IOException(e.getMessage());
+        }
+
+        return true;
     }
 	 
 }
