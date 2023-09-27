@@ -1,5 +1,7 @@
 package com.apigee.mgmtapi.sdk.client;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,18 +40,26 @@ public class MgmtAPIClient {
 	public static HttpTransportFactory getHttpTransportFactory(String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) {
 	    HttpHost proxyHostDetails = new HttpHost(proxyHost, proxyPort);
 	    HttpRoutePlanner httpRoutePlanner = new DefaultProxyRoutePlanner(proxyHostDetails);
+	    HttpClient httpClient;
+	    if (isNotBlank(proxyUsername) && isNotBlank(proxyPassword)) {
+	    	logger.info("setting proxy credentials to generate the token");
+	    	CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+		    credentialsProvider.setCredentials(
+		        new AuthScope(proxyHostDetails.getHostName(), proxyHostDetails.getPort()),
+		        new UsernamePasswordCredentials(proxyUsername, proxyPassword)
+		    );
 
-	    CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-	    credentialsProvider.setCredentials(
-	        new AuthScope(proxyHostDetails.getHostName(), proxyHostDetails.getPort()),
-	        new UsernamePasswordCredentials(proxyUsername, proxyPassword)
-	    );
-
-	    HttpClient httpClient = ApacheHttpTransport.newDefaultHttpClientBuilder()
-	        .setRoutePlanner(httpRoutePlanner)
-	        .setProxyAuthenticationStrategy(ProxyAuthenticationStrategy.INSTANCE)
-	        .setDefaultCredentialsProvider(credentialsProvider)
-	        .build();
+		    httpClient = ApacheHttpTransport.newDefaultHttpClientBuilder()
+		        .setRoutePlanner(httpRoutePlanner)
+		        .setProxyAuthenticationStrategy(ProxyAuthenticationStrategy.INSTANCE)
+		        .setDefaultCredentialsProvider(credentialsProvider)
+		        .build();
+	    }else {
+	    	logger.info("skipping proxy credentials to generate the token");
+	    	 httpClient = ApacheHttpTransport.newDefaultHttpClientBuilder()
+	 		        .setRoutePlanner(httpRoutePlanner)
+	 		        .build();
+	    }
 
 	    final HttpTransport httpTransport = new ApacheHttpTransport(httpClient);
 	    return new HttpTransportFactory() {
