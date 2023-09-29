@@ -16,19 +16,27 @@
 package com.apigee.edge.config.rest;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.apigee.edge.config.utils.PrintUtil;
 import com.apigee.edge.config.utils.ServerProfile;
 import com.apigee.mgmtapi.sdk.client.MgmtAPIClient;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -42,10 +50,12 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.MultipartContent;
+import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 
 public class RestUtil {
 	private static HttpRequestFactory REQUEST_FACTORY;
@@ -1090,7 +1100,6 @@ public class RestUtil {
             throws IOException {
     	HttpHeaders headers = request.getHeaders();
     	try {
-    		MgmtAPIClient client = new MgmtAPIClient();
     		if(profile.getBearerToken()!=null && !profile.getBearerToken().equalsIgnoreCase("")) {
     			logger.info("Using the bearer token");
     			accessToken = profile.getBearerToken();
@@ -1098,7 +1107,7 @@ public class RestUtil {
     		else if(profile.getServiceAccountJSONFile()!=null && !profile.getServiceAccountJSONFile().equalsIgnoreCase("")) {
     			logger.info("Using the service account file to generate a token");
     			File serviceAccountJSON = new File(profile.getServiceAccountJSONFile());
-    			accessToken = client.getGoogleAccessToken(serviceAccountJSON, profile);
+    			accessToken = getGoogleAccessToken(serviceAccountJSON);
     		}
     		else {
     			logger.error("Service Account file or bearer token is missing");
@@ -1115,5 +1124,46 @@ public class RestUtil {
     	logger.info(PrintUtil.formatRequest(request));
         return request.execute();
     }
+    
+    /**
+	 * To get the Google Service Account Access Token
+	 * 
+	 * @param serviceAccountFilePath
+	 * @param profile
+	 * @return
+	 * @throws Exception
+	 */
+	private String getGoogleAccessToken(File serviceAccountJSON) throws IOException {
+		String tokenUrl = "https://oauth2.googleapis.com/token";
+		long now = System.currentTimeMillis();
+		try {
+			ServiceAccountCredentials serviceAccount = ServiceAccountCredentials.fromStream(new FileInputStream(serviceAccountJSON));
+			Algorithm algorithm = Algorithm.RSA256(null, (RSAPrivateKey)serviceAccount.getPrivateKey());
+			String signedJwt = JWT.create()
+	                .withKeyId(serviceAccount.getPrivateKeyId())
+	                .withIssuer(serviceAccount.getClientEmail())
+	                .withAudience(tokenUrl)
+	                .withClaim("scope","https://www.googleapis.com/auth/cloud-platform")
+	                .withIssuedAt(new Date(now))
+	                .withExpiresAt(new Date(now + 3600 * 1000L))
+	                .sign(algorithm);
+			//System.out.println(signedJwt);
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer");
+			params.put("assertion", signedJwt);
+			HttpContent content = new UrlEncodedContent(params);
+			
+			HttpRequest restRequest = REQUEST_FACTORY.buildPostRequest(new GenericUrl(tokenUrl), content);
+	        restRequest.setReadTimeout(0);
+	        HttpResponse response = restRequest.execute();
+	        String payload = response.parseAsString();
+            JSONParser parser = new JSONParser();       
+            JSONObject obj     = (JSONObject)parser.parse(payload);
+            return (String)obj.get("access_token");
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+            throw new IOException(e.getMessage());
+		}
+	}
     
 }
