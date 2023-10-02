@@ -34,7 +34,6 @@ import org.json.simple.parser.JSONParser;
 
 import com.apigee.edge.config.utils.PrintUtil;
 import com.apigee.edge.config.utils.ServerProfile;
-import com.apigee.mgmtapi.sdk.client.MgmtAPIClient;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.api.client.http.ByteArrayContent;
@@ -1129,7 +1128,6 @@ public class RestUtil {
 	 * To get the Google Service Account Access Token
 	 * 
 	 * @param serviceAccountFilePath
-	 * @param profile
 	 * @return
 	 * @throws Exception
 	 */
