@@ -164,11 +164,6 @@
 			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			  <groupId>com.google.http-client</groupId>
-			  <artifactId>google-http-client-apache-v2</artifactId>
-			  <version>1.43.3</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j.version}</version>
