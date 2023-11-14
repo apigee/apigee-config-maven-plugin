@@ -43,7 +43,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
- * Goal to create KVM in Apigee EDGE.
+ * Goal to create KVM in Apigee.
  * scope: org, env, api
  *
  * @author madhan.sadasivam

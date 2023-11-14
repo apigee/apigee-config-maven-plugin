@@ -674,7 +674,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 	 * Get the proxy configuration from the maven settings
 	 *
 	 * @param settings the maven settings
-	 * @param host     the host name of the apigee edge endpoint
+	 * @param host     the host name of the apigee endpoint
 	 *
 	 * @return proxy or null if none was configured or the host was non-proxied
 	 */
