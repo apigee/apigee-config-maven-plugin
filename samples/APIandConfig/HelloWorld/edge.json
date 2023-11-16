@@ -253,6 +253,11 @@
             }
          ]
       },
+      "apiCategories":[
+      	"echo",
+      	"sample",
+      	"foo"
+      ],
       "importKeys":{
          "john@example.com":[
             {

@@ -120,8 +120,11 @@ public class ConsolidatedConfigReader {
             if (configs == null) return null;
 
             out = new ArrayList();
-            for (Object config: configs) {              
-                out.add(((JSONObject)config).toJSONString());
+            for (Object config: configs) {
+            	if(config instanceof String)
+            		out.add(config);
+            	else
+            		out.add(((JSONObject)config).toJSONString());
             }
         }
         catch(IOException ie) {
