@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
- * Goal to create API Categories in Apigee
+ * Goal to create API Categories in Apigee Portal
  * scope: org
  *
  * @author ssvaidyanathan
