@@ -192,7 +192,8 @@ public class APIDocsMojo extends GatewayAbstractMojo
                                         "\" already exists. Deleting and recreating.");
                             deleteAPIDoc(serverProfile, existingDocs.get(apiDocName));
                             logger.info("Creating API Doc - " + apiDoc);
-                            createAPIDoc(serverProfile, apiDoc);
+                            String apiDocId = createAPIDoc(serverProfile, apiDoc);
+                            createAPIDocSpec(serverProfile, apiDocId, apiDoc);
                             break;
 	        		}
 	        	} else {
