@@ -148,6 +148,20 @@
                             <goal>importKeys</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>create-portal-categories</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>apicategories</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-portal-docs</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>apidocs</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>            
 
