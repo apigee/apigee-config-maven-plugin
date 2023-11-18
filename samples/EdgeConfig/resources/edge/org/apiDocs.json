@@ -13,7 +13,7 @@
   		"oasDocumentation": {
 	     "spec": {
 	        "displayName": "sample-openapi",
-	        "file": "./resourceFiles/specs/openapi.yaml"
+	        "file": "./specs/openapi.yaml"
 	      }
 	   }
   	},
@@ -31,7 +31,7 @@
   		"graphqlDocumentation": {
 	     "schema": {
 	        "displayName": "sample-graphql",
-	        "file": "./resourceFiles/specs/schema.graphql"
+	        "file": "./specs/schema.graphql"
 	      },
 	     "endpointUri": "https://demo.google.com/graphql"
 	   }

@@ -277,7 +277,7 @@
             "oasDocumentation":{
                "spec":{
                   "displayName":"sample-doc-spec",
-                  "file":"./resourceFiles/specs/openapi.yaml"
+                  "file":"./specs/openapi.yaml"
                }
             }
          },
@@ -295,7 +295,7 @@
             "graphqlDocumentation":{
                "schema":{
                   "displayName":"sample-doc-spec",
-                  "file":"./resourceFiles/specs/schema.graphql"
+                  "file":"./specs/schema.graphql"
                },
                "endpointUri":"https://demo.google.com/graphql"
             }
