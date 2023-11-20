@@ -173,8 +173,7 @@ public class APIDocsMojo extends GatewayAbstractMojo
 	        			&& existingDocs.keySet().contains(apiDocName)) {
                     switch (buildOption) {
                         case update:
-                        	logger.info("API Doc \"" + apiDocName + 
-									"\" already exists. Skipping.");
+                        	logger.info("Updating API Doc - " + apiDocName);
                         	updateAPIDoc(serverProfile, existingDocs.get(apiDocName), apiDoc);
                         	createAPIDocSpec(serverProfile, existingDocs.get(apiDocName), apiDoc);
                         	break;
