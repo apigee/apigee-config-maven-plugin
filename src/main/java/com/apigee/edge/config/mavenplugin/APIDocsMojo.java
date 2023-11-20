@@ -101,8 +101,10 @@ public class APIDocsMojo extends GatewayAbstractMojo
 				if(existingCategoryMap != null && existingCategoryMap.size()>0) {
 					JsonArray categoryIds = new JsonArray();
 					for (String category : categories) {
-						JsonPrimitive id = new JsonPrimitive(existingCategoryMap.get(category));
-						categoryIds.add(id);
+						if(existingCategoryMap.get(category)!=null) {
+							JsonPrimitive id = new JsonPrimitive(existingCategoryMap.get(category));
+							categoryIds.add(id);
+						}
 					}
 					JsonParser parser = new JsonParser();
 					JsonElement jsonElement = parser.parse(payload);
