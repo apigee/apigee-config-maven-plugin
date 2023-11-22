@@ -1,0 +1,6 @@
+[
+	{
+	    "flowHookPoint":"PreTargetFlowHook",
+	    "sharedFlow":"test"
+	 }
+ ]

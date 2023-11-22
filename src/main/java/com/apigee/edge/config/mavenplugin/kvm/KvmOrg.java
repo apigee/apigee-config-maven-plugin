@@ -11,7 +11,7 @@ public class KvmOrg extends KvmOperations implements Kvm {
 	@Override
     public HttpResponse getKvm(KvmValueObject kvmValueObject) throws IOException {
 		RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
-        return restUtil.getOrgConfig(kvmValueObject.getProfile(),
+		return restUtil.getOrgConfig(kvmValueObject.getProfile(),
                 "keyvaluemaps/"+kvmValueObject.getKvmName());
     }
 	
@@ -37,6 +37,15 @@ public class KvmOrg extends KvmOperations implements Kvm {
     }
 
     @Override
+    public HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException {
+    	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
+    	return restUtil.updateOrgConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName(),
+                kvmValueObject.getKvm());
+    }
+
+    @Override
     public HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
     	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
     	return restUtil.createOrgConfig(kvmValueObject.getProfile(),
@@ -45,7 +54,15 @@ public class KvmOrg extends KvmOperations implements Kvm {
                 "entries",
                 kvmEntryValue);
     }
-
+    
+    @Override
+    public HttpResponse deleteKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
+    	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
+    	return restUtil.deleteOrgConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName()+"/entries/"+kvmEntryValue);
+    }
+    
     @Override
     public void update(KvmValueObject kvmValueObject)
             throws IOException, MojoFailureException {

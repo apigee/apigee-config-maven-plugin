@@ -23,12 +23,30 @@ public abstract class KvmOperations {
 
     public abstract HttpResponse updateKvmEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue) throws IOException;
 
+    public abstract HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException;
+
     public abstract HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException;
+
+    public abstract HttpResponse deleteKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException;
 
 
     public void update(KvmValueObject kvmValueObject)
             throws IOException, MojoFailureException {
-    	JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
+    	updateKvmForCpsOrg(kvmValueObject);
+//        if(isOrgCpsEnabled(kvmValueObject)){
+//            updateKvmForCpsOrg(kvmValueObject);
+//        }else {
+//            updateKvmForNonCpsOrg(kvmValueObject);
+//        }
+
+    }
+
+//    private Boolean isOrgCpsEnabled(KvmValueObject kvmValueObject) throws MojoFailureException {
+//        return kvmValueObject.getProfile().getCpsEnabled();
+//    }
+
+    private void updateKvmForCpsOrg(KvmValueObject kvmValueObject) throws MojoFailureException, IOException {
+        JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
         HttpResponse response;
 
         for (Object entry: entries){
@@ -36,11 +54,15 @@ public abstract class KvmOperations {
             JSONObject entryJson = ((JSONObject) entry);
             String entryName = (String) entryJson.get("name");
             String entryValue = (String) entryJson.get("value");
+            logger.info("** compare: "+compareKVMEntries(kvmValueObject, entryName, entryValue));
             if(!kvmValueObject.getProfile().getKvmOverride() && compareKVMEntries(kvmValueObject, entryName, entryValue)) {
             	logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+"-"+entryName +". Skipping !");
             	continue;
             }else if(doesEntryAlreadyExistForOrg(kvmValueObject, entryName)){
-                response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString());
+                //response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString()); //not supported in Apigee X, so need to delete and create entry
+            	logger.info("KVM Entry "+ entryName + " already exist, so deleting and creating");
+            	deleteKvmEntries(kvmValueObject, entryName);
+            	response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }else{
                 response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }
@@ -60,6 +82,32 @@ public abstract class KvmOperations {
         }
     }
 
+    /*private void updateKvmForNonCpsOrg(KvmValueObject kvmValueObject)
+            throws IOException {
+    	if(!kvmValueObject.getProfile().getKvmOverride()) {
+    		logger.info("Override is set to false");
+    		HttpResponse response = getKvm(kvmValueObject);
+    		String responseString = response.parseAsString();
+    		logger.debug("Get KVM Response " + response.getContentType() + "\n" + responseString);
+    		if(compareJSON(responseString, kvmValueObject.getKvm())) {
+    			logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+". Skipping !");
+    			return;
+    		}
+    	}
+        HttpResponse response = updateKvmEntriesForNonCpsOrg(kvmValueObject);
+        try {
+
+            logger.debug("Response " + response.getContentType() + "\n" +
+                    response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Update Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("KVM update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+    }*/
+
     private static JSONArray getEntriesConfig(String kvm) throws MojoFailureException {
         JSONParser parser = new JSONParser();
         JSONObject entry;
@@ -75,18 +123,24 @@ public abstract class KvmOperations {
 
     private boolean doesEntryAlreadyExistForOrg(KvmValueObject kvmValueObject, String kvmEntryName)  {
         try {
+
             HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
+
             if (response == null) {
                 return false;
             }
+
             logger.debug("Response " + response.getContentType() + "\n" +
                     response.parseAsString());
+
             if (response.isSuccessStatusCode()) {
                 return true;
             }
+
         } catch (IOException e) {
             logger.error("Get KVM Entry error " + e.getMessage());
         }
+
         return false;
     }
     
@@ -102,9 +156,12 @@ public abstract class KvmOperations {
 
             HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
             if (response == null) {
+            	logger.info("this is false");
                 return false;
             }
             String responseValue = parseValuefromKVM(response.parseAsString());
+            logger.info("responseValue: "+ responseValue);
+            logger.info("kvmEntryValue: "+ kvmEntryValue);
             if (responseValue.equals(kvmEntryValue)) {
                 return true;
             }

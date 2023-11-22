@@ -1,0 +1,12 @@
+[
+	{
+	    "name": "test",
+	    "type": "jsc",
+	    "file": "./resourceFiles/jsc/test.js"
+	},
+	{
+	    "name": "foobar",
+	    "type": "properties",
+	    "file": "./resourceFiles/properties/foobar.properties"
+	}  
+]

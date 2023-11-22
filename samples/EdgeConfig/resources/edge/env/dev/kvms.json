@@ -1,0 +1,15 @@
+[
+    {
+        "entry": [
+            {
+                "name": "COMPANY",
+                "value": "example.com"
+            },
+            {
+                "name": "PREFIX",
+                "value": "EXMPL12"
+            }
+        ],
+        "name": "backend_account_config"
+    }
+]
