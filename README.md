@@ -139,6 +139,14 @@ Refer to [samples/APIandConfig/HelloWorld](./samples/APIandConfig/HelloWorld) fo
 
 When `apigee.config.options=update` is run on apps and if the payload passed includes the apiProducts, the Management server created a new credentials. To avoid this you can pass `-Dapigee.app.ignoreAPIProducts=true`. Please note this is applicable only for `apigee.config.options=update`. For more info on this, check [this](https://github.com/apigee/apigee-config-maven-plugin/issues/128) discussion.
 
+### To use Portal APIs (from v2.6.0 onwards)
+
+To use `apicategories` and `apidocs`, make sure you provide the Apigee Portal Site ID in the pom properties. For example
+```xml
+<apigee.portal.siteId>${siteId}</apigee.portal.siteId>
+```
+
+and you can pass the siteId using the Maven arguments like `mvn apigee-config:apicategories -Pdev -Dorg=blah -Denv=blah -DsiteId=blah-site ...`
 
 ## Multi-file config
 Projects with several config entities can utilize the multi-file structure to organize config while keeping individual file sizes within manageable limits. The plugin requires the use of specific file names and directories to organize config. 
