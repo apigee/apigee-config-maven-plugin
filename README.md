@@ -82,7 +82,7 @@ mvn install -Ptest -Dapigee.config.options=create
   references
   keystores
   aliases
-  importKeys		#v2.1.3 or later
+  importKeys    #v2.1.3 or later
   apicategories #v2.6.0 or later
   apidocs       #v2.6.0 or later
 
