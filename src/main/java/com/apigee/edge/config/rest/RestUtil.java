@@ -509,6 +509,7 @@ public class RestUtil {
 
 	return response;
 	}
+	
 
     /***************************************************************************
      * Org Config - get, create, update
@@ -754,6 +755,36 @@ public class RestUtil {
 
         return executeAPIGet(profile, importCmd);
     }
+    
+    
+    public HttpResponse patchOrgConfig(ServerProfile profile, 
+            String resource,
+            String payload)
+	throws IOException {
+	
+		ByteArrayContent content = new ByteArrayContent("application/json", 
+		                        payload.getBytes());
+		
+		String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/" + resource;
+		
+		HttpRequest restRequest = APACHE_REQUEST_FACTORY.buildRequest(HttpMethods.PATCH, new GenericUrl(importCmd), content);
+		restRequest.setReadTimeout(0);
+		
+		//logger.info(PrintUtil.formatRequest(restRequest));
+		
+		HttpResponse response;
+		try {
+			//response = restRequest.execute();
+			response = executeAPI(profile, restRequest);
+		} catch (HttpResponseException e) {
+			logger.error("Apigee call failed " + e.getMessage());
+			throw new IOException(e.getMessage());
+		}
+
+	return response;
+	}
 
     /***************************************************************************
      * API Config - get, create, update

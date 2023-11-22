@@ -26,7 +26,7 @@
             <plugin>
                 <groupId>com.apigee.edge.config</groupId>
                 <artifactId>apigee-config-maven-plugin</artifactId>
-                <version>2.5.0</version>
+                <version>2.6.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>create-config-targetserver</id>
@@ -112,6 +112,20 @@
                             <goal>importKeys</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>create-portal-categories</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>apicategories</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-portal-docs</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>apidocs</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>            
         </plugins>
@@ -127,6 +141,7 @@
                 <apigee.env>${env}</apigee.env>
                 <apigee.authtype>oauth</apigee.authtype> <!-- only option -->
                 <apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+                <apigee.portal.siteId>${siteId}</apigee.portal.siteId> <!-- Apigee Portal Site ID -->
                 <apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
             </properties>
         </profile>
@@ -140,6 +155,7 @@
                 <apigee.env>${env}</apigee.env>
                 <apigee.authtype>oauth</apigee.authtype> <!-- only option -->
                 <apigee.bearer>${bearer}</apigee.bearer> <!-- this takes precedence over service account file -->
+                <apigee.portal.siteId>${siteId}</apigee.portal.siteId> <!-- Apigee Portal Site ID -->
                 <apigee.serviceaccount.file>${file}</apigee.serviceaccount.file>
             </properties>
         </profile>

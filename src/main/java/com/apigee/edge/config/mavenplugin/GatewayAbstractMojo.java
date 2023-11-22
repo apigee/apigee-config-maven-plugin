@@ -278,6 +278,12 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 	private String serviceAccountFilePath;
 	
 	/**
+	 * apigee portal siteId
+	 * @parameter property="apigee.portal.siteId"
+ 	 */
+	private String portalSiteId;
+	
+	/**
 	 * Parameter to set for DeveloperApp to ignore API Product so that new credentials are not generated for updates (https://github.com/apigee/apigee-config-maven-plugin/issues/128)
 	 * @parameter property="apigee.app.ignoreAPIProducts" default-value="false"
  	 */
@@ -335,6 +341,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 		this.buildProfile.setClientSecret(this.clientsecret);
 		this.buildProfile.setKvmOverride(this.kvmOverride);
 		this.buildProfile.setServiceAccountJSONFile(this.serviceAccountFilePath);
+		this.buildProfile.setPortalSiteId(this.portalSiteId);
 		this.buildProfile.setIgnoreProductsForApp(this.ignoreProductsForApp);
 		
 		// process proxy for management api endpoint
@@ -674,7 +681,7 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 	 * Get the proxy configuration from the maven settings
 	 *
 	 * @param settings the maven settings
-	 * @param host     the host name of the apigee edge endpoint
+	 * @param host     the host name of the apigee endpoint
 	 *
 	 * @return proxy or null if none was configured or the host was non-proxied
 	 */

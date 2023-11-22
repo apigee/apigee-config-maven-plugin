@@ -37,7 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
- * Goal to create target servers in Apigee EDGE.
+ * Goal to create target servers in Apigee.
  * scope: env
  *
  * @author madhan.sadasivam

@@ -56,6 +56,7 @@ public class ServerProfile {
 	private String authType; // Mgmt API Auth Type oauth|basic
 	private Boolean kvmOverride = true; //Override kvm only if true (used for update option)
 	private String serviceAccountJSONFile;
+	private String portalSiteId; //Apigee Integrated Portal Site ID
 	private Boolean ignoreProductsForApp = true; //Ignore API Product for App creation/updates so new credentials are not created
 	
 	
@@ -97,6 +98,14 @@ public class ServerProfile {
 
 	public void setServiceAccountJSONFile(String serviceAccountJSONFile) {
 		this.serviceAccountJSONFile = serviceAccountJSONFile;
+	}
+	
+	public String getPortalSiteId() {
+		return portalSiteId;
+	}
+
+	public void setPortalSiteId(String portalSiteId) {
+		this.portalSiteId = portalSiteId;
 	}
 
 	public String getHostURL() {

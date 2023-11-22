@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
- * Goal to create Developer in Apigee EDGE
+ * Goal to create Developer in Apigee
  * scope: org
  *
  * @author madhan.sadasivam
