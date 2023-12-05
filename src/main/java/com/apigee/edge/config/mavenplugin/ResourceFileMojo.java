@@ -37,7 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
- * Goal to create Resource Files in Apigee EDGE.
+ * Goal to create Resource Files in Apigee.
  * scope: env
  *
  * @author saisaran.vaidyanathan

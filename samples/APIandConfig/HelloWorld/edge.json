@@ -80,8 +80,8 @@
             "description":"Echo Product",
             "attributes":[
                {
-                  "name": "access",
-                  "value": "public"
+                  "name":"access",
+                  "value":"public"
                }
             ],
             "environments":[
@@ -91,33 +91,35 @@
             "quota":"10000",
             "quotaInterval":"1",
             "quotaTimeUnit":"month",
-            "operationGroup": {
-               "operationConfigs": [
-                   {
-                     "apiSource": "HelloWorld",
-                     "operations": [
-                       {
-                         "resource": "/",
-                         "methods": [
-                           "GET"
-                         ]
-                       }
+            "operationGroup":{
+               "operationConfigs":[
+                  {
+                     "apiSource":"HelloWorld",
+                     "operations":[
+                        {
+                           "resource":"/",
+                           "methods":[
+                              "GET"
+                           ]
+                        }
                      ],
-                     "quota": {
-                       "limit": "1000",
-                       "interval": "1",
-                       "timeUnit": "month"
+                     "quota":{
+                        "limit":"1000",
+                        "interval":"1",
+                        "timeUnit":"month"
                      },
-                     "attributes": [
-                       {
-                         "name": "foo",
-                         "value": "bar"
-                       }
+                     "attributes":[
+                        {
+                           "name":"foo",
+                           "value":"bar"
+                        }
                      ]
-                   }
+                  }
                ]
-           },
-            "scopes":[]
+            },
+            "scopes":[
+               
+            ]
          },
          {
             "name":"EchoProduct-legacy",
@@ -132,8 +134,8 @@
                   "value":"Echo Product Legacy"
                },
                {
-                  "name": "access",
-                  "value": "public"
+                  "name":"access",
+                  "value":"public"
                }
             ],
             "description":"Echo Product Legacy",
@@ -148,7 +150,9 @@
             "quota":"10000",
             "quotaInterval":"1",
             "quotaTimeUnit":"month",
-            "scopes":[]
+            "scopes":[
+               
+            ]
          }
       ],
       "kvms":[
@@ -253,6 +257,50 @@
             }
          ]
       },
+      "apiCategories":[
+         "echo",
+         "sample",
+         "foo"
+      ],
+      "apiDocs":[
+         {
+            "title":"Sample Doc",
+            "description":"Sample description",
+            "anonAllowed":true,
+            "imageUrl":"",
+            "requireCallbackUrl":true,
+            "published":true,
+            "apiProductName":"weatherProduct",
+            "categories":[
+               "foo"
+            ],
+            "oasDocumentation":{
+               "spec":{
+                  "displayName":"sample-doc-spec",
+                  "file":"./specs/openapi.yaml"
+               }
+            }
+         },
+         {
+            "title":"Sample GQL",
+            "description":"Sample GraphQL",
+            "anonAllowed":true,
+            "imageUrl":"",
+            "requireCallbackUrl":true,
+            "published":true,
+            "apiProductName":"demo",
+            "categories":[
+               "bar"
+            ],
+            "graphqlDocumentation":{
+               "schema":{
+                  "displayName":"sample-doc-spec",
+                  "file":"./specs/schema.graphql"
+               },
+               "endpointUri":"https://demo.google.com/graphql"
+            }
+         }
+      ],
       "importKeys":{
          "john@example.com":[
             {

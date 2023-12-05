@@ -105,7 +105,10 @@ public class ConfigReader {
             if (configs == null) return null;
 
             out = new ArrayList();
-            for (Object config: configs) {              
+            for (Object config: configs) {  
+            	if(config instanceof String)
+            		out.add(config);
+            	else
                 out.add(((JSONObject)config).toJSONString());
             }
         }

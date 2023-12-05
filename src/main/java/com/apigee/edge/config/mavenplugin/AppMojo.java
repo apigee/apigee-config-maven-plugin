@@ -42,7 +42,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 /**                                                                                                                                     ¡¡
- * Goal to create Apps in Apigee EDGE
+ * Goal to create Apps in Apigee
  * scope: org
  *
  * @author madhan.sadasivam

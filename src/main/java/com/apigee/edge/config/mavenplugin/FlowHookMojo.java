@@ -37,7 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
- * Goal to attach flow hooks in Apigee EDGE
+ * Goal to attach flow hooks in Apigee
  * scope: env
  *
  * @author saisaran.vaidyanathan
