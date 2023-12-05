@@ -32,7 +32,7 @@ public abstract class KvmOperations {
 
     public void update(KvmValueObject kvmValueObject)
             throws IOException, MojoFailureException {
-    	updateKvmForCpsOrg(kvmValueObject);
+    	updateKvm(kvmValueObject);
 //        if(isOrgCpsEnabled(kvmValueObject)){
 //            updateKvmForCpsOrg(kvmValueObject);
 //        }else {
@@ -45,7 +45,7 @@ public abstract class KvmOperations {
 //        return kvmValueObject.getProfile().getCpsEnabled();
 //    }
 
-    private void updateKvmForCpsOrg(KvmValueObject kvmValueObject) throws MojoFailureException, IOException {
+    private void updateKvm(KvmValueObject kvmValueObject) throws MojoFailureException, IOException {
         JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
         HttpResponse response;
 
@@ -54,13 +54,12 @@ public abstract class KvmOperations {
             JSONObject entryJson = ((JSONObject) entry);
             String entryName = (String) entryJson.get("name");
             String entryValue = (String) entryJson.get("value");
-            logger.info("** compare: "+compareKVMEntries(kvmValueObject, entryName, entryValue));
             if(!kvmValueObject.getProfile().getKvmOverride() && compareKVMEntries(kvmValueObject, entryName, entryValue)) {
             	logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+"-"+entryName +". Skipping !");
             	continue;
             }else if(doesEntryAlreadyExistForOrg(kvmValueObject, entryName)){
                 //response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString()); //not supported in Apigee X, so need to delete and create entry
-            	logger.info("KVM Entry "+ entryName + " already exist, so deleting and creating");
+            	logger.info("KVM Entry: "+ entryName + " already exist, so deleting and creating");
             	deleteKvmEntries(kvmValueObject, entryName);
             	response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }else{

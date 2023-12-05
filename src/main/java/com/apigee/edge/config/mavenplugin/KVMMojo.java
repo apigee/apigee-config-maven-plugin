@@ -154,7 +154,8 @@ public class KVMMojo extends GatewayAbstractMojo
                                 "\" already exists. Deleting and recreating.");
                             deleteOrgKVM(serverProfile, kvmName);
                             logger.info("Creating Org KVM - " + kvmName);
-                            createOrgKVM(serverProfile, kvm);
+                            createOrgKVM(serverProfile, kvmName);
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                     }
                 } else {
@@ -163,7 +164,8 @@ public class KVMMojo extends GatewayAbstractMojo
                         case sync:
                         case update:
                             logger.info("Creating Org KVM - " + kvmName);
-                            createOrgKVM(serverProfile, kvm);
+                            createOrgKVM(serverProfile, kvmName);
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case delete:
                             logger.info("Org KVM \"" + kvmName + 
@@ -288,7 +290,8 @@ public class KVMMojo extends GatewayAbstractMojo
                                             "\" already exists. Deleting and recreating.");
                             deleteAPIKVM(serverProfile, api, kvmName);
                             logger.info("Creating API KVM - " + kvmName);
-                            createAPIKVM(serverProfile, api, kvm);
+                            createAPIKVM(serverProfile, api, kvmName);
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
                             break;
                     }
 	        	} else {
@@ -297,7 +300,8 @@ public class KVMMojo extends GatewayAbstractMojo
                         case sync:
                         case update:
                             logger.info("Creating API KVM - " + kvmName);
-                            createAPIKVM(serverProfile, api, kvm);
+                            createAPIKVM(serverProfile, api, kvmName);
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
                             break;
                         case delete:
                             logger.info("API KVM \"" + kvmName + 
@@ -385,12 +389,13 @@ public class KVMMojo extends GatewayAbstractMojo
     /***************************************************************************
      * REST call wrappers
      **/
-    public static String createOrgKVM(ServerProfile profile, String kvm)
+    public static String createOrgKVM(ServerProfile profile, String kvmName)
             throws IOException {
+    	String payload = "{\"name\": \""+kvmName+"\", \"encrypted\": true}";
     	RestUtil restUtil = new RestUtil(profile);
         HttpResponse response = restUtil.createOrgConfig(profile,
                                                             "keyvaluemaps", 
-                                                            kvm);
+                                                            payload);
         try {
 
             logger.debug("Response " + response.getContentType() + "\n" +
@@ -535,13 +540,14 @@ public class KVMMojo extends GatewayAbstractMojo
 
     public static String createAPIKVM(ServerProfile profile, 
                                         String api,
-                                        String kvm)
+                                        String kvmName)
             throws IOException {
+    	String payload = "{\"name\": \""+kvmName+"\", \"encrypted\": true}";
     	RestUtil restUtil = new RestUtil(profile);
         HttpResponse response = restUtil.createAPIConfig(profile,
                                                             api,
                                                             "keyvaluemaps", 
-                                                            kvm);
+                                                            payload);
         try {
 
             logger.debug("Response " + response.getContentType() + "\n" +
