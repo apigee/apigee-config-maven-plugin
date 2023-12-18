@@ -71,6 +71,14 @@ public class KVMMojo extends GatewayAbstractMojo
     public static class KVM {
         @Key
         public String name;
+        @Key
+        public List<KVMEntry> entry;
+    }
+    public static class KVMEntry {
+        @Key
+        public String name;
+        @Key
+        public String value;
     }
 	
 	public KVMMojo() {
@@ -110,6 +118,26 @@ public class KVMMojo extends GatewayAbstractMojo
 		try {
 			KVM kvm = gson.fromJson(payload, KVM.class);
 			return kvm.name;
+		} catch (JsonParseException e) {
+		  throw new MojoFailureException(e.getMessage());
+		}
+	}
+	
+	//Apigee API does not allow "/" in the key name, so need to check before create/update operation
+	protected void checkForInvalidKey(List<String> kvms) throws MojoFailureException {
+		if (buildOption == OPTIONS.delete) //This check is not needed for delete option
+			return;
+		Gson gson = new Gson();
+		try {
+			for (String kvmString : kvms) {
+				KVM kvm = gson.fromJson(kvmString, KVM.class);
+				if(kvm!=null && kvm.entry!=null && kvm.entry.size()>0) {
+					for (KVMEntry kvmEntry : kvm.entry) {
+						if(kvmEntry!=null && kvmEntry.name!=null && kvmEntry.name.contains("/"))
+							throw new MojoFailureException("KVM key: "+ kvmEntry.name +" is invalid. Keys cannot contain \"/\" character ");
+					}
+				}
+			}
 		} catch (JsonParseException e) {
 		  throw new MojoFailureException(e.getMessage());
 		}
@@ -351,6 +379,7 @@ public class KVMMojo extends GatewayAbstractMojo
 			if (kvms == null || kvms.size() == 0) {
 				logger.info("No org scoped KVM config found.");
 			} else {
+				checkForInvalidKey(kvms);
                 doOrgUpdate(kvms, scope);
             }
 
@@ -359,6 +388,7 @@ public class KVMMojo extends GatewayAbstractMojo
             if (kvms == null || kvms.size() == 0) {
                 logger.info("No env scoped KVM config found.");
             } else {
+            	checkForInvalidKey(kvms);
                 doEnvUpdate(kvms, scope);
             }
 
@@ -375,6 +405,7 @@ public class KVMMojo extends GatewayAbstractMojo
                     logger.info(
                         "No API scoped KVM config found for " + api);
                 } else {
+                	checkForInvalidKey(kvms);
                     doAPIUpdate(api, kvms);
                 }
             }

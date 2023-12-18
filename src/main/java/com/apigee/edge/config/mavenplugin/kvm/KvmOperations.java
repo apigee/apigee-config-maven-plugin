@@ -1,6 +1,7 @@
 package com.apigee.edge.config.mavenplugin.kvm;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,7 +61,7 @@ public abstract class KvmOperations {
             }else if(doesEntryAlreadyExistForOrg(kvmValueObject, entryName)){
                 //response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString()); //not supported in Apigee X, so need to delete and create entry
             	logger.info("KVM Entry: "+ entryName + " already exist, so deleting and creating");
-            	deleteKvmEntries(kvmValueObject, entryName);
+            	deleteKvmEntries(kvmValueObject, URLEncoder.encode(entryName, "UTF-8")); //encoding as entryName could contain special characters
             	response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }else{
                 response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
@@ -122,8 +123,8 @@ public abstract class KvmOperations {
 
     private boolean doesEntryAlreadyExistForOrg(KvmValueObject kvmValueObject, String kvmEntryName)  {
         try {
-
-            HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
+        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
+            HttpResponse response = getEntriesForKvm(kvmValueObject, URLEncoder.encode(URLEncoder.encode(kvmEntryName, "UTF-8"), "UTF-8")); 
 
             if (response == null) {
                 return false;
@@ -152,8 +153,8 @@ public abstract class KvmOperations {
      */
     private boolean compareKVMEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue)  {
         try {
-
-            HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
+        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
+            HttpResponse response = getEntriesForKvm(kvmValueObject, URLEncoder.encode(URLEncoder.encode(kvmEntryName, "UTF-8"), "UTF-8"));
             if (response == null) {
             	logger.info("this is false");
                 return false;
