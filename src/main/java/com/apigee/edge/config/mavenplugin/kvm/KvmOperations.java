@@ -59,10 +59,10 @@ public abstract class KvmOperations {
             	logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+"-"+entryName +". Skipping !");
             	continue;
             }else if(doesEntryAlreadyExistForOrg(kvmValueObject, entryName)){
-                //response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString()); //not supported in Apigee X, so need to delete and create entry
-            	logger.info("KVM Entry: "+ entryName + " already exist, so deleting and creating");
-            	deleteKvmEntries(kvmValueObject, URLEncoder.encode(entryName, "UTF-8")); //encoding as entryName could contain special characters
-            	response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
+                response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString()); 
+//            	logger.info("KVM Entry: "+ entryName + " already exist, so deleting and creating");
+//            	deleteKvmEntries(kvmValueObject, URLEncoder.encode(entryName, "UTF-8")); //encoding as entryName could contain special characters
+//            	response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }else{
                 response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }
