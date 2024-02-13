@@ -71,6 +71,14 @@ public class KVMMojo extends GatewayAbstractMojo
     public static class KVM {
         @Key
         public String name;
+        @Key
+        public List<KVMEntry> entry;
+    }
+    public static class KVMEntry {
+        @Key
+        public String name;
+        @Key
+        public String value;
     }
 	
 	public KVMMojo() {
@@ -114,6 +122,26 @@ public class KVMMojo extends GatewayAbstractMojo
 		  throw new MojoFailureException(e.getMessage());
 		}
 	}
+	
+	//Apigee API does not allow "/" in the key name, so need to check before create/update operation
+	protected void checkForInvalidKey(List<String> kvms) throws MojoFailureException {
+		if (buildOption == OPTIONS.delete) //This check is not needed for delete option
+			return;
+		Gson gson = new Gson();
+		try {
+			for (String kvmString : kvms) {
+				KVM kvm = gson.fromJson(kvmString, KVM.class);
+				if(kvm!=null && kvm.entry!=null && kvm.entry.size()>0) {
+					for (KVMEntry kvmEntry : kvm.entry) {
+						if(kvmEntry!=null && kvmEntry.name!=null && kvmEntry.name.contains("/"))
+							throw new MojoFailureException("KVM key: "+ kvmEntry.name +" is invalid. Keys cannot contain \"/\" character ");
+					}
+				}
+			}
+		} catch (JsonParseException e) {
+		  throw new MojoFailureException(e.getMessage());
+		}
+	}
 
     protected void doOrgUpdate(List<String> kvms, String scope)
                                                  throws MojoFailureException {
@@ -135,6 +163,11 @@ public class KVMMojo extends GatewayAbstractMojo
 
                 if (existingKVM.contains(kvmName)) {
                     switch (buildOption) {
+                        case update:
+                            logger.info("Org KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
+                            break;
                         case create:
                             logger.info("Org KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
@@ -143,14 +176,6 @@ public class KVMMojo extends GatewayAbstractMojo
                             logger.info("Org KVM \"" + kvmName + 
                                 "\" already exists. Deleting.");
                             deleteOrgKVM(serverProfile, kvmName);
-                            break;
-                        case update:
-                            logger.info("Org KVM \"" + kvmName + 
-                                                    "\" exists. Updating.");
-                            //deleting the KVM and re-creating the KVM and entries
-                            deleteOrgKVM(serverProfile, kvmName);
-                            createOrgKVM(serverProfile, kvmName);
-                            kvmOrg.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case sync:
                             logger.info("Org KVM \"" + kvmName + 
@@ -206,6 +231,11 @@ public class KVMMojo extends GatewayAbstractMojo
 
                 if (existingKVM.contains(kvmName)) {
                     switch (buildOption) {
+                        case update:
+                            logger.info("Env KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
+                            break;
                         case create:
                             logger.info("Env KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
@@ -214,14 +244,6 @@ public class KVMMojo extends GatewayAbstractMojo
                             logger.info("Env KVM \"" + kvmName + 
                                 "\" already exists. Deleting.");
                             deleteEnvKVM(serverProfile, kvmName);
-                            break;
-                        case update:
-                            logger.info("Env KVM \"" + kvmName + 
-                                                    "\" exists. Updating.");
-                            //deleting the KVM and re-creating the KVM and entries
-                            deleteEnvKVM(serverProfile, kvmName);
-                            createEnvKVM(serverProfile, kvmName);
-                            kvmEnv.update(new KvmValueObject(serverProfile, kvmName, kvm));
                             break;
                         case sync:
                             logger.info("Env KVM \"" + kvmName + 
@@ -277,6 +299,11 @@ public class KVMMojo extends GatewayAbstractMojo
 
         		if (existingKVM.contains(kvmName)) {
                     switch (buildOption) {
+                        case update:
+                            logger.info("API KVM \"" + kvmName + 
+                                                    "\" exists. Updating.");
+                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
+                            break;
                         case create:
                             logger.info("API KVM \"" + kvmName + 
                                                 "\" already exists. Skipping.");
@@ -285,15 +312,6 @@ public class KVMMojo extends GatewayAbstractMojo
                             logger.info("API KVM \"" + kvmName + 
                                             "\" already exists. Deleting.");
                             deleteAPIKVM(serverProfile, api, kvmName);
-                            break;
-                        case update:
-                            logger.info("API KVM \"" + kvmName + 
-                                                    "\" exists. Updating.");
-                            //deleting the KVM and re-creating the KVM and entries
-                            deleteAPIKVM(serverProfile, api, kvmName);
-                            createAPIKVM(serverProfile, api, kvmName);
-                            kvmApi.update(new KvmValueObject(serverProfile, api, kvmName, kvm));
-                            
                             break;
                         case sync:
                             logger.info("API KVM \"" + kvmName + 
@@ -361,6 +379,7 @@ public class KVMMojo extends GatewayAbstractMojo
 			if (kvms == null || kvms.size() == 0) {
 				logger.info("No org scoped KVM config found.");
 			} else {
+				checkForInvalidKey(kvms);
                 doOrgUpdate(kvms, scope);
             }
 
@@ -369,6 +388,7 @@ public class KVMMojo extends GatewayAbstractMojo
             if (kvms == null || kvms.size() == 0) {
                 logger.info("No env scoped KVM config found.");
             } else {
+            	checkForInvalidKey(kvms);
                 doEnvUpdate(kvms, scope);
             }
 
@@ -385,6 +405,7 @@ public class KVMMojo extends GatewayAbstractMojo
                     logger.info(
                         "No API scoped KVM config found for " + api);
                 } else {
+                	checkForInvalidKey(kvms);
                     doAPIUpdate(api, kvms);
                 }
             }
@@ -630,6 +651,7 @@ public class KVMMojo extends GatewayAbstractMojo
     }   
 
 }
+
 
 
 

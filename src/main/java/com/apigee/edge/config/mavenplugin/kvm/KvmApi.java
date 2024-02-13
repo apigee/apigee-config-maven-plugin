@@ -11,7 +11,7 @@ public class KvmApi extends KvmOperations implements Kvm {
 	@Override
     public HttpResponse getKvm(KvmValueObject kvmValueObject) throws IOException {
 		RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
-        return restUtil.getAPIConfig(kvmValueObject.getProfile(),
+		return restUtil.getAPIConfig(kvmValueObject.getProfile(),
         		kvmValueObject.getApi(),
         		"keyvaluemaps/"+kvmValueObject.getKvmName());
     }
@@ -40,14 +40,33 @@ public class KvmApi extends KvmOperations implements Kvm {
     }
 
     @Override
+    public HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException {
+    	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
+    	return restUtil.updateAPIConfig(kvmValueObject.getProfile(),
+                kvmValueObject.getApi(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName(),
+                kvmValueObject.getKvm());
+    }
+
+    @Override
     public HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
     	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
-        return restUtil.createAPIConfig(kvmValueObject.getProfile(),
+    	return restUtil.createAPIConfig(kvmValueObject.getProfile(),
                 kvmValueObject.getApi(),
                 "keyvaluemaps",
                 kvmValueObject.getKvmName(),
                 "entries",
                 kvmEntryValue);
+    }
+    
+    @Override
+    public HttpResponse deleteKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
+    	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
+    	return restUtil.deleteAPIConfig(kvmValueObject.getProfile(),
+                kvmValueObject.getApi(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName()+ "/entries/"+kvmEntryValue);
     }
 
     @Override
@@ -55,4 +74,5 @@ public class KvmApi extends KvmOperations implements Kvm {
             throws IOException, MojoFailureException {
         super.update(kvmValueObject);
     }
+
 }

@@ -37,6 +37,15 @@ public class KvmEnv extends KvmOperations implements Kvm {
     }
 
     @Override
+    public HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException {
+    	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
+    	return restUtil.updateEnvConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName(),
+                kvmValueObject.getKvm());
+    }
+
+    @Override
     public HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
     	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
     	return restUtil.createEnvConfig(kvmValueObject.getProfile(),
@@ -45,6 +54,15 @@ public class KvmEnv extends KvmOperations implements Kvm {
                 "entries",
                 kvmEntryValue);
     }
+    
+    @Override
+    public HttpResponse deleteKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException {
+    	RestUtil restUtil = new RestUtil(kvmValueObject.getProfile());
+    	return restUtil.deleteEnvConfig(kvmValueObject.getProfile(),
+                "keyvaluemaps",
+                kvmValueObject.getKvmName()+"/entries/"+kvmEntryValue);
+    }
+   
 
     @Override
     public void update(KvmValueObject kvmValueObject)

@@ -1,6 +1,7 @@
 package com.apigee.edge.config.mavenplugin.kvm;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,12 +24,30 @@ public abstract class KvmOperations {
 
     public abstract HttpResponse updateKvmEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue) throws IOException;
 
+    public abstract HttpResponse updateKvmEntriesForNonCpsOrg(KvmValueObject kvmValueObject) throws IOException;
+
     public abstract HttpResponse createKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException;
+
+    public abstract HttpResponse deleteKvmEntries(KvmValueObject kvmValueObject, String kvmEntryValue) throws IOException;
 
 
     public void update(KvmValueObject kvmValueObject)
             throws IOException, MojoFailureException {
-    	JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
+    	updateKvm(kvmValueObject);
+//        if(isOrgCpsEnabled(kvmValueObject)){
+//            updateKvmForCpsOrg(kvmValueObject);
+//        }else {
+//            updateKvmForNonCpsOrg(kvmValueObject);
+//        }
+
+    }
+
+//    private Boolean isOrgCpsEnabled(KvmValueObject kvmValueObject) throws MojoFailureException {
+//        return kvmValueObject.getProfile().getCpsEnabled();
+//    }
+
+    private void updateKvm(KvmValueObject kvmValueObject) throws MojoFailureException, IOException {
+        JSONArray entries = getEntriesConfig(kvmValueObject.getKvm());
         HttpResponse response;
 
         for (Object entry: entries){
@@ -40,7 +59,10 @@ public abstract class KvmOperations {
             	logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+"-"+entryName +". Skipping !");
             	continue;
             }else if(doesEntryAlreadyExistForOrg(kvmValueObject, entryName)){
-                response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString());
+                response = updateKvmEntries(kvmValueObject, entryName, entryJson.toJSONString()); 
+//            	logger.info("KVM Entry: "+ entryName + " already exist, so deleting and creating");
+//            	deleteKvmEntries(kvmValueObject, URLEncoder.encode(entryName, "UTF-8")); //encoding as entryName could contain special characters
+//            	response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }else{
                 response = createKvmEntries(kvmValueObject, entryJson.toJSONString());
             }
@@ -60,6 +82,32 @@ public abstract class KvmOperations {
         }
     }
 
+    /*private void updateKvmForNonCpsOrg(KvmValueObject kvmValueObject)
+            throws IOException {
+    	if(!kvmValueObject.getProfile().getKvmOverride()) {
+    		logger.info("Override is set to false");
+    		HttpResponse response = getKvm(kvmValueObject);
+    		String responseString = response.parseAsString();
+    		logger.debug("Get KVM Response " + response.getContentType() + "\n" + responseString);
+    		if(compareJSON(responseString, kvmValueObject.getKvm())) {
+    			logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+". Skipping !");
+    			return;
+    		}
+    	}
+        HttpResponse response = updateKvmEntriesForNonCpsOrg(kvmValueObject);
+        try {
+
+            logger.debug("Response " + response.getContentType() + "\n" +
+                    response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Update Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("KVM update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+    }*/
+
     private static JSONArray getEntriesConfig(String kvm) throws MojoFailureException {
         JSONParser parser = new JSONParser();
         JSONObject entry;
@@ -75,18 +123,24 @@ public abstract class KvmOperations {
 
     private boolean doesEntryAlreadyExistForOrg(KvmValueObject kvmValueObject, String kvmEntryName)  {
         try {
-            HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
+        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
+            HttpResponse response = getEntriesForKvm(kvmValueObject, URLEncoder.encode(URLEncoder.encode(kvmEntryName, "UTF-8"), "UTF-8")); 
+
             if (response == null) {
                 return false;
             }
+
             logger.debug("Response " + response.getContentType() + "\n" +
                     response.parseAsString());
+
             if (response.isSuccessStatusCode()) {
                 return true;
             }
+
         } catch (IOException e) {
             logger.error("Get KVM Entry error " + e.getMessage());
         }
+
         return false;
     }
     
@@ -99,12 +153,15 @@ public abstract class KvmOperations {
      */
     private boolean compareKVMEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue)  {
         try {
-
-            HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
+        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
+            HttpResponse response = getEntriesForKvm(kvmValueObject, URLEncoder.encode(URLEncoder.encode(kvmEntryName, "UTF-8"), "UTF-8"));
             if (response == null) {
+            	logger.info("this is false");
                 return false;
             }
             String responseValue = parseValuefromKVM(response.parseAsString());
+            logger.info("responseValue: "+ responseValue);
+            logger.info("kvmEntryValue: "+ kvmEntryValue);
             if (responseValue.equals(kvmEntryValue)) {
                 return true;
             }
