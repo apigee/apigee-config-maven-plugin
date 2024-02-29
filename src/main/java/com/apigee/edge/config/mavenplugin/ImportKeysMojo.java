@@ -233,7 +233,7 @@ public class ImportKeysMojo extends GatewayAbstractMojo
                  creds);
 		try {
 		
-			logger.info("Response " + response.getContentType() + "\n" +
+			logger.debug("Response " + response.getContentType() + "\n" +
 			                 response.parseAsString());
 			if (response.isSuccessStatusCode())
 				logger.info("Import Consumer Key/Secret Success.");
@@ -257,7 +257,7 @@ public class ImportKeysMojo extends GatewayAbstractMojo
                  apiProducts);
 		try {
 		
-			logger.info("Response " + response.getContentType() + "\n" +
+			logger.debug("Response " + response.getContentType() + "\n" +
 			                 response.parseAsString());
 			if (response.isSuccessStatusCode())
 				logger.info("Association of API Products to Consumer Key Success.");
