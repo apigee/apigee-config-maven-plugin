@@ -85,6 +85,7 @@ mvn install -Ptest -Dapigee.config.options=create
   importKeys    #v2.1.3 or later
   apicategories #v2.6.0 or later
   apidocs       #v2.6.0 or later
+  debugmasks    #v2.7.1 or later
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
@@ -163,6 +164,7 @@ The apigee.config.dir option must be used to identify the top most directory con
       │   ├── prod
       │   │   ├── kvms.json
       │   │   ├── flowhooks.json
+      │   │   ├── debugmasks.json
       │   │   ├── targetServers.json
       │   │   ├── references.json
       │   ├── test
@@ -170,6 +172,7 @@ The apigee.config.dir option must be used to identify the top most directory con
       │   │   ├── targetServers.json
       │   │   ├── keystores.json
       │   │   ├── aliases.json
+      │   │   ├── debugmasks.json
       │   │   └── references.json   
       └── org
           ├── apiProducts.json
