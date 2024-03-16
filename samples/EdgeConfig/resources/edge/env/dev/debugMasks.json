@@ -1,0 +1,30 @@
+[
+	{
+		"namespaces":{
+			"myco":"http://example.com",
+		},
+		"requestXPaths":[
+			"/myco:Greeting/myco:User"
+		],
+		"responseXPaths":[
+			"/myco:Greeting/myco:User"
+		],
+		"faultXPaths":[
+			"/myco:Greeting/myco:User"
+		],
+		"requestJSONPaths":[
+			"$.store.book[*].author"
+		],
+		"responseJSONPaths":[
+			"$.store.book[*].author"
+		],
+		"faultJSONPaths":[
+			"$.store.book[*].author"
+		],
+		"variables":[
+			"request.header.user-name",
+			"request.formparam.password",
+			"myCustomVariable"
+		]
+	}
+]
