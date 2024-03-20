@@ -33,6 +33,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.util.Key;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 /**                                                                                                                                     ¡¡
@@ -212,6 +213,7 @@ public class DebugMaskMojo extends GatewayAbstractMojo
 
 	protected void doUpdate(List<String> debugMasks) throws MojoFailureException {
 		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			DebugMask existingDebugMask = null;
 			if (buildOption != OPTIONS.update && 
 				buildOption != OPTIONS.create && 
@@ -241,21 +243,20 @@ public class DebugMaskMojo extends GatewayAbstractMojo
 				//DebugMask exist in Apigee, so need to manipulate the payload 
 				switch (buildOption) {
 					case create:
-						logger.info("Adding to existing Debug Mask");
-						createDebugMask(serverProfile, new Gson().toJson(new DebugMask().union(existingDebugMask, parseDebugMask(debugMasks.get(0)))), "Create");
-						break;
 					case update:
-						logger.info("Adding to existing Debug Mask");
-						createDebugMask(serverProfile, new Gson().toJson(new DebugMask().union(existingDebugMask, parseDebugMask(debugMasks.get(0)))), "Update");
+					case delete:
+						logger.info("---- ATTENTION ----");
+						logger.info("WARNING: Create, Update, or Delete option is not allowed when a Debug Mask already exist!");
+						logger.info("Existing DebugMask in the "+ serverProfile.getEnvironment() +" environment: ");
+						logger.info(gson.toJson(existingDebugMask));
+						logger.info("Use the existing DebugMask config and replace the config file. Add, update or delete entries to it and use the 'sync' option");
+						logger.info("---- ATTENTION ----");
+						//createDebugMask(serverProfile, new Gson().toJson(new DebugMask().union(existingDebugMask, parseDebugMask(debugMasks.get(0)))), "Create");
 						break;
 					case sync:
 	                    logger.info("Syncing the Debug Mask.");
-	                    createDebugMask(serverProfile, debugMasks.get(0), "Sync");
+	                    syncDebugMask(serverProfile, debugMasks.get(0));
 	                    break;
-					case delete:
-						logger.info("Deleting existing Debug Mask");
-						createDebugMask(serverProfile, new Gson().toJson(new DebugMask().diff(existingDebugMask, parseDebugMask(debugMasks.get(0)))), "Delete",true);
-						break;
 				}
 				
 	    	}
@@ -340,23 +341,33 @@ public class DebugMaskMojo extends GatewayAbstractMojo
 	
 	public static String createDebugMask(ServerProfile profile, String debugMask, String operation)
             throws IOException {
-		return createDebugMask(profile, debugMask, operation, false);
-	}
-	
-	public static String createDebugMask(ServerProfile profile, String debugMask, String operation, boolean replaceRepeatedFields)
-            throws IOException {
     	RestUtil restUtil = new RestUtil(profile);
     	HttpResponse response;
-    	if(replaceRepeatedFields)
-    		response = restUtil.patchEnvConfig(profile, "debugmask?replaceRepeatedFields=true", debugMask);
-    	else
-    		response = restUtil.patchEnvConfig(profile, "debugmask", debugMask);
         try {
-
+        	response = restUtil.patchEnvConfig(profile, "debugmask", debugMask);
             logger.info("Response " + response.getContentType() + "\n" +
                                         response.parseAsString());
             if (response.isSuccessStatusCode())
             	logger.info(operation + " Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Debug Mask create error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
+	
+	public static String syncDebugMask(ServerProfile profile, String debugMask)
+            throws IOException {
+    	RestUtil restUtil = new RestUtil(profile);
+    	HttpResponse response;
+        try {
+        	response = restUtil.patchEnvConfig(profile, "debugmask?replaceRepeatedFields=true", debugMask);
+            logger.info("Response " + response.getContentType() + "\n" +
+                                        response.parseAsString());
+            if (response.isSuccessStatusCode())
+            	logger.info("Sync Success.");
 
         } catch (HttpResponseException e) {
             logger.error("Debug Mask create error " + e.getMessage());
