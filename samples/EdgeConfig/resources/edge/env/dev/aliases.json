@@ -24,5 +24,11 @@
          "format": "pkcs12",
          "filePath":"/tmp/certs/myKeystore.p12",
          "password":"dummy"
+      },
+      {
+         "alias":"testAliasKeyCertFile",
+         "keystorename": "testKeyStorename",
+         "format": "keycertfile",
+         "certFilePath":"/tmp/certs/keystore.pem"
       }
 ]
