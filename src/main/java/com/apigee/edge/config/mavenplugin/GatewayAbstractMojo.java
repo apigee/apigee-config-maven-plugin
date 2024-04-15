@@ -481,10 +481,12 @@ public abstract class GatewayAbstractMojo extends AbstractMojo implements Contex
 			throws MojoExecutionException {
 		List<File> configFiles = new ArrayList<File>();
 		File[] listOfFiles = new File(configDir + File.separator + scope).listFiles();
-		for (File file : listOfFiles) {
-		    if (file.isFile() && file.getName().startsWith(config)) {
-		    	configFiles.add(file);
-		    }
+		if(listOfFiles!=null && listOfFiles.length>0) {
+			for (File file : listOfFiles) {
+			    if (file.isFile() && file.getName().startsWith(config)) {
+			    	configFiles.add(file);
+			    }
+			}
 		}
 		return configFiles;
 	}
