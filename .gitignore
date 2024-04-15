@@ -5,3 +5,4 @@ target
 .classpath
 .project
 .DS_Store
+**/*/Test.java
