@@ -65,6 +65,9 @@ mvn install -Ptest -Dapigee.config.options=create
      
   -Dapigee.config.exportDir=<dir>
      dir where the dev app keys are exported. This is only used for `exportAppKeys` goal. The file name is always devAppKeys.json
+ 
+   -Dapigee.kvm.override=true|false
+     is used only when -Dapigee.config.options=update. It overrides the KVM entries even if there are no changes. Default is true. If set to false, it skips the entry update.
 
   # Individual goals
   You can also work with an individual config type using the 
