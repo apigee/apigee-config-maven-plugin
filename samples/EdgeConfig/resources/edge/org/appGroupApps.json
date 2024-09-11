@@ -1,0 +1,11 @@
+{
+    "appGroup1": [
+        {
+            "apiProducts": [
+                "weatherProduct"
+            ],
+            "callbackUrl": "http://weatherapp.com",
+            "name": "appGroupApp1"
+        }
+    ]
+}

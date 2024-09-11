@@ -155,6 +155,45 @@
             ]
          }
       ],
+      "appGroups":[
+         {
+            "name":"appGroup1",
+            "channelUri":"marketplace",
+            "channelId":"owner",
+            "displayName":"App Group 1",
+            "status":"active",
+            "attributes":[
+               {
+                  "name":"access",
+                  "value":"public"
+               }
+            ]
+         },
+         {
+            "name":"appGroup2",
+            "channelUri":"marketplace",
+            "channelId":"owner",
+            "displayName":"App Group 2",
+            "status":"active",
+            "attributes":[
+               {
+                  "name":"access",
+                  "value":"public"
+               }
+            ]
+         }
+      ],
+      "appGroupApps":{
+         "appGroup1":[
+            {
+               "apiProducts":[
+                  "weatherProduct"
+               ],
+               "callbackUrl":"http://weatherapp.com",
+               "name":"appGroupApp1"
+            }
+         ]
+      },
       "kvms":[
          {
             "name":"user_account_status",
@@ -303,6 +342,18 @@
       ],
       "importKeys":{
          "john@example.com":[
+            {
+               "apiProducts":[
+                  "EchoProduct"
+               ],
+               "name":"coolechoapp",
+               "consumerKey":"abcd",
+               "consumerSecret":"xyz123"
+            }
+         ]
+      },
+      "importAppGroupAppKeys":{
+         "appGroup1":[
             {
                "apiProducts":[
                   "EchoProduct"

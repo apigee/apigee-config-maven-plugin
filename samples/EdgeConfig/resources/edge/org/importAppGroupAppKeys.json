@@ -1,0 +1,12 @@
+{
+   "appGroup1":[
+      {
+         "apiProducts":[
+            "weatherProduct"
+         ],
+         "name":"appGroupApp1",
+         "consumerKey":"abcd",
+         "consumerSecret":"xyz"
+      }
+   ]
+}

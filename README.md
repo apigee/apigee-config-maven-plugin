@@ -73,7 +73,7 @@ mvn install -Ptest -Dapigee.config.options=create
   You can also work with an individual config type using the 
   corresponding goal directly. The goals available are,
  
-  keyvaluemaps   #v2.4.0 supports entries    
+  keyvaluemaps   		#v2.4.0 supports entries    
   targetservers
   resourcefiles
   flowhooks
@@ -85,15 +85,23 @@ mvn install -Ptest -Dapigee.config.options=create
   references
   keystores
   aliases
-  importKeys    #v2.1.3 or later
-  apicategories #v2.6.0 or later
-  apidocs       #v2.6.0 or later
+  importKeys    	   	#v2.1.3 or later
+  apicategories			#v2.6.0 or later
+  apidocs       		#v2.6.0 or later
+  appgroups				#v2.8.2 or later
+  appgroupapps			#v2.8.2 or later
+  importAppGroupAppKeys	#v2.8.2 or later
+  exportAppGroupAppKeys	#v2.8.2 or later
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
   
   To export the dev app keys, use the following:
   mvn apigee-config:exportAppKeys -Ptest -Dapigee.config.exportDir=./target  
+  
+  To export the app group app keys, use the following:
+  mvn apigee-config:exportAppGroupAppKeys -Ptest -Dapigee.config.exportDir=./target
+  
 ```
 The default "none" action is a NO-OP and it helps deploy APIs (using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin)) without affecting config.
 
@@ -138,7 +146,7 @@ To run the plugin and use the multi-file config format jump to samples project `
 
 Refer to [samples/APIandConfig/HelloWorld](./samples/APIandConfig/HelloWorld) for config management along with API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](./samples/README.md)
 
-### Update Developer App and Company App (from v2.1.2 onwards)
+### Update Developer App, Group App and Company App (from v2.8.2 onwards)
 
 When `apigee.config.options=update` is run on apps and if the payload passed includes the apiProducts, the Management server created a new credentials. To avoid this you can pass `-Dapigee.app.ignoreAPIProducts=true`. Please note this is applicable only for `apigee.config.options=update`. For more info on this, check [this](https://github.com/apigee/apigee-config-maven-plugin/issues/128) discussion.
 
@@ -180,6 +188,8 @@ The apigee.config.dir option must be used to identify the top most directory con
       │   │   └── references.json   
       └── org
           ├── apiProducts.json
+          ├── appGroups.json
+          ├── appGroupApps.json          
           ├── developerApps.json
           ├── developers.json
           ├── kvms.json
