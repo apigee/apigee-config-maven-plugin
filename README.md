@@ -73,7 +73,7 @@ mvn install -Ptest -Dapigee.config.options=create
   You can also work with an individual config type using the 
   corresponding goal directly. The goals available are,
  
-  keyvaluemaps   		#v2.4.0 supports entries    
+  keyvaluemaps           #v2.4.0 or later supports entries    
   targetservers
   resourcefiles
   flowhooks
@@ -85,13 +85,13 @@ mvn install -Ptest -Dapigee.config.options=create
   references
   keystores
   aliases
-  importKeys    	   	#v2.1.3 or later
-  apicategories			#v2.6.0 or later
-  apidocs       		#v2.6.0 or later
-  appgroups				#v2.8.2 or later
-  appgroupapps			#v2.8.2 or later
-  importAppGroupAppKeys	#v2.8.2 or later
-  exportAppGroupAppKeys	#v2.8.2 or later
+  importKeys             #v2.1.3 or later
+  apicategories          #v2.6.0 or later
+  apidocs                #v2.6.0 or later
+  appgroups              #v2.8.2 or later
+  appgroupapps           #v2.8.2 or later
+  importAppGroupAppKeys	 #v2.8.2 or later
+  exportAppGroupAppKeys	 #v2.8.2 or later
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
