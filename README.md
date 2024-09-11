@@ -88,10 +88,10 @@ mvn install -Ptest -Dapigee.config.options=create
   importKeys             #v2.1.3 or later
   apicategories          #v2.6.0 or later
   apidocs                #v2.6.0 or later
-  appgroups              #v2.8.2 or later
-  appgroupapps           #v2.8.2 or later
-  importAppGroupAppKeys	 #v2.8.2 or later
-  exportAppGroupAppKeys	 #v2.8.2 or later
+  appgroups              #v2.9.0 or later
+  appgroupapps           #v2.9.0 or later
+  importAppGroupAppKeys	 #v2.9.0 or later
+  exportAppGroupAppKeys	 #v2.9.0 or later
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
@@ -146,7 +146,7 @@ To run the plugin and use the multi-file config format jump to samples project `
 
 Refer to [samples/APIandConfig/HelloWorld](./samples/APIandConfig/HelloWorld) for config management along with API deployment using [apigee-deploy-maven-plugin](https://github.com/apigee/apigee-deploy-maven-plugin). More info at [samples/README.md](./samples/README.md)
 
-### Update Developer App, Group App and Company App (from v2.8.2 onwards)
+### Update Developer App, Group App and Company App (from v2.9.0 onwards)
 
 When `apigee.config.options=update` is run on apps and if the payload passed includes the apiProducts, the Management server created a new credentials. To avoid this you can pass `-Dapigee.app.ignoreAPIProducts=true`. Please note this is applicable only for `apigee.config.options=update`. For more info on this, check [this](https://github.com/apigee/apigee-config-maven-plugin/issues/128) discussion.
 
