@@ -1,0 +1,28 @@
+[
+   {
+      "name":"appGroup1",
+      "channelUri":"marketplace",
+      "channelId":"owner",
+      "displayName":"App Group 1",
+      "status":"active",
+      "attributes":[
+         {
+            "name":"access",
+            "value":"public"
+         }
+      ]
+   },
+   {
+      "name":"appGroup2",
+      "channelUri":"marketplace",
+      "channelId":"owner",
+      "displayName":"App Group 2",
+      "status":"active",
+      "attributes":[
+         {
+            "name":"access",
+            "value":"public"
+         }
+      ]
+   }
+]
