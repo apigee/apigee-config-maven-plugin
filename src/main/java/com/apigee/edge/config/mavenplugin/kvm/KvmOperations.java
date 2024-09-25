@@ -2,6 +2,8 @@ package com.apigee.edge.config.mavenplugin.kvm;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,6 +57,16 @@ public abstract class KvmOperations {
             JSONObject entryJson = ((JSONObject) entry);
             String entryName = (String) entryJson.get("name");
             String entryValue = (String) entryJson.get("value");
+            
+        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
+            Pattern special = Pattern.compile(" "); //dont double encode if there is a space - https://github.com/apigee/apigee-config-maven-plugin/issues/214
+    		Matcher hasSpecial = special.matcher(entryName);
+    		if(hasSpecial.find()) {
+    			entryName = URLEncoder.encode(entryName, "UTF-8");
+    		} else {
+    			entryName = URLEncoder.encode(URLEncoder.encode(entryName, "UTF-8"), "UTF-8");
+    		}	
+    		
             if(!kvmValueObject.getProfile().getKvmOverride() && compareKVMEntries(kvmValueObject, entryName, entryValue)) {
             	logger.info("No change to KVM - "+ kvmValueObject.getKvmName()+"-"+entryName +". Skipping !");
             	continue;
@@ -122,10 +134,9 @@ public abstract class KvmOperations {
     }
 
     private boolean doesEntryAlreadyExistForOrg(KvmValueObject kvmValueObject, String kvmEntryName)  {
-        try {
-        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
-            HttpResponse response = getEntriesForKvm(kvmValueObject, URLEncoder.encode(URLEncoder.encode(kvmEntryName, "UTF-8"), "UTF-8")); 
-
+    	try {	
+    		HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
+    		
             if (response == null) {
                 return false;
             }
@@ -152,16 +163,14 @@ public abstract class KvmOperations {
      * @return
      */
     private boolean compareKVMEntries(KvmValueObject kvmValueObject, String kvmEntryName, String kvmEntryValue)  {
-        try {
-        	//double URL encoding so the entry name with special characters like #?/ are decoded by GAAMBO correctly - https://github.com/apigee/apigee-config-maven-plugin/issues/192#issuecomment-1852050814
-            HttpResponse response = getEntriesForKvm(kvmValueObject, URLEncoder.encode(URLEncoder.encode(kvmEntryName, "UTF-8"), "UTF-8"));
+    	try {
+    		HttpResponse response = getEntriesForKvm(kvmValueObject, kvmEntryName);
             if (response == null) {
-            	logger.info("this is false");
                 return false;
             }
             String responseValue = parseValuefromKVM(response.parseAsString());
-            logger.info("responseValue: "+ responseValue);
-            logger.info("kvmEntryValue: "+ kvmEntryValue);
+            logger.debug("responseValue: "+ responseValue);
+            logger.debug("kvmEntryValue: "+ kvmEntryValue);
             if (responseValue.equals(kvmEntryValue)) {
                 return true;
             }
