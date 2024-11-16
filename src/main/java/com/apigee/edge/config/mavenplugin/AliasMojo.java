@@ -156,9 +156,9 @@ public class AliasMojo extends GatewayAbstractMojo
         		if (existingAliases.contains(a.alias)) {
                     switch (buildOption) {
                         case update:
-                            logger.info("Alias \"" + a.alias + 
-                                                    "\" exists.");
-                            logger.info("Please delete the alias and re-create or run it using 'sync' option");
+                        	logger.info("Alias \"" + a.alias + 
+                                    "\" already exists. Updating.");
+                        	updateAlias(serverProfile, alias);
                             break;
                         case create:
                             logger.info("Alias \"" + a.alias + 
@@ -300,6 +300,69 @@ public class AliasMojo extends GatewayAbstractMojo
 
         return "";
     }
+    
+    public static String updateAlias(ServerProfile profile, String aliasPayload)
+            throws IOException, MojoFailureException {
+    	Alias alias = getAliasObj(aliasPayload);
+    	
+    	validateAlias(alias);
+    	    	
+    	// Call rest helper
+    	RestUtil restUtil = new RestUtil(profile);
+    	HttpResponse response = null;
+    	//For selfsignedcert, pass the JSON payload
+    	if(alias.format!=null && alias.format.equalsIgnoreCase("selfsignedcert")) {
+    		logger.info("Update alias for \"selfsignedcert\" format is not supported");
+    		return "";
+//    		Map<String, String> params = new HashMap<String, String>();
+//    		params.put("format", "selfsignedcert");
+//    		response = restUtil.updateEnvConfigWithParameters(profile, 
+//    				"keystores", URLEncoder.encode(alias.keystorename, "UTF-8"), "aliases/"+alias.alias, params, removeFormatFromAlias(aliasPayload));
+    	}
+    	else if(alias.format!=null && alias.format.equalsIgnoreCase("keycertfile") && alias.keyFilePath!=null && !alias.keyFilePath.equalsIgnoreCase("")) {
+    		logger.info("Update alias for \"keycertfile\" format with a private key is not supported");
+    		return "";
+    	}
+    	else {
+    		
+    		Map<String, String> parameters = new HashMap<String, String>();
+        	parameters.put("alias", alias.alias);
+        	parameters.put("format", alias.format);
+        	parameters.put("ignoreNewlineValidation", (alias.ignoreNewlineValidation)?String.valueOf(alias.ignoreNewlineValidation): "true"); //default to true
+        	parameters.put("ignoreExpiryValidation", (alias.ignoreExpiryValidation)?String.valueOf(alias.ignoreExpiryValidation): "false"); //default to false
+        	parameters.put("privateKeyExportable", (alias.privateKeyExportable)?String.valueOf(alias.privateKeyExportable): "false"); //default to false
+        	if(alias.password!=null && !alias.password.equalsIgnoreCase(""))
+        		parameters.put("password", alias.password);   
+        	
+    		Map<String, String> multipartFiles = new HashMap<String, String>();
+    		//Set param as "certFile" for keycertfile
+    		if(alias.certFilePath!=null && !alias.certFilePath.equalsIgnoreCase(""))
+    			multipartFiles.put("certFile", alias.certFilePath);
+    		//Set param as "keyFile" for keycertfile if keyFilePath is passed
+        	if(alias.keyFilePath!=null && !alias.keyFilePath.equalsIgnoreCase(""))
+        		multipartFiles.put("keyFile", alias.keyFilePath);  
+        	//Set param as "file" for keycertjar or pkcs12
+        	if(alias.filePath!=null && !alias.filePath.equalsIgnoreCase(""))
+    			multipartFiles.put("file", alias.filePath);
+        	logger.info("**** multipartFiles: "+ multipartFiles);
+        	response = restUtil.updateEnvConfigUpload(profile, 
+            		"keystores", alias.keystorename, "aliases/"+alias.alias, multipartFiles, parameters);
+        	
+    	}
+        try {
+
+            logger.info("Response " + response.getContentType() + "\n" +
+                    response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Create Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Alias create error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
 
     public static String deleteAlias(ServerProfile profile, 
                                         String aliasPayload)
@@ -386,6 +449,5 @@ public class AliasMojo extends GatewayAbstractMojo
 		return aliasJsonObj.toString();
 	}
 }
-
 
 
