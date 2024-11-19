@@ -156,9 +156,9 @@ public class AliasMojo extends GatewayAbstractMojo
         		if (existingAliases.contains(a.alias)) {
                     switch (buildOption) {
                         case update:
-                            logger.info("Alias \"" + a.alias + 
-                                                    "\" exists.");
-                            logger.info("Please delete the alias and re-create or run it using 'sync' option");
+                        	logger.info("Alias \"" + a.alias + 
+                                    "\" already exists. Updating.");
+                        	updateAlias(serverProfile, alias);
                             break;
                         case create:
                             logger.info("Alias \"" + a.alias + 
@@ -300,6 +300,65 @@ public class AliasMojo extends GatewayAbstractMojo
 
         return "";
     }
+    
+    public static String updateAlias(ServerProfile profile, String aliasPayload)
+            throws IOException, MojoFailureException {
+    	Alias alias = getAliasObj(aliasPayload);
+    	
+    	validateAlias(alias);
+    	    	
+    	// Call rest helper
+    	RestUtil restUtil = new RestUtil(profile);
+    	HttpResponse response = null;
+    	//update is not supported for selfsignedcert, keycertjar or pkcs12 format
+    	if(alias.format!=null && (alias.format.equalsIgnoreCase("selfsignedcert") || alias.format.equalsIgnoreCase("keycertjar") || alias.format.equalsIgnoreCase("pkcs12"))) {
+    		logger.info(____ATTENTION_MARKER____);
+    		logger.info("NOTE: Update alias for \""+alias.format+"\" format is not supported");
+    		logger.info(____ATTENTION_MARKER____);
+    		return "";
+    	}
+    	else {
+    		Map<String, String> parameters = new HashMap<String, String>();
+        	parameters.put("alias", alias.alias);
+        	parameters.put("format", alias.format);
+        	parameters.put("ignoreNewlineValidation", (alias.ignoreNewlineValidation)?String.valueOf(alias.ignoreNewlineValidation): "true"); //default to true
+        	parameters.put("ignoreExpiryValidation", (alias.ignoreExpiryValidation)?String.valueOf(alias.ignoreExpiryValidation): "false"); //default to false
+        	parameters.put("privateKeyExportable", (alias.privateKeyExportable)?String.valueOf(alias.privateKeyExportable): "false"); //default to false
+        	
+        	//password should not be passed for update
+//        	if(alias.password!=null && !alias.password.equalsIgnoreCase(""))
+//        		parameters.put("password", alias.password);   
+        	
+    		Map<String, String> multipartFiles = new HashMap<String, String>();
+    		//Set param as "certFile" for keycertfile
+    		if(alias.certFilePath!=null && !alias.certFilePath.equalsIgnoreCase(""))
+    			multipartFiles.put("certFile", alias.certFilePath);
+        	if(alias.keyFilePath!=null && !alias.keyFilePath.equalsIgnoreCase("")) {
+        		logger.info(____ATTENTION_MARKER____);
+        		logger.info("NOTE: Key files will be ignored for the update option. Only the certs are updated");
+        		logger.info(____ATTENTION_MARKER____);
+        	}
+        	//Set param as "file" for keycertjar or pkcs12
+        	if(alias.filePath!=null && !alias.filePath.equalsIgnoreCase(""))
+    			multipartFiles.put("file", alias.filePath);
+        	response = restUtil.updateEnvConfigUpload(profile, 
+            		"keystores", alias.keystorename, "aliases/"+alias.alias, multipartFiles, parameters);
+        	
+    	}
+        try {
+
+            logger.info("Response " + response.getContentType() + "\n" +
+                    response.parseAsString());
+            if (response.isSuccessStatusCode())
+                logger.info("Update Success.");
+
+        } catch (HttpResponseException e) {
+            logger.error("Alias update error " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return "";
+    }
 
     public static String deleteAlias(ServerProfile profile, 
                                         String aliasPayload)
@@ -386,6 +445,5 @@ public class AliasMojo extends GatewayAbstractMojo
 		return aliasJsonObj.toString();
 	}
 }
-
 
 
