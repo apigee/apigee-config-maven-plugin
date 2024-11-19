@@ -310,41 +310,37 @@ public class AliasMojo extends GatewayAbstractMojo
     	// Call rest helper
     	RestUtil restUtil = new RestUtil(profile);
     	HttpResponse response = null;
-    	//For selfsignedcert, pass the JSON payload
-    	if(alias.format!=null && alias.format.equalsIgnoreCase("selfsignedcert")) {
-    		logger.info("Update alias for \"selfsignedcert\" format is not supported");
-    		return "";
-//    		Map<String, String> params = new HashMap<String, String>();
-//    		params.put("format", "selfsignedcert");
-//    		response = restUtil.updateEnvConfigWithParameters(profile, 
-//    				"keystores", URLEncoder.encode(alias.keystorename, "UTF-8"), "aliases/"+alias.alias, params, removeFormatFromAlias(aliasPayload));
-    	}
-    	else if(alias.format!=null && alias.format.equalsIgnoreCase("keycertfile") && alias.keyFilePath!=null && !alias.keyFilePath.equalsIgnoreCase("")) {
-    		logger.info("Update alias for \"keycertfile\" format with a private key is not supported");
+    	//update is not supported for selfsignedcert, keycertjar or pkcs12 format
+    	if(alias.format!=null && (alias.format.equalsIgnoreCase("selfsignedcert") || alias.format.equalsIgnoreCase("keycertjar") || alias.format.equalsIgnoreCase("pkcs12"))) {
+    		logger.info(____ATTENTION_MARKER____);
+    		logger.info("NOTE: Update alias for \""+alias.format+"\" format is not supported");
+    		logger.info(____ATTENTION_MARKER____);
     		return "";
     	}
     	else {
-    		
     		Map<String, String> parameters = new HashMap<String, String>();
         	parameters.put("alias", alias.alias);
         	parameters.put("format", alias.format);
         	parameters.put("ignoreNewlineValidation", (alias.ignoreNewlineValidation)?String.valueOf(alias.ignoreNewlineValidation): "true"); //default to true
         	parameters.put("ignoreExpiryValidation", (alias.ignoreExpiryValidation)?String.valueOf(alias.ignoreExpiryValidation): "false"); //default to false
         	parameters.put("privateKeyExportable", (alias.privateKeyExportable)?String.valueOf(alias.privateKeyExportable): "false"); //default to false
-        	if(alias.password!=null && !alias.password.equalsIgnoreCase(""))
-        		parameters.put("password", alias.password);   
+        	
+        	//password should not be passed for update
+//        	if(alias.password!=null && !alias.password.equalsIgnoreCase(""))
+//        		parameters.put("password", alias.password);   
         	
     		Map<String, String> multipartFiles = new HashMap<String, String>();
     		//Set param as "certFile" for keycertfile
     		if(alias.certFilePath!=null && !alias.certFilePath.equalsIgnoreCase(""))
     			multipartFiles.put("certFile", alias.certFilePath);
-    		//Set param as "keyFile" for keycertfile if keyFilePath is passed
-        	if(alias.keyFilePath!=null && !alias.keyFilePath.equalsIgnoreCase(""))
-        		multipartFiles.put("keyFile", alias.keyFilePath);  
+        	if(alias.keyFilePath!=null && !alias.keyFilePath.equalsIgnoreCase("")) {
+        		logger.info(____ATTENTION_MARKER____);
+        		logger.info("NOTE: Key files will be ignored for the update option. Only the certs are updated");
+        		logger.info(____ATTENTION_MARKER____);
+        	}
         	//Set param as "file" for keycertjar or pkcs12
         	if(alias.filePath!=null && !alias.filePath.equalsIgnoreCase(""))
     			multipartFiles.put("file", alias.filePath);
-        	logger.info("**** multipartFiles: "+ multipartFiles);
         	response = restUtil.updateEnvConfigUpload(profile, 
             		"keystores", alias.keystorename, "aliases/"+alias.alias, multipartFiles, parameters);
         	
@@ -354,10 +350,10 @@ public class AliasMojo extends GatewayAbstractMojo
             logger.info("Response " + response.getContentType() + "\n" +
                     response.parseAsString());
             if (response.isSuccessStatusCode())
-                logger.info("Create Success.");
+                logger.info("Update Success.");
 
         } catch (HttpResponseException e) {
-            logger.error("Alias create error " + e.getMessage());
+            logger.error("Alias update error " + e.getMessage());
             throw new IOException(e.getMessage());
         }
 

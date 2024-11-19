@@ -11,7 +11,7 @@
          "certValidityInDays":"90"
       },
       {
-         "alias":"testAliasKeyCertFile",
+         "alias":"testAliasCertFile",
          "keystorename": "testKeyStorename",
          "ignoreExpiryValidation": true,
          "format": "keycertfile",
