@@ -738,6 +738,36 @@ public class RestUtil {
 
     public HttpResponse deleteOrgConfig(ServerProfile profile, 
                                                 String resource,
+                                                String resourceId,
+                                                String subResource,
+                                                String subResourceId)
+            throws IOException {
+        
+        String cmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource + "/"
+                + subResourceId;
+
+        HttpRequest restRequest = REQUEST_FACTORY.buildDeleteRequest(
+                                                    new GenericUrl(cmd));
+        restRequest.setReadTimeout(0);
+
+        HttpResponse response;
+        try {
+        	//response = restRequest.execute();
+            response = executeAPI(profile, restRequest);
+        } catch (HttpResponseException e) {
+            logger.error("Apigee call failed " + e.getMessage());
+            throw new IOException(e.getMessage());
+        }
+
+        return response;
+    }
+    
+    public HttpResponse deleteOrgConfig(ServerProfile profile, 
+                                                String resource,
                                                 String resourceId)
             throws IOException {
 
@@ -825,6 +855,21 @@ public class RestUtil {
                 + URLEncoder.encode(resourceId, "UTF-8")
                 + "/" + subResource + "/"
                 + subResourceId;
+
+        return executeAPIGet(profile, importCmd);
+    }
+    
+    public HttpResponse getOrgConfig(ServerProfile profile,
+                                            String resource,
+                                            String resourceId,
+                                            String subResource)
+            throws IOException {
+
+        String importCmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg()  + "/" + resource + "/"
+                + URLEncoder.encode(resourceId, "UTF-8")
+                + "/" + subResource;
 
         return executeAPIGet(profile, importCmd);
     }

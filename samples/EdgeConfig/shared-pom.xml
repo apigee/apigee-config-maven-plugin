@@ -78,6 +78,13 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>create-config-rateplans</id>
+                        <phase>install</phase>                        
+                        <goals>
+                            <goal>rateplans</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>create-config-developer</id>
                         <phase>install</phase>                        
                         <goals>
