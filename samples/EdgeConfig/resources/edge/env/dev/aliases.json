@@ -11,8 +11,16 @@
          "certValidityInDays":"90"
       },
       {
+         "alias":"testAliasCertFile",
+         "keystorename": "testKeyStorename",
+         "ignoreExpiryValidation": true,
+         "format": "keycertfile",
+         "certFilePath":"/tmp/certs/keystore.pem"
+      },
+      {
          "alias":"testAliasKeyCertFileAndKey",
          "keystorename": "testKeyStorename",
+         "ignoreExpiryValidation": true,
          "format": "keycertfile",
          "certFilePath":"/tmp/certs/keystore.pem",
          "keyFilePath":"/tmp/certs/keystore.key",
@@ -21,14 +29,9 @@
       {
          "alias":"testAliasPKCS12",
          "keystorename": "testKeyStorename",
+         "ignoreExpiryValidation": true,
          "format": "pkcs12",
          "filePath":"/tmp/certs/myKeystore.p12",
          "password":"dummy"
       },
-      {
-         "alias":"testAliasKeyCertFile",
-         "keystorename": "testKeyStorename",
-         "format": "keycertfile",
-         "certFilePath":"/tmp/certs/keystore.pem"
-      }
 ]
