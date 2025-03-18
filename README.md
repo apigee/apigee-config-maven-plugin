@@ -92,6 +92,7 @@ mvn install -Ptest -Dapigee.config.options=create
   appgroupapps           #v2.9.0 or later
   importAppGroupAppKeys	 #v2.9.0 or later
   exportAppGroupAppKeys	 #v2.9.0 or later
+  spaces				 #v2.9.3 or later
 
   For example, the apps goal is used below to only create apps and ignore all other config types.
   mvn apigee-config:apps -Ptest -Dapigee.config.options=create
@@ -124,6 +125,7 @@ This project demonstrates the creation and management of Apigee Edge Config and 
   - Creates References
   - Creates Keystores
   - Creates Aliases
+  - Creates Spaces
   and many more
 
 To use, edit samples/EdgeConfig/shared-pom.xml, and update org, env to point to your Apigee org and env respectively and path of service account credentials elements in all profiles. You can add more profiles corresponding to each env in your org. 
@@ -157,7 +159,9 @@ To use `apicategories` and `apidocs`, make sure you provide the Apigee Portal Si
 <apigee.portal.siteId>${siteId}</apigee.portal.siteId>
 ```
 
-and you can pass the siteId using the Maven arguments like `mvn apigee-config:apicategories -Pdev -Dorg=blah -Denv=blah -DsiteId=blah-site ...`
+### To manage Spaces (from v2.9.3 onwards)
+
+To use `spaces`, make sure its enabled in your Apigee project and you have the appropriate permissions. This plugin only supports space creation, updation and deletion. For associating and moving entities from/to spaces and assigning members to spaces, please follow our public documentation.
 
 ## Multi-file config
 Projects with several config entities can utilize the multi-file structure to organize config while keeping individual file sizes within manageable limits. The plugin requires the use of specific file names and directories to organize config. 
