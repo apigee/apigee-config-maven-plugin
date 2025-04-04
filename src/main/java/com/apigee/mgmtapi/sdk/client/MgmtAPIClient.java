@@ -1,14 +1,14 @@
 package com.apigee.mgmtapi.sdk.client;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -33,23 +32,21 @@ public class MgmtAPIClient {
 	
 	public MgmtAPIClient(ServerProfile profile) {
 		if(profile.getHasProxy()) {
-			
 			HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 			HttpHost proxy = new HttpHost(profile.getProxyServer(), profile.getProxyPort());
-			
 			if(profile.getProxyUsername()!=null && !profile.getProxyUsername().equalsIgnoreCase("")
 					&& profile.getProxyPassword()!=null && !profile.getProxyPassword().equalsIgnoreCase("")) {
-				CredentialsProvider credsProvider = new BasicCredentialsProvider();
+				BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
 				credsProvider.setCredentials( 
 				        new AuthScope(profile.getProxyServer(), profile.getProxyPort()), 
-				        new UsernamePasswordCredentials(profile.getProxyUsername(), profile.getProxyPassword())
+				        new UsernamePasswordCredentials(profile.getProxyUsername(), profile.getProxyPassword().toCharArray())
 				    );
 				clientBuilder.setDefaultCredentialsProvider(credsProvider).disableCookieManagement();
 			}
-			
-		    clientBuilder.setProxy(proxy);
 		    
-		    HttpClient httpClient = clientBuilder.build();
+			clientBuilder.setProxy(proxy);
+		    
+			HttpClient httpClient = clientBuilder.build();
 		    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 		    factory.setHttpClient(httpClient);
 		    
@@ -146,8 +143,9 @@ public class MgmtAPIClient {
 		AccessToken token = new AccessToken();
 		ResponseEntity<String> result = null;
 		try {
+
 			headers.add("Authorization", "Basic "
-					+ new String(Base64.encode((clientId + ":" + client_secret).getBytes()), Charset.forName("UTF-8")));
+					+ Base64.getEncoder().encodeToString((clientId + ":" + client_secret).getBytes(StandardCharsets.UTF_8)));
 			headers.add("Content-Type", "application/x-www-form-urlencoded");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("username", username);
@@ -186,7 +184,7 @@ public class MgmtAPIClient {
 		ResponseEntity<String> result = null;
 		try {
 			headers.add("Authorization", "Basic "
-					+ new String(Base64.encode((clientId + ":" + client_secret).getBytes()), Charset.forName("UTF-8")));
+					+ Base64.getEncoder().encodeToString((clientId + ":" + client_secret).getBytes(StandardCharsets.UTF_8)));
 			headers.add("Content-Type", "application/x-www-form-urlencoded");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("refresh_token", refreshToken);
