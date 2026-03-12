@@ -242,4 +242,3 @@ Apigee customers should use [formal support channels](https://cloud.google.com/a
 
 ## Disclaimer
 This is not an officially supported Google product.
-

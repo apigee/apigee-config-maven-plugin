@@ -189,6 +189,19 @@ public class RestUtil {
         return executeAPIPost(profile, payload, importCmd);
     }
     
+        public HttpResponse updateDeveloperStatus(ServerProfile profile,
+                                               String resource,
+                                               String developerId,
+                                               String action)
+            throws IOException {
+        String cmd = profile.getHostUrl() + "/"
+                + profile.getApi_version() + "/organizations/"
+                + profile.getOrg() + "/developers/"
+                + URLEncoder.encode(developerId, "UTF-8") + "?action=" + action;
+
+        return executeAPIPost(profile, "", cmd, "application/octet-stream");
+    }
+
     public HttpResponse createEnvConfigWithParameters(ServerProfile profile, String resource, String resourceId, String subResource, Map<String, String> parameters,
 			String payload) throws IOException {
 
@@ -1249,7 +1262,15 @@ public class RestUtil {
                                                String importCmd)
             throws IOException {
 
-        ByteArrayContent content = new ByteArrayContent("application/json",
+       
+        return executeAPIPost(profile, payload, importCmd, "application/json");
+    }
+
+    private HttpResponse executeAPIPost(ServerProfile profile, String payload,
+                                               String importCmd, String contentType)
+            throws IOException {
+
+        ByteArrayContent content = new ByteArrayContent(contentType,
                 payload.getBytes());
 
         HttpRequest restRequest = REQUEST_FACTORY
