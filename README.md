@@ -111,6 +111,13 @@ Supported from v2.5.0
 
 Please refer to this [doc](http://maven.apache.org/guides/mini/guide-proxies.html) that explains how to setup proxy settings in your settings.xml usually in your $HOME/.m2 directory. Only `https` protocol is supported
 
+## Custom TLS Truststore
+This plugin uses standard JVM TLS certificate and hostname verification. If you are connecting through a corporate TLS-intercepting proxy or to an endpoint using a private CA certificate, configure a JVM truststore containing that CA via `MAVEN_OPTS` (or import the CA into `$JAVA_HOME/lib/security/cacerts`):
+
+```
+MAVEN_OPTS="-Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStorePassword=<password>" mvn ...
+```
+
 ## Sample project
 Refer to an example project at [/samples/EdgeConfig](./samples/EdgeConfig)
 
