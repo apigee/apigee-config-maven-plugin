@@ -25,8 +25,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -94,9 +92,6 @@ public class RestUtil {
 			// @Override
 			public void initialize(HttpRequest request) {
 				request.setParser(JSON_FACTORY.createJsonObjectParser());
-				XTrustProvider.install();
-				// FIXME this is bad - Install the all-trusting host name verifier
-				HttpsURLConnection.setDefaultHostnameVerifier(new FakeHostnameVerifier());
 			}
 		});
 
@@ -104,39 +99,10 @@ public class RestUtil {
 			// @Override
 			public void initialize(HttpRequest request) {
 				request.setParser(JSON_FACTORY.createJsonObjectParser());
-				XTrustProvider.install();
-				// FIXME this is bad - Install the all-trusting host name verifier
-				HttpsURLConnection.setDefaultHostnameVerifier(new FakeHostnameVerifier());
 			}
 		});
 
 	}
-    
-    /*static HttpRequestFactory REQUEST_FACTORY = HTTP_TRANSPORT
-            .createRequestFactory(new HttpRequestInitializer() {
-                // @Override
-                public void initialize(HttpRequest request) {
-                    request.setParser(JSON_FACTORY.createJsonObjectParser());
-                    XTrustProvider.install();
-                    FakeHostnameVerifier _hostnameVerifier = new FakeHostnameVerifier();
-                    // Install the all-trusting host name verifier:
-                    HttpsURLConnection.setDefaultHostnameVerifier(_hostnameVerifier);
-
-                }
-            });
-    
-    static HttpRequestFactory APACHE_REQUEST_FACTORY = APACHE_HTTP_TRANSPORT
-            .createRequestFactory(new HttpRequestInitializer() {
-                // @Override
-                public void initialize(HttpRequest request) {
-                    request.setParser(JSON_FACTORY.createJsonObjectParser());
-                    XTrustProvider.install();
-                    FakeHostnameVerifier _hostnameVerifier = new FakeHostnameVerifier();
-                    // Install the all-trusting host name verifier:
-                    HttpsURLConnection.setDefaultHostnameVerifier(_hostnameVerifier);
-
-                }
-            });*/
 
     /***************************************************************************
      * Env Config - get, create, update
