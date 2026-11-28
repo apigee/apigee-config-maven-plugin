@@ -4,6 +4,7 @@
         "email": "hugh@example.com",
         "firstName": "Hugh",
         "lastName": "Jack",
-        "userName": "hughexample"
+        "userName": "hughexample",
+        "status": "active"
     }
 ]
